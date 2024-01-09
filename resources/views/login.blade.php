@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BPKP Kalbar</title>
+
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+
     <link rel="icon" href="{{asset('img/bpkp_logo.ico')}}" type="image/x-icon" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
@@ -77,17 +80,17 @@
           </div>
           <form id="loginForm">
             <div class="mb-3">
-              <label for="username" class="form-label fw-medium">
-                Username
+              <label for="nip" class="form-label fw-medium">
+                NIP
               </label>
-              <input type="text" class="form-control" id="username" id="username"/>
+              <input type="text" class="form-control" pattern="[0-9]" id="nip" name="nip" required/>
             </div>
             <div class="mb-3 pb-3">
               <label for="password" class="form-label fw-medium">
                 Password
               </label>
               <div class="password-input-wrapper">
-                <input type="password" class="form-control" id="password" name="password"/>
+                <input type="password" class="form-control" id="password" name="password" required/>
                 <span toggle="#password" class="toggle-password" onclick="togglePasswordVisibility()">
                   <i class="bi bi-eye-fill" id="eye" aria-hidden="true"></i>
                 </span>
@@ -151,26 +154,30 @@
               $('#btnlogin').click(function (e) {
                   e.preventDefault();
   
-                  var username = $("#username").val();
+                  var nip = $("#nip").val();
                   var password = $("#password").val();
                   var token = csrfToken;
   
-                  if(username.length == "") {
-                      showToast("warning", "Oops..", "Please enter your <b>username</b>");
+                  if(nip.length == "") {
+                      showToast("warning", "Oops..", "Please enter your <b>NIP</b>");
                   } else if(password.length == "") {
                       showToast("warning", "Oops..", "please enter your <b>password</b>");
+                  } else if (!/^\d+$/.test(nip)) {
+                      showToast("warning", "Oops..", "Please enter your NIP using only <b>numbers</b>");
+                      return false;
                   } else {
                       $.ajax({
-                      url: '',
+                      url: '{{route('login')}}',
                       type: "POST",
                       dataType: "JSON",
                       cache: false,
                       data: {
-                          "username": username,
+                          "nip": nip,
                           "password": password,
                           "_token": token
                       },
                       success:function(response){
+                        console.log(response);
                           if (response.success) {
                               iziToast.success({
                                   title: "Login Success",
