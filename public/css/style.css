@@ -3,7 +3,7 @@
         font-family: "Open Sans", sans-serif;
       }
       body {
-        background: url(asset/img/bg-login.jpg) no-repeat center center fixed;
+        background: url(img/bg-login.jpg) no-repeat center center fixed;
         background-size: cover;
         backdrop-filter: brightness(60%);
       }
