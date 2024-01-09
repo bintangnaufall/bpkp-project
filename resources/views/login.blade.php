@@ -9,42 +9,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
-      body {
-        font-family: "Open Sans", sans-serif;
-      }
-      body {
-        background: url(asset/img/bg-login.jpg) no-repeat center center fixed;
-        background-size: cover;
-        backdrop-filter: brightness(60%);
-      }
-
-      .login-box {
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        padding: 20px;
-        background-color: white;
-      }
-
-      #logo {
-        width: 100px;
-        margin: 0 auto;
-        display: block;
-        margin-bottom: 15px;
-      }
-
-      .form-control {
-        border: none;
-        border-bottom: 2px solid #ddd;
-        border-radius: 0;
-      }
-
-      .shadow-bottom {
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
