@@ -42,4 +42,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function bidang(){
+        return $this->belongsTo('App\Models\bidang', 'bidang_id');
+    }
+
+    public function jabatan(){
+        return $this->belongsTo('App\Models\jabatan', 'jabatan_id');
+    }
+
+    public function hak_akses(){
+        return $this->belongsTo('App\Models\hakakses', 'hak_akses_id');
+    }
 }

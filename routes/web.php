@@ -1,7 +1,12 @@
 <?php
 
-use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\BidangController;
+use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\HakaksesController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +20,48 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['guest'])->group(function () {
+
     Route::get('/',[LoginController::class,'index'])->name('index');
     Route::post('/login',[LoginController::class,'authenticate'])->name('login');
+
 });
 
-Route::get('/logout',[LoginController::class,'logout'])->name('logout');
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/dashboard',[DashboardController::class, 'index'])->name('dashboard');
+
+    Route::prefix('user')->name('user.')->group(function() {
+        Route::get('/', [UserController::class, 'index'])->name('show'); 
+        Route::post('/create-update', [UserController::class, 'storeOrUpdate'])->name('create_update'); 
+        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit'); 
+        Route::get('/delete/{id}', [UserController::class, 'destroy'])->name('delete'); 
+    });
+    
+    Route::prefix('master-data')->name('master_data.')->group(function() {
+
+        Route::prefix('bidang')->name('bidang.')->group(function() {
+            Route::get('/', [BidangController::class, 'index'])->name('show'); 
+            Route::post('/create-update', [BidangController::class, 'storeOrUpdate'])->name('create_update'); 
+            Route::get('/edit/{id}', [BidangController::class, 'edit'])->name('edit'); 
+            Route::get('/delete/{id}', [BidangController::class, 'destroy'])->name('delete'); 
+        });
+
+        Route::prefix('jabatan')->name('jabatan.')->group(function() {
+            Route::get('/', [JabatanController::class, 'index'])->name('show'); 
+            Route::post('/create-update', [JabatanController::class, 'storeOrUpdate'])->name('create_update'); 
+            Route::get('/edit/{id}', [JabatanController::class, 'edit'])->name('edit'); 
+            Route::get('/delete/{id}', [JabatanController::class, 'destroy'])->name('delete'); 
+        });
+
+        Route::prefix('hak_akses')->name('hak_akses.')->group(function() {
+            Route::get('/', [HakaksesController::class, 'index'])->name('show'); 
+            Route::post('/create-update', [HakaksesController::class, 'storeOrUpdate'])->name('create_update'); 
+            Route::get('/edit/{id}', [HakaksesController::class, 'edit'])->name('edit'); 
+            Route::get('/delete/{id}', [HakaksesController::class, 'destroy'])->name('delete'); 
+        });
+
+    });    
+    
+    Route::get('/logout',[LoginController::class,'logout'])->name('logout');
+});
+

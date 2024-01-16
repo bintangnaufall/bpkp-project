@@ -17,6 +17,12 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">s  
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="{{ asset('css/iziToast.min.css') }}">
+
+
+
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
       body {
@@ -26,6 +32,7 @@
         background: url('/img/bg-login.jpg') no-repeat center center fixed;
         background-size: cover;
         backdrop-filter: brightness(60%);
+        overflow-y: hidden;
       }
 
       .login-box {
@@ -47,6 +54,7 @@
         border: none;
         border-bottom: 2px solid #ddd;
         border-radius: 0;
+        background-color: #fff !important;
       }
 
       .shadow-bottom {
@@ -166,37 +174,47 @@
                       showToast("warning", "Oops..", "Please enter your NIP using only <b>numbers</b>");
                       return false;
                   } else {
+                    iziToast.warning({
+                        icon: 'fas fa-spinner fa-spin',
+                        title: 'Loading...',
+                        message: 'Mohon Tunggu Sebentar',
+                        position: 'topCenter',
+                    });
+
+                    setTimeout(function() {
+                      iziToast.destroy();
                       $.ajax({
-                      url: '{{route('login')}}',
-                      type: "POST",
-                      dataType: "JSON",
-                      cache: false,
-                      data: {
-                          "nip": nip,
-                          "password": password,
-                          "_token": token
-                      },
-                      success:function(response){
-                        console.log(response);
-                          if (response.success) {
-                              iziToast.success({
-                                  title: "Login Success",
-                                  message: response.success,
-                                  timeout: 2000,
-                                  position: "topCenter",
-                                  closeOnClick: true,
-                                  onClosing: function () {
-                                      window.location.href = '/dashboard';
-                                  }
-                              })
-                          } else if (response.error) {
-                              showToast("error", "Login Error", response.error);
-                          }
-                      },
-                      error:function(error){
-                          showToast("error", "Login Error", "something went wrong");
-                      }
-                  });
+                        url: '{{route('login')}}',
+                        type: "POST",
+                        dataType: "JSON",
+                        cache: false,
+                        data: {
+                            "nip": nip,
+                            "password": password,
+                            "_token": token
+                        },
+                        success:function(response){
+                          console.log(response);
+                            if (response.success) {
+                                iziToast.success({
+                                    title: "Login Success",
+                                    message: response.success,
+                                    timeout: 2000,
+                                    position: "topCenter",
+                                    closeOnClick: true,
+                                    onClosing: function () {
+                                        window.location.href = '/dashboard';
+                                    }
+                                })
+                            } else if (response.error) {
+                                showToast("error", "Login Error", response.error);
+                            }
+                        },
+                        error:function(error){
+                            showToast("error", "Login Error", "something went wrong");
+                        }
+                      });
+                    },2000);
                   }
               });
           });
