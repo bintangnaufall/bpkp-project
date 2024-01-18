@@ -2,7 +2,12 @@
     <nav class="navbar bg-secondary navbar-dark">
       <a href="{{ route('dashboard')}}" class="navbar-brand mx-4 mb-3">
         <h3 class="text-white">
-          <i class="fa fa-user-edit me-2"></i>BPKP Kalbar
+          <img
+            class="me-2"
+            src="{{ asset('img/bpkp_logo.png')}}"
+            alt="bpkp"
+            style="width: 40px; height: 40px"
+          />BPKP Kalbar
         </h3>
       </a>
       <div class="d-flex align-items-center ms-4 mb-4">
