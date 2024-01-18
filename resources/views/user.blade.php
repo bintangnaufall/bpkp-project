@@ -25,9 +25,6 @@
         .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
             color: white !important;
         }
-        .form-control {
-          background-color: #fff !important;
-        }
         .text-center {
             text-align: justify !important;
         }
@@ -43,14 +40,6 @@
         .dataTables_wrapper .dataTables_length select {
           background-color: rgba(26, 20, 20, 0.521) !important;
           color: white;
-        }
-        .form-select {
-          background-color: #fff !important;
-          color: black !important;
-        }
-        .form-control {
-          background-color: #fff !important;
-          color: black !important;
         }
         table.dataTable.display tbody tr.even>.sorting_1, table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
             background-color: #191C24 !important;
@@ -136,7 +125,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel" title="Batal">Batal</button>
-          <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
+          <button class="btn btn-primary btn-md waves-effect rounded waves-light" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
         </div>
       </div>
     </div>
@@ -192,7 +181,7 @@
                     },
                     { data: 'jabatan', name: 'jabatan' },
                     { data: 'hak_akses', name: 'hak_akses' },
-                    { data: 'action', name: 'action' }
+                    { data: 'action', name: 'action', responsivePriority: 1}
                 ]
             });
 
@@ -361,6 +350,78 @@
                         $.ajax({
                             url: url,
                             type: 'GET',
+                            success: function (res) {
+                              // console.log(res);
+                                if(res.status == true) {
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: res.pesan,
+                                        icon: 'success',
+                                        confirmButtonText: 'Ok'
+                                    });
+                                    $('#myTable').DataTable().ajax.reload();
+                                } else if(res.status == false) {
+                                    Swal.fire({
+                                        title: 'Gagal!',
+                                        text: res.pesan,
+                                        icon: 'error',
+                                        confirmButtonText: 'Ok'
+                                    });
+                                }else {
+                                    Swal.fire({
+                                        title: 'Gagal!',
+                                        html: res.error,
+                                        icon: 'error',
+                                        confirmButtonText: 'Redo'
+                                    })
+                                }
+                            }
+                        })
+                      },800);
+                  }
+              })
+            });
+//---------------------------------------------------- Reset
+
+            $(document).on('click', '.btnReset', function (e) {
+              e.preventDefault();
+              var id = $(this).data("id");
+              let nama = $(this).data('name');
+              Swal.fire({
+                  title: 'Yakin ?',
+                  html: '<p>Apakah anda yakin ingin mengatur ulang Sandi :</p>' +
+                      '<p><b>' + nama + '</b></p>',
+                  showCancelButton: true,
+                  confirmButtonText: 'Reset Password',
+                  icon: 'question',
+                  cancelButtonColor: '#d61c0f',
+                  confirmButtonColor: '#198754',
+                  cancelButtonText: 'Batal',
+                  customClass: {
+                      actions: 'my-actions',
+                      cancelButton: 'order-1 right-gap',
+                      confirmButton: 'order-2',
+                      denyButton: 'order-3',
+                  }
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      let url = '{{ route('user.reset', ':id') }}';
+                      url = url.replace(':id', id);
+
+                      Swal.fire({
+                        title: 'Loading',
+                        html: 'Please Wait....',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                          swal.showLoading();
+                        }
+                      });
+
+                      setTimeout(function () {
+                        $.ajax({
+                            url: url,
+                            type: 'POST',
                             success: function (res) {
                               console.log(res);
                                 if(res.status == true) {

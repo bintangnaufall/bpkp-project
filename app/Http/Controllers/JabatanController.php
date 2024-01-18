@@ -22,6 +22,10 @@ class JabatanController extends Controller
                 $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-name="'.$data->name.'" data-original-title="Delete" class="btn btn-danger btn-sm btnDelete"><i class="bi bi-trash-fill"></i></a>';
                 return $btn;
             })   
+            ->addColumn('eselon', function ($data) {
+                $jabatan =  $data->eselon;
+                return "E".$jabatan;
+            })
             ->rawColumns(['action'])
             ->make(true);
         }
@@ -32,12 +36,14 @@ class JabatanController extends Controller
     {
         $rules = [
             'id' => ($data['action'] == 'tambah') ? '' : 'required',
-            'name' => 'required'
+            'name' => 'required',
+            'eselon' => 'required',
         ];
 
         $message = [
             'id.required' => 'ID tidak boleh kosong',
-            'name.required' => 'Nama Jabatan tidak boleh kosong'
+            'name.required' => 'Nama Jabatan tidak boleh kosong',
+            'eselon.required' => 'Kategori Jabatan tidak boleh kosong',
         ];
 
         return Validator::make($data, $rules, $message);
@@ -70,6 +76,7 @@ class JabatanController extends Controller
                 }
 
                 $storeOrUpdate->name = $request->name;
+                $storeOrUpdate->eselon = $request->eselon;
                 $storeOrUpdate->save();
 
                 $message = ($id == null) ? 'menambahkan' : 'mengubah';

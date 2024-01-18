@@ -5,6 +5,8 @@
     <a href="#" class="sidebar-toggler text-white flex-shrink-0">
       <i class="fa fa-bars"></i>
     </a>
+
+    @yield('navtop')
     
     {{-- <form class="d-none d-md-flex ms-4">
       <input

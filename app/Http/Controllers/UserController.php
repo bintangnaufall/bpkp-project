@@ -22,8 +22,12 @@ class UserController extends Controller
             return Datatables::of($data)
             ->addIndexColumn() 
             ->addColumn('action', function($data){
+
                 $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.Crypt::encryptString($data->id).'" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit"><i class="bi bi-pencil-square"></i></a>';
+
                 $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-name="'.$data->name.'" data-original-title="Delete" class="btn btn-danger btn-sm btnDelete"><i class="bi bi-trash-fill"></i></a>';
+
+                $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.Crypt::encryptString($data->id).'" data-name="'.$data->name.'" data-original-title="Reset" class="reset btn btn-success btn-sm mx-1 btnReset"><i class="bi bi-arrow-repeat"></i></a>';
                 return $btn;
             })   
             ->addColumn('bidang', function ($data) {
@@ -152,6 +156,28 @@ class UserController extends Controller
                 }
             }
         
+        
+        } catch(\Exception $e) {
+            return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];
+        }
+    }
+
+    public function reset($id)
+    {
+        try {
+            $id = Crypt::decryptString($id);
+
+            $userToReset = User::find($id);
+
+            $symbols = ['!', '@', '#', '$', '%', '^', '&', '*'];
+            $randomKataSandi= Str::random(8) . $symbols[array_rand($symbols, 1)];
+            $encryptedKataSandi= bcrypt($randomKataSandi);
+
+            $userToReset->default_password = $randomKataSandi;
+            $userToReset->password = $encryptedKataSandi;
+            $userToReset->save();
+
+            return ['status' => true, 'pesan' => 'Anda berhasil mengatur ulang kata sandi'];
         
         } catch(\Exception $e) {
             return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];

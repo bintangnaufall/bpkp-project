@@ -14,6 +14,7 @@ class jabatan extends Model
 
     protected $fillable = [
         'name',
+        'eselon',
     ];
 
     public function user(){

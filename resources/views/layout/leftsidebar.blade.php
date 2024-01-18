@@ -16,7 +16,7 @@
           {{-- <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div> --}}
         </div>
         <div class="ms-3">
-          <h1 class="mb-0">{{ auth()->user()->name }}</h1>
+          <h4 class="mb-0">{{ auth()->user()->name }}</h4>
           <span>{{ auth()->user()->jabatan->name }}</span>
         </div>
       </div>
@@ -26,7 +26,7 @@
           <i class="fa fa-tachometer-alt me-2"></i>
           Dashboard
         </a>
-        <a href="#" class="nav-link">
+        <a href="{{ route('surat.buat_surat.show') }}" class=" nav-item nav-link {{ Request::is('surat*') ? 'active' : '' }}">
           <i class="fa fa-envelope" aria-hidden="true"></i>
           Surat
         </a>

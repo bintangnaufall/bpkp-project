@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\BidangController;
+use App\Http\Controllers\BuatSuratController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\HakaksesController;
 use App\Http\Controllers\DashboardController;
@@ -35,6 +36,16 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/create-update', [UserController::class, 'storeOrUpdate'])->name('create_update'); 
         Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit'); 
         Route::get('/delete/{id}', [UserController::class, 'destroy'])->name('delete'); 
+        Route::post('/reset/{id}', [UserController::class, 'reset'])->name('reset'); 
+    });
+    
+    Route::prefix('surat')->name('surat.')->group(function() {
+        Route::prefix('buat_surat')->name('buat_surat.')->group(function() {
+            Route::get('/', [BuatSuratController::class, 'index'])->name('show'); 
+            Route::post('/create-update', [BuatSuratController::class, 'storeOrUpdate'])->name('create_update'); 
+            // Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit'); 
+            // Route::get('/delete/{id}', [UserController::class, 'destroy'])->name('delete'); 
+        });
     });
     
     Route::prefix('master-data')->name('master_data.')->group(function() {

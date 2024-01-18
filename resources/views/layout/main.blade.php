@@ -59,6 +59,14 @@
       .dataTables_wrapper .dataTables_filter input {
           background-color: white !important;
       }
+      .form-select {
+          background-color: #fff !important;
+          color: black !important;
+        }
+        .form-control {
+          background-color: #fff !important;
+          color: black !important;
+        }
     </style>
     @yield('css')
   </head>
