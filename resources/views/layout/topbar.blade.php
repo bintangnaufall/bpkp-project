@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
-    <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+<nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0 shadow-lg">
+    <a href="{{ route('dashboard')}}" class="navbar-brand d-flex d-lg-none me-4">
       <h2 class="text-white mb-0"><img
             class="me-2"
             src="{{ asset('img/bpkp_logo.png')}}"

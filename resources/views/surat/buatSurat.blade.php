@@ -76,7 +76,7 @@
             vertical-align: middle;
             cursor: pointer;
             user-select: none;
-            background-color: #cf3030;
+            background-color: #0dcaf0;
             border: 1px solid transparent;
             padding: 0.375rem 0.75rem;
             font-size: 1rem;
@@ -92,14 +92,14 @@
 @endsection
 
 @section('navtop') 
-<a href="#" class="ml-3">Buat Surat</a>
-<a href="#" class="mx-3">Disposisi Surat</a>
-<a href="#">Arsip</a>
+<a href="#" class="ml-3 text-white">Buat Surat</a>
+<a href="#" class="mx-3 text-white">Disposisi Surat</a>
+<a href="#" class="text-white">Arsip</a>
 @endsection
 
 @section('content')
 <div class="container-fluid pt-4 px-4">
-    <div class="bg-secondary text-center rounded p-4">
+    <div class="bg-white text-center rounded p-4 shadow-lg">
       <div class="d-flex align-items-center justify-content-between mb-4">
         <h1 class="mb-0">Pembuatan Surat Penugasan</h1>
       </div>
@@ -110,7 +110,7 @@
             <div class="line h-100"></div>
           </div>
           <div class="container">
-            <h5 class="text-white">Formulir Surat</h5>
+            <h5 class="">Formulir Surat</h5>
 {{-- -------------------------------------------------------------------------------identitas Surat-----------------------------------------------}}
             <h6>*Identitas Surat</h6>
             <form action="javascript:void(0)">
@@ -186,7 +186,7 @@
                       <div class="input-group">
                         <input type="text" class="form-control" placeholder="NIP">
                         <div class="input-group-append">
-                          <button class="btn-1 btn-primary" type="button">
+                          <button class="btn-1 btn-info" type="button">
                             <i class="fa fa-search"></i>
                           </button>
                         </div>
@@ -217,7 +217,7 @@
           <div>
             <div class="container">
               <h5 class="text-white">Bentuk Surat</h5>
-              <button id="show_layout" class="btn btn-primary"><i class="bi bi-info-square"></i>  Layout Surat</button>
+              <button id="show_layout" class="btn btn-info"><i class="bi bi-info-square"></i>  Layout Surat</button>
               <button id="show_preview" class="btn btn-success"><i class="bi bi-eye"></i>  Preview Surat</button>
             </div>
           </div>
