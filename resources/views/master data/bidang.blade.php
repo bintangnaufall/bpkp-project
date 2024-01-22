@@ -51,7 +51,7 @@
 <div class="container-fluid pt-4 px-4">
     <div class="bg-secondary text-center rounded p-4">
       <div class="d-flex align-items-center justify-content-between mb-4">
-        <h6 class="mb-0">Data Bidang</h6>
+        <h6 class="mb-0 text-white">Data Bidang</h6>
         <a href="javascript:void(0)" class="btn btn-primary mb-2" id="newBidang">
           Tambah Data
         </a>

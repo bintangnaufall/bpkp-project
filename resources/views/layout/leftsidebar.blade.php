@@ -2,7 +2,12 @@
     <nav class="navbar bg-secondary navbar-dark">
       <a href="{{ route('dashboard')}}" class="navbar-brand mx-4 mb-3">
         <h3 class="text-white">
-          <i class="fa fa-user-edit me-2"></i>BPKP Kalbar
+          <img
+            class="me-2"
+            src="{{ asset('img/bpkp_logo.png')}}"
+            alt="bpkp"
+            style="width: 40px; height: 40px"
+          />BPKP Kalbar
         </h3>
       </a>
       <div class="d-flex align-items-center ms-4 mb-4">
@@ -16,11 +21,10 @@
           {{-- <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div> --}}
         </div>
         <div class="ms-3">
-          <h4 class="mb-0">{{ auth()->user()->name }}</h4>
+          <h4 class="mb-0 text-white">{{ auth()->user()->name }}</h4>
           <span>{{ auth()->user()->jabatan->name }}</span>
         </div>
       </div>
-      <!-- fa-laptop fa-keyboard fa-th tu mangil icon buat font awesome, kalo bootstrap bi-.. kalo tak salah -->
       <div class="navbar-nav w-100">
         <a href="{{ route('dashboard') }}" class="nav-item nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
           <i class="fa fa-tachometer-alt me-2"></i>

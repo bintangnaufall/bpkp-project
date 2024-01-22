@@ -104,7 +104,7 @@
                 </span>
               </div>
             </div>
-            <button type="button" class="btn btn-primary w-100" id="btnlogin">
+            <button type="button" class="btn btn-info w-100" id="btnlogin">
               LOGIN
             </button>
           </form>
