@@ -43,7 +43,9 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('buat_surat')->name('buat_surat.')->group(function() {
             Route::get('/', [BuatSuratController::class, 'index'])->name('show'); 
             Route::post('/create-update', [BuatSuratController::class, 'storeOrUpdate'])->name('create_update'); 
-            // Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit'); 
+            Route::post('/api/fetchjabatan', [BuatSuratController::class, 'fetchjabatan'])->name('api-jabatan'); 
+            Route::post('/api/fetchnip', [BuatSuratController::class, 'fetchnip'])->name('api-nip'); 
+            Route::match(['get', 'post'], 'pdfview', [BuatSuratController::class, 'pdfview'])->name('pdfview');
             // Route::get('/delete/{id}', [UserController::class, 'destroy'])->name('delete'); 
         });
     });
