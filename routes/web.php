@@ -42,7 +42,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('surat')->name('surat.')->group(function() {
         Route::prefix('buat_surat')->name('buat_surat.')->group(function() {
             Route::get('/', [BuatSuratController::class, 'index'])->name('show'); 
-            Route::post('/create-update', [BuatSuratController::class, 'storeOrUpdate'])->name('create_update'); 
+            Route::post('/create', [BuatSuratController::class, 'store'])->name('create'); 
             Route::post('/api/fetchjabatan', [BuatSuratController::class, 'fetchjabatan'])->name('api-jabatan'); 
             Route::post('/api/fetchnip', [BuatSuratController::class, 'fetchnip'])->name('api-nip'); 
             Route::match(['get', 'post'], 'pdfview', [BuatSuratController::class, 'pdfview'])->name('pdfview');

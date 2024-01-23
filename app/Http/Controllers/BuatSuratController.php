@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\surat;
-use App\Models\jabatan;
-use Illuminate\Http\Request;
-
+use App\Models\dasaracuansurat;
 use PDF;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\surat;
+
+use App\Models\jabatan;
+use App\Models\tembusansurat;
+use App\Models\tujuansurat;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 
 class BuatSuratController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return view('surat.buatSurat',[
@@ -51,14 +52,13 @@ class BuatSuratController extends Controller
     }
 
     public function pdfview(Request $request)
-    {
-        // dd($request->tujuan_surat[0]);
+    {        
+        // dd($request->all());
         $jabatan = jabatan::find($request->jabatan_id);
 
         if ($jabatan) {
             $nama_jabatan = $jabatan->name;
         } else {
-            // Handle ketika tidak ditemukan jabatan dengan ID yang diberikan
             $nama_jabatan = "<Jabatan>";
         }
         
@@ -88,33 +88,81 @@ class BuatSuratController extends Controller
         return $pdf->stream('pdf.pdf_preview.pdf');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function store( Request $request)
     {
-        //
+        // dd($request->all());
+        $surat = new surat();
+        $surat->tanggal_surat = $request->tanggal_surat;
+        $surat->keterangan_lampiran	 = $request->lampiran_surat;
+        $surat->perihal_surat = $request->perihal_surat;
+        
+        $surat->{'alamat_instansi/pejabat'} = $request->alamat_tujuan;
+        $surat->rincian_pelaksanaan_penugasan = $request->rincian_pelaksanaan_penugasan;
+        $surat->beban_anggaran = $request->beban_anggaran;
+
+        $user = User::where("NIP" , $request->nip_pejabat)->first();
+        $surat->nama_pejabat = $user->id;
+
+        $surat->pembuat_surat = auth()->user()->id;
+
+        $jabatan = jabatan::find($request->jabatan_id);
+
+        if ($jabatan) {
+            $nama_jabatan = $jabatan->name;
+        } else {
+            $nama_jabatan = "<Jabatan>";
+        }
+        
+        $data = [
+            "nomor_surat" => $request->nomor_surat ? $request->nomor_surat : "<Nomor_Surat>",
+            "lampiran_surat" => $request->lampiran_surat ? $request->lampiran_surat : "<Lampiran_Surat>",
+            "perihal_surat" => $request->perihal_surat ? $request->perihal_surat : "<Perihal_Surat>",
+            "tanggal_surat" =>  $request->tanggal_surat ? Carbon::parse($request->tanggal_surat)->locale('id')->isoFormat('D MMMM Y') : "<Tanggal_Surat>",
+
+            "tujuan_surat" => $request->tujuan_surat,
+            "alamat_tujuan" => $request->alamat_tujuan ?? "<Alamat_Tujuan>",
+
+
+            "dasar_acuan" => $request->dasar_acuan,
+            "rincian_pelaksanaan_penugasan" => $request->rincian_pelaksanaan_penugasan ? $request->rincian_pelaksanaan_penugasan : "<Rincian_pelaksanaan_penugasan>",
+            "beban_anggaran" => $request->beban_anggaran ? $request->beban_anggaran : "<Beban_Anggaran>",
+
+
+            "Jabatan" => $nama_jabatan,
+            "nama_pejabat" => $request->nama_pejabat ? $request->nama_pejabat : "<Nama_Pejabat>",
+            "nip_pejabat" => $request->nip_pejabat ? $request->nip_pejabat : "<NIP_Pejabat>",
+
+            "tembusan_surat" => $request->tembusan_surat,
+        ];
+        $pdf = PDF::loadView('pdf.pdf_preview', compact('data'));
+
+        $pdfPath = 'public/pdf/' . uniqid() . '.pdf';
+        Storage::put($pdfPath, $pdf->output());
+
+        $surat->pdf = $pdfPath;
+        $surat->save();
+
+        foreach ($request->tujuan_surat as $tujuan) {
+            $tujuan_surat = new tujuansurat();
+            $tujuan_surat->surat_id = $surat->id;
+            $tujuan_surat->tujuan_surat	= $tujuan;
+            $tujuan_surat->save();
+        }
+        foreach ($request->dasar_acuan as $acuan) {
+            $dasar_acuan = new dasaracuansurat();
+            $dasar_acuan->surat_id = $surat->id;
+            $dasar_acuan->dasar_acuan_surat = $acuan;
+            $dasar_acuan->save();
+        }
+        foreach ($request->tembusan_surat as $tembusan) {
+            $tembusan_surat = new tembusansurat();
+            $tembusan_surat->surat_id = $surat->id;
+            $tembusan_surat->tembusan_surat = $tembusan;
+            $tembusan_surat->save();
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(surat $surat)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(surat $surat)
     {
         //

@@ -54,4 +54,11 @@ class User extends Authenticatable
     public function hak_akses(){
         return $this->belongsTo('App\Models\hakakses', 'hak_akses_id');
     }
+
+    public function nama_pejabat(){
+        return $this->hasMany('App\Models\surat');
+    }
+    public function pembuat_surat(){
+        return $this->hasMany('App\Models\surat');
+    }
 }

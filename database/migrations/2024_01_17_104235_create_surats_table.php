@@ -13,20 +13,19 @@ return new class extends Migration
     {
         Schema::create('surats', function (Blueprint $table) {
             $table->id();
+            $table->string('nomor_surat')->nullable();
             $table->date('tanggal_surat');
-            $table->string('nomor_surat');
             $table->string('keterangan_lampiran');
             $table->string('perihal_surat');
-            $table->string('instansi/pejabat_tujuan_surat');
             $table->string('alamat_instansi/pejabat');
-            $table->string('dasar_acuan_penugasan');
+            $table->string('rincian_pelaksanaan_penugasan');
             $table->string('beban_anggaran');
             $table->unsignedBigInteger('nama_pejabat');
-            $table->string('tembusan');
-            $table->boolean('e2');
-            $table->boolean('e3');
-            $table->boolean('e4');
+            $table->boolean('e2')->default(0);
+            $table->boolean('e3')->default(0);
+            $table->boolean('e4')->default(0);
             $table->unsignedBigInteger('pembuat_surat');
+            $table->string('pdf');
             $table->timestamps();
         });
     }

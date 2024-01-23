@@ -8,4 +8,44 @@ use Illuminate\Database\Eloquent\Model;
 class surat extends Model
 {
     use HasFactory;
+
+    use HasFactory;
+    protected $table="surats";
+
+
+    protected $fillable = [
+        "tanggal_surat",
+        "nomor_surat",
+        "keterangan_lampiran",
+        "perihal_surat",
+        "alamat_instansi/pejabat",
+        "rincian_pelaksanaan_penugasan",
+        "beban anggaran",
+        "nama pejabat",
+        "e2",
+        "e3",
+        "e4",
+        "pembuat_surat",
+        'pdf',
+    ];
+
+    public function tujuan_surat(){
+        return $this->hasMany('App\Models\tujuansurat');
+    }
+    public function dasar_acuan_surat(){
+        return $this->hasMany('App\Models\dasaracuansurat');
+    }
+    public function tembusan_surat(){
+        return $this->hasMany('App\Models\tembusansurat');
+    }
+    public function lampiran(){
+        return $this->hasMany('App\Models\lampiran');
+    }
+    
+    public function nama_pejabat(){
+        return $this->belongsTo('App\Models\User', 'nama_pejabat');
+    }
+    public function pembuat_surat(){
+        return $this->belongsTo('App\Models\User', 'pembuat_surat');
+    }
 }
