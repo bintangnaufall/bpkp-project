@@ -6,7 +6,7 @@
 
     <style>
         label {
-            color: white;
+            color: rgb(3, 3, 3);
         }
         table.dataTable.no-footer {
             border-bottom: 1px solid rgb(255 255 255) !important;
@@ -23,7 +23,7 @@
             color: white;
         }
         .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-            color: white !important;
+            color: rgb(0, 0, 0) !important;
         }
         .form-control {
           background-color: #fff !important;
@@ -49,15 +49,15 @@
 
 @section('content')
 <div class="container-fluid pt-4 px-4">
-    <div class="bg-secondary text-center rounded p-4">
+    <div class="bg-white text-center rounded p-4 shadow-lg">
       <div class="d-flex align-items-center justify-content-between mb-4">
         <h6 class="mb-0">Data Hak Akses</h6>
-        <a href="javascript:void(0)" class="btn btn-primary mb-2" id="newhak-akses">
+        <a href="javascript:void(0)" class="btn btn-info mb-2" id="newhak-akses">
           Tambah Data
         </a>
       </div>
       <div class="table-responsive">
-        <table id="myTable" class="table table-bordered dt-responsive nowrap table-striped"
+        <table id="myTable" class="table table-bordered dt-responsive nowrap table-striped table-light"
         width="100%">
           <thead>
             <tr class="text-white">
@@ -94,7 +94,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel" title="Batal">Batal</button>
-          <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
+          <button class="btn btn-info" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
         </div>
       </div>
     </div>
