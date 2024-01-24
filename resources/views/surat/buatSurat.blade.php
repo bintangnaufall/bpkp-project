@@ -97,8 +97,8 @@
 @endsection
 
 @section('navtop') 
-<a href="#" class="mx-3 text-white">Manajemne Surat</a>
-<a href="#" class="ml-3 text-white">Buat Surat</a>
+<a href="#" class="mx-3 {{ Request::is('*disposisi_surat') ? 'text-primary' : 'text-white' }}">Manajemen Surat</a>
+<a href="{{ route('surat.buat_surat.show') }}" class="ml-3 {{ Request::is('*buat_surat') ? 'text-primary' : 'text-white' }}">Buat Surat</a>
 <a href="#" class="mx-3 text-white">Disposisi Surat</a>
 <a href="#" class="text-white">Arsip</a>
 @endsection
@@ -238,6 +238,21 @@
                   </div>
                 </div>
               </div>
+{{-- -------------------------------------------------------------------------------isian Surat--------------------------------------------------}}
+              <div class="border-3 border p-3 rounded mb-3">
+                <h6>*Lampiran Surat</h6>
+                <div class="row" id="dynamic_form-4">
+	                <div class="form-group baru-data-4" style="margin-bottom: -25px">
+		                <div class="col-md-12">
+                      <input class="form-control" type="file" name="lampiran[]" id="formFile">
+		                </div>
+		                <div class="button-group d-flex justify-content-center mt-4 mb-3">
+		                    <button type="button" class="btn btn-success btn-tambah-4 mx-2">Tambah Isian Tembusan <i class="fa fa-plus"></i></button>
+		                    <button type="button" class="btn btn-danger btn-hapus-4" style="display:none;">Hapus <i class="fa fa-times"></i></button>
+		                </div>
+                  </div>
+                </div>
+              </div>
             </form>
         </div>
         </div>
@@ -303,6 +318,35 @@
             headers: {
             'X-CSRF-TOKEN': csrfToken
             },
+        });
+        function addFormsss() {
+          var addrow = '<div class="form-group baru-data-4" style="margin-bottom: -25px">\
+              <div class="col-md-12">\
+                <input class="form-control" type="file" name="lampiran[]" id="formFile">\
+              </div>\
+              <div class="button-group d-flex justify-content-center mt-4 mb-4">\
+                  <button type="button" class="btn btn-success btn-tambah-4 mx-2">Tambah Isian Tujuan Surat <i class="fa fa-plus"></i></button>\
+                  <button type="button" class="btn btn-danger btn-hapus-4">Hapus <i class="fa fa-times"></i></button>\
+              </div>\
+          </div>';
+          $("#dynamic_form-4").append(addrow);
+        }
+
+        $("#dynamic_form-4").on("click", ".btn-tambah-4", function () {
+            addFormsss();
+            $(".btn-hapus-4").show();
+            $(this).hide();
+        });
+
+        $("#dynamic_form-4").on("click", ".btn-hapus-4", function () {
+            $(this).closest('.baru-data-4').remove();
+            var bykrow = $(".baru-data-4").length;
+            if (bykrow === 1) {
+                $(".btn-hapus-4").hide();
+                $(".btn-tambah-4").show();
+            } else {
+                $('.baru-data-4:last .btn-hapus-4').show();
+            }
         });
         //-----dynamicform_dasar_acuan------
         function addForm() {

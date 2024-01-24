@@ -43,7 +43,6 @@ class BuatSuratController extends Controller
             return response()->json(['status' => false, 'message' => 'No data found']);
         }
     
-        // Check if the 'jabatan' relationship is loaded and has any records
         if ($data['user']->jabatan && $data['user']->jabatan->count() > 0) {
             return response()->json(['status' => true, 'data' => $data['user']]);
         } else {
@@ -53,7 +52,7 @@ class BuatSuratController extends Controller
 
     public function pdfview(Request $request)
     {        
-        // dd($request->all());
+        dd($request->all());
         $jabatan = jabatan::find($request->jabatan_id);
 
         if ($jabatan) {

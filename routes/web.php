@@ -46,7 +46,6 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/api/fetchjabatan', [BuatSuratController::class, 'fetchjabatan'])->name('api-jabatan'); 
             Route::post('/api/fetchnip', [BuatSuratController::class, 'fetchnip'])->name('api-nip'); 
             Route::match(['get', 'post'], 'pdfview', [BuatSuratController::class, 'pdfview'])->name('pdfview');
-            // Route::get('/delete/{id}', [UserController::class, 'destroy'])->name('delete'); 
         });
     });
     
