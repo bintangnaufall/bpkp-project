@@ -16,6 +16,9 @@ class UserController extends Controller
 {
     public function index( Request $request )
     {
+        if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+            abort(403);
+        }
         if ($request->ajax()) {
             $data = User::orderBy('id', 'desc')->get();
 
@@ -61,6 +64,7 @@ class UserController extends Controller
             'bidang_id' => 'required',
             'jabatan_id' => 'required',
             'hak_akses_id' => 'required',
+            'password' => ($data['action'] == 'tambah') ? 'required' : '',
         ];
 
         $message = [
@@ -71,7 +75,13 @@ class UserController extends Controller
             'bidang_id.required' => 'Bidang tidak boleh kosong',
             'jabatan_id.required' => 'Jabatan tidak boleh kosong',
             'hak_akses_id.required' => 'Hak Akses tidak boleh kosong',
+            'password.required' => 'Password tidak boleh kosong',
         ];
+
+        if ($data['hak_akses_id'] == 3) {
+            $rules['tingkatan_eselon'] = 'required';
+            $message['tingkatan_eselon.required'] = 'Tingkat Eselon tidak boleh kosong';
+        }
 
         return Validator::make($data, $rules, $message);
     }
@@ -95,33 +105,46 @@ class UserController extends Controller
                 $id = ($request->id == null) ? '' : Crypt::decryptString($request->id);
 
                 $storeOrUpdate = User::findOrNew($id);
+                
+                $isAddingNew = $id == '';
 
-                if($request->action == 'tambah') {
-                    if(User::where('NIP', $request->nip)->exists()) {
-                        return ['error' => 'Nomor NIP sudah ada'];
+                if ($isAddingNew && User::where('NIP', $request->nip)->exists()) {
+                    return ['error' => 'Nomor NIP sudah ada'];
+                }
+
+                if (!$isAddingNew) {
+                    $userWithSameNIP = User::where('NIP', $request->nip)->where('id', '<>', $id)->exists();
+                    if ($userWithSameNIP) {
+                        return ['error' => 'Nomor NIP sudah digunakan oleh pengguna lain'];
                     }
                 }
+
 
                 $storeOrUpdate->NIP = $request->nip;
                 $storeOrUpdate->name = $request->name;
                 $storeOrUpdate->bidang_id = $request->bidang_id;
                 $storeOrUpdate->jabatan_id = $request->jabatan_id;
                 $storeOrUpdate->hak_akses_id = $request->hak_akses_id;
+                if ($request->hak_akses_id == 3 ) {
+                    $storeOrUpdate->tingkatan_eselon = $request->tingkatan_eselon;
+                }
 
-                $symbols = ['!', '@', '#', '$', '%', '^', '&', '*'];
-                $randomPassword = Str::random(8) . $symbols[array_rand($symbols, 1)];
-                $encryptedPassword = bcrypt($randomPassword);
+                // $symbols = ['!', '@', '#', '$', '%', '^', '&', '*'];
+                // $randomPassword = Str::random(8) . $symbols[array_rand($symbols, 1)];
+                $encryptedPassword = bcrypt($request->password);
 
-                $storeOrUpdate->password = $encryptedPassword;
-                $storeOrUpdate->default_password = $randomPassword;
-
+                if ($request->action == 'tambah') {
+                    $storeOrUpdate->password = $encryptedPassword;
+                    $storeOrUpdate->default_password = $request->password;
+                }
+                
                 $storeOrUpdate->save();
 
                 $message = ($id == null) ? 'menambahkan' : 'mengubah';
                 return ['status' => true, 'pesan' => 'Anda berhasil '.$message.' data User'];
             }
         } catch(\Exception $e) {
-            // return dd($e);
+            return dd($e);
             return ['status' => false, 'error' => 'Terjadi kesalahan pada sistem dengan kode : 500'];
         }
     }
@@ -162,18 +185,19 @@ class UserController extends Controller
         }
     }
 
-    public function reset($id)
+    public function reset(Request $req ,$id)
     {
         try {
+            // dd($req->all());
             $id = Crypt::decryptString($id);
 
             $userToReset = User::find($id);
 
-            $symbols = ['!', '@', '#', '$', '%', '^', '&', '*'];
-            $randomKataSandi= Str::random(8) . $symbols[array_rand($symbols, 1)];
-            $encryptedKataSandi= bcrypt($randomKataSandi);
+            // $symbols = ['!', '@', '#', '$', '%', '^', '&', '*'];
+            // $randomKataSandi= Str::random(8) . $symbols[array_rand($symbols, 1)];
+            $encryptedKataSandi= bcrypt($req->password);
 
-            $userToReset->default_password = $randomKataSandi;
+            $userToReset->default_password = $req->password;
             $userToReset->password = $encryptedKataSandi;
             $userToReset->save();
 

@@ -1,64 +1,38 @@
 @extends('layout.main')
 
-@section('title', 'Users')
+@section('title', 'Buat Surat')
 
 @section('css')
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet" />
 
     <style>
-        label {
-          color: black;
+      label {
+          color: rgb(0, 0, 0);
+      }
+      .dataTables_wrapper .dataTables_filter {
+          margin-bottom: 20px;
+      } 
+      .text-center {
+          text-align: justify !important;
+      }
+      .animate__fadeInDown {
+        --animate-duration: 0.5s;
+      }
+      .form-control, .form-select {
+        border: var(--bs-border-width) solid #8693a1 !important;
+      }
+      .content .navbar .sidebar-toggler, .content .navbar .navbar-nav .nav-link i {
+        margin-right: 1.5rem;
+      }
+      .stepper {
+          .line {
+              width: 2px;
+              background-color: lightgrey !important;
+          }
+          .lead {
+              font-size: 1.1rem;
+          }
         }
-        table.dataTable.no-footer {
-            border-bottom: 1px solid rgb(255 255 255) !important;
-            border-top: 1px solid rgb(255 255 255);
-        }
-        table.dataTable {
-            border-color: white !important;
-        }
-        .dataTables_wrapper .dataTables_filter {
-            margin-bottom: 20px;
-        }
-        table.dataTable th.dt-center, table.dataTable td.dt-center, table.dataTable td.dataTables_empty 
-        {
-            color: white;
-        }
-        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-            color: white !important;
-        }
-        .text-center {
-            text-align: justify !important;
-        }
-        td {
-          color: #fff;  
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-          border: 1px solid rgb(255 255 255);
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-          border: 1px solid #f8f8f84e;
-        }
-        .dataTables_wrapper .dataTables_length select {
-          background-color: rgba(26, 20, 20, 0.521) !important;
-          color: white;
-        }
-        table.dataTable.display tbody tr.even>.sorting_1, table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
-            background-color: #191C24 !important;
-        }
-        .content .navbar .sidebar-toggler, .content .navbar .navbar-nav .nav-link i {
-            margin-right: 1.5rem;
-        }
-        .stepper {
-            .line {
-                width: 2px;
-                background-color: lightgrey !important;
-            }
-            .lead {
-                font-size: 1.1rem;
-            }
-        }
-        /* .pr-4 {
-            padding-right: 0.5rem;
-        } */
         input:disabled {
             background-color: #c6c6c6 !important; /* Warna abu-abu */
             color: #ffffff; /* Warna teks yang sesuai */
@@ -71,12 +45,11 @@
             display: inline-block;
             font-weight: 400;
             line-height: 1.5;
-            color: #cdd1e6;
             text-align: center;
             vertical-align: middle;
             cursor: pointer;
             user-select: none;
-            background-color: #0dcaf0;
+            background-color: #0d73f0;
             border: 1px solid transparent;
             padding: 0.375rem 0.75rem;
             font-size: 1rem;
@@ -93,38 +66,95 @@
             max-width: 830px  !important;
           }
         }
+        .button {
+          color: rgb(255, 255, 255);
+          transition: color 0.25s, border-color 1s;
+          text-decoration: none;
+        }
+        .button {
+          background: none;
+          border-bottom: 2px solid;
+          font: inherit;
+          line-height: 1;
+          margin: 0.5em;
+          padding: .2em .5em;
+        }
+        .active {
+          border-color: #0d6efd;
+        }
+        .button:hover,
+        .button:focus {
+          border-color: #0d6efd;
+          color: #fff;
+        }
+        .raise:hover,
+        .raise:focus {
+          box-shadow: 0 0.5em 0.5em -0.4em rgba(0, 128, 0, 0.4);
+          transform: translateY(-0.25em);
+        }
+        a {
+          text-decoration: none;
+        }
+        .ratio-16x9 {
+            --bs-aspect-ratio: 100%;
+        }
+        .desktop-text {
+            display: inline;
+        }
+        .mobile-logo {
+            display: none;
+        }
+
+        /* CSS untuk mobile */
+        @media screen and (max-width: 768px) {
+            .desktop-text {
+                display: none;
+            }
+            .mobile-logo {
+                display: inline;
+            }
+        }
+        .ql-container {
+            height: 80%;
+        }
     </style>
 @endsection
 
 @section('navtop') 
-<a href="#" class="mx-3 {{ Request::is('*disposisi_surat') ? 'text-primary' : 'text-white' }}">Manajemen Surat</a>
-<a href="{{ route('surat.buat_surat.show') }}" class="ml-3 {{ Request::is('*buat_surat') ? 'text-primary' : 'text-white' }}">Buat Surat</a>
-<a href="#" class="mx-3 text-white">Disposisi Surat</a>
-<a href="#" class="text-white">Arsip</a>
+<a href="{{ route("surat.manajemen_surat.show") }}" class="button raise">
+  <span class="desktop-text">{{ auth()->user()->hak_akses_id == 1 ? "Manajemen Surat" : "Disposisi Surat"}}</span>
+  <span class="mobile-logo"><i class="bi bi-kanban-fill"></i></span>
+</a>
+<a href="{{ route('surat.buat_surat.show') }}" class="mx-3 button raise {{ Request::is('*buat_surat') ? 'active' : '' }}">
+  <span class="desktop-text">Buat Surat</span>
+  <span class="mobile-logo"><i class="bi bi-envelope"></i></span>
+</a>
+<a href="#" class="button raise">
+  <span class="desktop-text">Arsip</span>
+  <span class="mobile-logo"><i class="bi bi-archive"></i></span>
+</a>
 @endsection
 
 @section('content')
 <div class="container-fluid pt-4 px-4">
     <div class="bg-white text-center rounded p-4 shadow-lg">
       <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="mb-0">Pembuatan Surat Penugasan</h1>
+        <h6 class="mb-0">Pembuatan Surat Penugasan</h6>
       </div>
       <div class="stepper d-flex flex-column mt-5 ml-2">
         <div class="d-flex mb-1">
-          <div class="d-flex flex-column align-items-center">
-            {{-- <div class="rounded-circle py-2 px-3 bg-success text-white mb-1">1</div> --}}
-            {{-- <div class="line h-100"></div> --}}
-          </div>
           <div class="container">
-            <h5 class="">Formulir Surat</h5>
+            {{-- <h5 class="">Formulir Surat</h5> --}}
 {{-- -------------------------------------------------------------------------------identitas Surat-----------------------------------------------}}
         <form action="javascript:void(0)" id="form_surat" enctype="multipart/form-data">
               <div class="border-3 border p-3 rounded mb-5">
-              <h6>*Identitas Surat</h6>
+              <h4 class="mb-3">*Identitas Surat</h4>
               <div class="row mb-3">
                   <div class="col-md-6">
+                    <span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Nomor Surat Akan Di Isi Sekretaris">
                       <label for="nomor_surat">Nomor Surat</label>
                       <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" placeholder="Nomor Surat" disabled>
+                    </span>
                   </div>
                   <div class="col-md-6">
                       <label for="tanggal_surat">Tanggal Surat</label>
@@ -140,19 +170,27 @@
               <div class="row mb-3">
                   <div class="col-md-12">
                       <label for="perihal_surat">Perihal Surat</label>
-                      <textarea type="text" name="perihal_surat" id="perihal_surat" class="form-control" placeholder="Perihal Surat" rows="3"></textarea>
+                      <textarea type="text" name="perihal_surat" id="perihal_surat" class="form-control d-none" placeholder="Perihal Surat" rows="3"></textarea>
+                      <div id="editor_perihal_surat" class="perihal_surat" style="font-size: 14px;">
+                      </div>
                   </div>
               </div>
               <hr>
-              <div class="row" id="dynamic_form-3">
+              <div class="row" style="margin-top:60px;" id="dynamic_form-3">
                 <div class="form-group baru-data-3">
                   <div class="col-md-12">
                       <label for="tujuan_surat">Tujuan Surat</label>
                       <textarea id="tujuan_surat" name="tujuan_surat[]" placeholder="Tujuan Surat" class="form-control tujuan_surat" rows="3"></textarea>
                   </div>
                   <div class="button-group d-flex justify-content-center mt-2 mb-3">
-                      <button type="button" class="btn btn-success btn-tambah-3 mx-2">Tambah Isian Tujuan Surat <i class="fa fa-plus"></i></button>
-                      <button type="button" class="btn btn-danger btn-hapus-3" style="display:none;">Hapus <i class="fa fa-times"></i></button>
+                      <button type="button" class="btn btn-success btn-tambah-3 mx-2">
+                        <span class="desktop-text">Tambah Isian Tujuan Surat</span>
+                        <span class="mobile-logo"><i class="fa fa-plus"></i></span>
+                      </button>
+                      <button type="button" class="btn btn-danger btn-hapus-3" style="display:none;">
+                        <span class="desktop-text">Hapus</span>
+                        <span class="mobile-logo"><i class="fa fa-times"></i></span>
+                      </button>
                   </div>
                 </div>
               </div>
@@ -164,8 +202,8 @@
               </div>
             </div>
 {{-- -------------------------------------------------------------------------------isian Surat--------------------------------------------------}}
-              <div class="border-3 border p-3 rounded mb-3">
-                <h6>*Isian Surat</h6>
+              <div class="border-3 border p-3 rounded mb-3" style="min-height:600px;">
+                <h4 class="mb-3">*Isian Surat</h4>
                 <div class="row" id="dynamic_form">
 	                <div class="form-group baru-data">
 		                <div class="col-md-12">
@@ -173,34 +211,44 @@
 		                    <textarea id="dasar_acuan" name="dasar_acuan[]" placeholder="Dasar Acuan Penugasan" class="form-control dasar_acuan" rows="3"></textarea>
 		                </div>
 		                <div class="button-group d-flex justify-content-center mt-2 mb-3">
-		                    <button type="button" class="btn btn-success btn-tambah mx-2">Tambah Isian Dasar Acuan <i class="fa fa-plus"></i></button>
-		                    <button type="button" class="btn btn-danger btn-hapus" style="display:none;">Hapus <i class="fa fa-times"></i></button>
+		                    <button type="button" class="btn btn-success btn-tambah mx-2">
+                          <span class="desktop-text">Tambah Dasar Acuan Surat</span>
+                          <span class="mobile-logo"><i class="fa fa-plus"></i></span>
+                        </button>
+		                    <button type="button" class="btn btn-danger btn-hapus" style="display:none;">
+                          <span class="desktop-text">Hapus</span>
+                          <span class="mobile-logo"><i class="fa fa-times"></i></span>
+                        </button>
 		                </div>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-md-12">
                       <label for="rincian_pelaksanaan_penugasan">Rincian Pelaksanaan Penugasan</label>
-                      <textarea type="text" name="rincian_pelaksanaan_penugasan" id="rincian_pelaksanaan_penugasan" class="form-control" placeholder="kami....." rows="3"></textarea>
+                      <textarea type="text" name="rincian_pelaksanaan_penugasan" id="rincian_pelaksanaan_penugasan" class="form-control d-none" placeholder="kami....." rows="3"></textarea>
+                      <div id="editor_rincian_pelaksanaan_penugasan" class="rincian_pelaksanaan_penugasan" style="font-size: 14px;">
+                      </div>
                   </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row mb-3" style="margin-top: 80px;">
                   <div class="col-md-12">
                       <label for="beban_anggaran">Beban Anggaran</label>
-                      <textarea type="text" name="beban_anggaran" id="beban_anggaran" class="form-control" placeholder="Beban Anggaran" rows="3"></textarea>
+                      <textarea type="text" name="beban_anggaran" id="beban_anggaran" class="form-control d-none" placeholder="Beban Anggaran" rows="3"></textarea>
+                      <div id="editor_beban_anggaran" class="beban_anggaran" style="font-size: 14px;">
+                      </div>
                   </div>
                 </div>
               </div>
-{{----------------------------------------------------------------------------------isian Surat--------------------------------------------------}}
+{{----------------------------------------------------------------------------------Penandatangan Surat--------------------------------------------------}}
                 <div class="border-3 border p-3 rounded mb-3">
-                  <h6>*Penandatangan Surat</h6>
+                  <h4 class="mb-3">*Penandatangan Surat</h4>
                   <div class="row mb-3">
                     <div class="col-md-12">
                       <label for="jabatan_id">Jabatan</label>
                       <select class="form-select" aria-label="Default select example" name="jabatan_id" id="jabatan_id">
                         <option value="" disabled selected hidden>Pilih Jabatan</option>
                         @foreach($jabatans as $jabatan)
-                          <option value="{{ $jabatan->id }}">{{ $jabatan->name }}</option>
+                          <option value="{{ $jabatan['id'] }}">{{ $jabatan['name'] }}</option>
                         @endforeach
                       </select>
                     </div>
@@ -215,7 +263,7 @@
                       <div class="input-group">
                         <input type="text" name="nip_pejabat"  id="nip" class="form-control" placeholder="NIP">
                         <div class="input-group-append">
-                          <button class="btn-1 btn-info" id="search_nip" type="button">
+                          <button class="btn-1 btn-primary" id="search_nip" type="button">
                             <i class="fa fa-search"></i>
                           </button>
                         </div>
@@ -223,32 +271,44 @@
                     </div>
                   </div>
                 </div>
-{{-- -------------------------------------------------------------------------------isian Surat--------------------------------------------------}}
+{{-- -------------------------------------------------------------------------------Tembusan Surat--------------------------------------------------}}
               <div class="border-3 border p-3 rounded mb-3">
-                <h6>*Tembusan Surat</h6>
+                <h4 class="mb-3">*Tembusan Surat</h4>
                 <div class="row" id="dynamic_form-2">
 	                <div class="form-group baru-data-2">
 		                <div class="col-md-12">
 		                    <textarea id="tembusan_surat" name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="3"></textarea>
 		                </div>
 		                <div class="button-group d-flex justify-content-center mt-2 mb-3">
-		                    <button type="button" class="btn btn-success btn-tambah-2 mx-2">Tambah Isian Tembusan <i class="fa fa-plus"></i></button>
-		                    <button type="button" class="btn btn-danger btn-hapus-2" style="display:none;">Hapus <i class="fa fa-times"></i></button>
+		                    <button type="button" class="btn btn-success btn-tambah-2 mx-2">
+                          <span class="desktop-text">Tambah Tembusan Surat</span>
+                          <span class="mobile-logo"><i class="fa fa-plus"></i></span>
+                        </button>
+		                    <button type="button" class="btn btn-danger btn-hapus-2" style="display:none;">
+                          <span class="desktop-text">Hapus</span>
+                        <span class="mobile-logo"><i class="fa fa-times"></i></span>
+                        </button>
 		                </div>
                   </div>
                 </div>
               </div>
-{{-- -------------------------------------------------------------------------------isian Surat--------------------------------------------------}}
+{{-- -------------------------------------------------------------------------------Lampiran Surat--------------------------------------------------}}
               <div class="border-3 border p-3 rounded mb-3">
-                <h6>*Lampiran Surat</h6>
+                <h4 class="mb-3">*Lampiran Surat</h4>
                 <div class="row" id="dynamic_form-4">
 	                <div class="form-group baru-data-4" style="margin-bottom: -25px">
 		                <div class="col-md-12">
-                      <input class="form-control" type="file" name="lampiran[]" id="formFile">
+                      <input class="form-control formFile" type="file" name="lampiran[]" id="formFile">
 		                </div>
-		                <div class="button-group d-flex justify-content-center mt-4 mb-3">
-		                    <button type="button" class="btn btn-success btn-tambah-4 mx-2">Tambah Isian Tembusan <i class="fa fa-plus"></i></button>
-		                    <button type="button" class="btn btn-danger btn-hapus-4" style="display:none;">Hapus <i class="fa fa-times"></i></button>
+		                <div class="button-group d-flex justify-content-center mt-4 mb-4">
+		                    <button type="button" class="btn btn-success btn-tambah-4 mx-2">
+                          <span class="desktop-text">Tambah Lampiran Surat</span>
+                          <span class="mobile-logo"><i class="fa fa-plus"></i></span>
+                        </button>
+		                    <button type="button" class="btn btn-danger btn-hapus-4" style="display:none;">
+                          <span class="desktop-text">Hapus</span>
+                          <span class="mobile-logo"><i class="fa fa-times"></i></span>
+                        </button>
 		                </div>
                   </div>
                 </div>
@@ -257,26 +317,23 @@
         </div>
         </div>
         <div class="d-flex mb-1">
-          <div class="d-flex flex-column pr-4 align-items-center">
-            {{-- <div class="rounded-circle py-2 px-3 bg-success text-white mb-1">2</div>
-            <div class="line h-100"></div>
-          </div> --}}
           <div>
             <div class="container">
-              <h5 class="text-white">Bentuk Surat</h5>
-              <button id="show_layout" class="btn btn-warning"><i class="bi bi-info-square"></i>  Layout Surat</button>
-              <button id="show_preview" class="btn btn-info"><i class="bi bi-eye"></i>  Preview Surat</button>
+              <button id="show_layout" class="btn btn-warning">
+                <span class="desktop-text">Layout Surat</span>
+                <span class="mobile-logo"><i class="bi bi-info-square"></i></span>
+              </button>
+              <button id="show_preview" class="btn btn-primary">
+                <span class="desktop-text">Preview Surat</span>
+                <span class="mobile-logo"><i class="bi bi-eye"></i></span>
+              </button>
             </div>
           </div>
         </div>
         <div class="d-flex mb-1">
           <div class="d-flex flex-column pr-4 align-items-center">
-            {{-- <div class="rounded-circle py-2 px-3 bg-success text-white mb-1">3</div>
-            <div class="line h-100 d-none"></div> --}}
           </div>
           <div>
-            {{-- <h5 class="text-dark">Make changes and push!</h5>
-            <p class="lead text-muted pb-3">Now make changes to your application source code, test it then commit &amp; push</p> --}}
           </div>
         </div>
       </div>
@@ -292,7 +349,24 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <iframe id="pdfViewer" src="" loading="lazy" width="800px" height="1000px"></iframe>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Preview</button>
+            </li>
+            {{-- <li class="nav-item" role="presentation">
+              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Lampiran 1</button>
+            </li> --}}
+          </ul>
+          <div class="tab-content mt-2" id="myTabContent">
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+              <div class="ratio ratio-16x9">
+                <iframe id="pdfViewer" src="" loading="lazy"></iframe>
+              </div>
+            </div>
+            {{-- <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+              <iframe id="pdfViewerlampiran1" src="" loading="lazy" width="800px" height="1000px"></iframe>
+            </div> --}}
+          </div>  
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel" title="Batal" data-bs-dismiss="modal">Batal</button>
@@ -310,23 +384,75 @@
     <script src="{{ asset('assets/libs/datatables/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.11/dist/sweetalert2.all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.js"></script>
 
     <script>
+      const quill_rincian_pelaksanaan_penugasan = new Quill('#editor_rincian_pelaksanaan_penugasan', {
+        theme: 'snow'
+      });
+      const quill_perihal_surat = new Quill('#editor_perihal_surat', {
+        theme: 'snow'
+      });
+      const quill_beban_anggaran = new Quill('#editor_beban_anggaran', {
+        theme: 'snow'
+      });
+    </script>
+    
+      
+    <script>
       $(document).ready(function () {
+
+        $('.ql-formats').eq(0).remove(); 
+        $('.ql-formats').eq(3).remove(); 
+        $('.ql-formats').eq(2).remove();
+        $('.ql-formats').eq(1).remove();
+        $('.ql-formats').eq(4).remove();
+
+        $('.ql-header.ql-picker').empty();
+        $('.ql-clean').remove();
+        $('.ql-list').remove();
+        $('.ql-link').remove();
+
+
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+        let pdfLinks = [];
+        // let currentIndex = 0;
+
+        $(document).on("change", ".formFile", function(event) {
+          const file = event.target.files[0];
+          const reader = new FileReader();
+
+          reader.onload = function(event) {
+            const pdfUrl = event.target.result;
+            pdfLinks.push(pdfUrl);
+          };
+
+          reader.readAsDataURL(file);
+        });
+        
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
         $.ajaxSetup({
             headers: {
             'X-CSRF-TOKEN': csrfToken
             },
         });
+        
         function addFormsss() {
           var addrow = '<div class="form-group baru-data-4" style="margin-bottom: -25px">\
               <div class="col-md-12">\
-                <input class="form-control" type="file" name="lampiran[]" id="formFile">\
+                <input class="form-control formFile" type="file" name="lampiran[]" id="formFile">\
               </div>\
               <div class="button-group d-flex justify-content-center mt-4 mb-4">\
-                  <button type="button" class="btn btn-success btn-tambah-4 mx-2">Tambah Isian Tujuan Surat <i class="fa fa-plus"></i></button>\
-                  <button type="button" class="btn btn-danger btn-hapus-4">Hapus <i class="fa fa-times"></i></button>\
+                  <button type="button" class="btn btn-success btn-tambah-4 mx-2">\
+                    <span class="desktop-text">Tambah Lampiran Surat</span>\
+                    <span class="mobile-logo"><i class="fa fa-plus"></i></span>\
+                  </button>\
+                  <button type="button" class="btn btn-danger btn-hapus-4">\
+                    <span class="desktop-text">Hapus</span>\
+                    <span class="mobile-logo"><i class="fa fa-times"></i></span>\
+                  </button>\
               </div>\
           </div>';
           $("#dynamic_form-4").append(addrow);
@@ -334,18 +460,19 @@
 
         $("#dynamic_form-4").on("click", ".btn-tambah-4", function () {
             addFormsss();
-            $(".btn-hapus-4").show();
-            $(this).hide();
+            $(this).css("display", "none");
+            $(".btn-hapus-4").css("display", "none");
+            $(".baru-data-4:last .btn-hapus-4").show();
         });
 
         $("#dynamic_form-4").on("click", ".btn-hapus-4", function () {
-            $(this).closest('.baru-data-4').remove();
+          $(this).closest('.baru-data-4').remove();
+            $(".baru-data-4:last .btn-tambah-4").show(); 
             var bykrow = $(".baru-data-4").length;
-            if (bykrow === 1) {
-                $(".btn-hapus-4").hide();
-                $(".btn-tambah-4").show();
+            if (bykrow == 1) {
+                $(".btn-hapus-4").css("display", "none");
             } else {
-                $('.baru-data-4:last .btn-hapus-4').show();
+                $('.baru-data-4:last .btn-hapus-4').css("display", "");
             }
         });
         //-----dynamicform_dasar_acuan------
@@ -355,8 +482,14 @@
                     <textarea name="dasar_acuan[]"" placeholder="Dasar Acuan Penugasan" class="form-control dasar_acuan" rows="3"></textarea>\
                 </div>\
                 <div class="button-group d-flex justify-content-center mt-2 mb-3">\
-                    <button type="button" class="btn btn-success btn-tambah mx-2">Tambah Isian Dasar Acuan <i class="fa fa-plus"></i></button>\
-                    <button type="button" class="btn btn-danger btn-hapus">Hapus <i class="fa fa-times"></i></button>\
+                    <button type="button" class="btn btn-success btn-tambah mx-2">\
+                      <span class="desktop-text">Tambah Dasar Acuan Surat</span>\
+                      <span class="mobile-logo"><i class="fa fa-plus"></i></span>\
+                    </button>\
+                    <button type="button" class="btn btn-danger btn-hapus">\
+                      <span class="desktop-text">Hapus</span>\
+                      <span class="mobile-logo"><i class="fa fa-times"></i></span>\
+                    </button>\
                 </div>\
             </div>';
             $("#dynamic_form").append(addrow);
@@ -387,8 +520,14 @@
                     <textarea name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control" rows="3"></textarea>\
                 </div>\
                 <div class="button-group d-flex justify-content-center mt-2 mb-3">\
-                    <button type="button" class="btn btn-success btn-tambah-2 mx-2">Tambah Isian Tembusan <i class="fa fa-plus"></i></button>\
-                    <button type="button" class="btn btn-danger btn-hapus-2">Hapus <i class="fa fa-times"></i></button>\
+                    <button type="button" class="btn btn-success btn-tambah-2 mx-2">\
+                      <span class="desktop-text">Tambah Tembusan Surat</span>\
+                      <span class="mobile-logo"><i class="fa fa-plus"></i></span>\
+                    </button>\
+                    <button type="button" class="btn btn-danger btn-hapus-2">\
+                      <span class="desktop-text">Hapus</span>\
+                      <span class="mobile-logo"><i class="fa fa-times"></i></span>\
+                    </button>\
                 </div>\
             </div>';
             $("#dynamic_form-2").append(addrow);
@@ -419,8 +558,14 @@
                     <textarea name="tujuan_surat[]" placeholder="Tujuan Surat" class="form-control tujuan_surat" rows="3"></textarea>\
                 </div>\
                 <div class="button-group d-flex justify-content-center mt-3 mb-3">\
-                    <button type="button" class="btn btn-success btn-tambah-3 mx-2">Tambah Isian Tujuan Surat <i class="fa fa-plus"></i></button>\
-                    <button type="button" class="btn btn-danger btn-hapus-3">Hapus <i class="fa fa-times"></i></button>\
+                    <button type="button" class="btn btn-success btn-tambah-3 mx-2">\
+                      <span class="desktop-text">Tambah Isian Tujuan Surat</span>\
+                      <span class="mobile-logo"><i class="fa fa-plus"></i></span>\
+                    </button>\
+                    <button type="button" class="btn btn-danger btn-hapus-3">\
+                      <span class="desktop-text">Hapus</span>\
+                      <span class="mobile-logo"><i class="fa fa-times"></i></span>\
+                    </button>\
                 </div>\
             </div>';
             $("#dynamic_form-3").append(addrow);
@@ -513,6 +658,16 @@
 
         $("#show_preview").click( function () {
 
+
+          var editorContentPenugasan = $('#editor_rincian_pelaksanaan_penugasan p').html();
+          $("#rincian_pelaksanaan_penugasan").val(editorContentPenugasan);
+          
+          var editorContentPerihal = $('#editor_perihal_surat p').html();
+          $("#perihal_surat").val(editorContentPerihal);
+
+          var editorContentAnggaran = $('#editor_beban_anggaran p').html();
+          $("#beban_anggaran").val(editorContentAnggaran);    
+
           var tanggal_surat = $("#tanggal_surat").val();
           var lampiran_surat = $("#lampiran_surat").val();
           var perihal_surat = $("#perihal_surat").val();
@@ -524,8 +679,20 @@
           var jabatan_id = $("#jabatan_id").val();
           var nama_pejabat = $("#nama_pejabat").val();
           var nip = $("#nip").val();
-          var tembusan_surat = $("#tembusan_surat").val();
+          var tembusan_surat = $("#tembusan_surat").val();        
 
+          $("#myTab").empty();
+          $("#myTabContent").empty();
+
+          $("#myTab").append(`<li class="nav-item" role="presentation">
+              <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview-tab-pane" type="button" role="tab" aria-controls="preview-tab-pane" aria-selected="true">Preview</button>
+          </li>`);
+
+          $("#myTabContent").append(`<div class="tab-pane fade show active" id="preview-tab-pane" role="tabpanel" aria-labelledby="preview-tab" tabindex="0">
+            <div class="ratio ratio-16x9">
+                <iframe id="pdfViewer" src="" loading="lazy"></iframe>
+              </div>
+          </div>`);
           if (
               tanggal_surat === "" ||
               lampiran_surat === "" ||
@@ -537,8 +704,7 @@
               beban_anggaran === "" ||
               jabatan_id === "" ||
               nama_pejabat === "" ||
-              nip === "" ||
-              tembusan_surat === ""
+              nip === ""
           ) {
             Swal.fire({
                 title: 'error',
@@ -549,13 +715,13 @@
             });
           } else {
 
-            $("#ModalPDf").modal("show");
             $("#pdfViewer").attr("src", "");
             $("#labelModal").html('Preview Surat');
             $("#saveButton").css("display", "block");
             $(".btnCancel").css("display", "block");
 
             var form = document.getElementById('form_surat');
+
 
             Swal.fire({
                 title: 'Loading',
@@ -575,15 +741,47 @@
               processData: false,
               success: function(response) {
                 $("#pdfViewer").attr("src", '{{ route('surat.buat_surat.pdfview') }}?' + new URLSearchParams(new FormData(form)).toString());
+                $("#ModalPDf").modal("show");
                 Swal.close();
-          
-               
+                var linkpdf = $(".formFile").val();
+                
+                if (linkpdf.length > 0) {
+                  $.ajax({
+                      url: '{{ route('surat.buat_surat.pdf') }}',
+                      type: "post",
+                      data: new FormData(form),
+                      contentType: false,
+                      cache: false,
+                      processData: false,
+                      success: function (response) {
+                        $("#myTab").append(response.map(function (res, index) {
+                            return `<li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="lampiran-tab-${index}" data-bs-toggle="tab" data-bs-target="#lampiran-tab-pane-${index}" type="button" role="tab" aria-controls="lampiran-tab-pane-${index}" aria-selected="false">Lampiran ${index + 1}</button>
+                                    </li>`;
+                        }).join(''));
+                        $("#myTabContent").append(response.map(function (res, index) {
+                            return `<div class="tab-pane fade" id="lampiran-tab-pane-${index}" role="tabpanel" aria-labelledby="lampiran-tab-${index}" tabindex="0">
+                                      <div class="ratio ratio-16x9">
+                                        <iframe id="pdfViewer${index + 1}" src="data:application/pdf;base64,${res}" loading="lazy" width="800px" height="1000px"></iframe>
+                                      </div>
+                                    </div>`;
+                        }).join('')).find('iframe').removeAttr('style');
+                      },
+                      error: function (error) {
+                          Swal.fire({
+                              title: 'Error',
+                              text: 'An error occurred',
+                              icon: 'error',
+                              confirmButtonText: 'OK'
+                          });
+                      }
+                  });
+                }
               },
               error: function(error) {
-                  console.error(error);
                   Swal.fire({
                       title: 'Error',
-                      text: 'An error occurred',
+                      text: error.responseJSON.error,
                       icon: 'error',
                       confirmButtonText: 'OK'
                   });
@@ -628,16 +826,17 @@
                     cache: false,
                     processData: false,
                     success: function(response) {
-                      Swal.fire({
-                          title: 'Berhasil!',
-                          text: "Surat berhasil Disimpan",
-                          icon: 'success',
-                          timer: 3000,
-                      });
-                      window.location.reload();
+                      setInterval(() => {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: "Surat berhasil Disimpan",
+                            icon: 'success',
+                            timer: 3000,
+                        });
+                      }, 3000);
+                      window.location.href = '/surat/disposisi_surat';
                     },
                     error: function(error) {
-                        console.error(error);
                         Swal.fire({
                             title: 'Error',
                             text: 'An error occurred',

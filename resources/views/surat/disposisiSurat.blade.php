@@ -51,9 +51,12 @@
 @endsection
 
 @section('navtop') 
-<a href="#" class="ml-3">Buat Surat</a>
-<a href="#" class="mx-3">Disposisi Surat</a>
-<a href="#">Arsip</a>
+@can("admin")
+<a href="{{ route("surat.manajemen_surat.show") }}" class="mx-3 text-white">Manajemen Surat</a>
+@endcan
+<a href="{{ route('surat.buat_surat.show') }}" class="ml-3 text-white">Buat Surat</a>
+<a href="{{ route('surat.disposisi_surat.show') }}" class="mx-3 {{ Request::is('*disposisi_surat') ? 'text-primary' : 'text-white' }}">Disposisi Surat</a>
+<a href="#" class="text-white">Arsip</a>
 @endsection
 
 @section('content')

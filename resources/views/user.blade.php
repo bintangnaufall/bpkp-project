@@ -5,69 +5,87 @@
 @section('css')
 
     <style>
-        label {
-            color: rgb(0, 0, 0);
-        }
-        table.dataTable.no-footer {
-            border-bottom: 1px solid rgb(255 255 255) !important;
-            border-top: 1px solid rgb(255 255 255);
-        }
-        table.dataTable {
-            border-color: white !important;
-        }
-        .dataTables_wrapper .dataTables_filter {
-            margin-bottom: 20px;
-        }
-        table.dataTable th.dt-center, table.dataTable td.dt-center, table.dataTable td.dataTables_empty 
-        {
-            color: white;
-        }
-        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-            color: rgb(0, 0, 0) !important;
-        }
-        .text-center {
-            text-align: justify !important;
-        }
-        td {
-          color: #fff;  
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-          border: 1px solid rgb(255 255 255);
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-          border: 1px solid #f8f8f84e;
-        }
-        .dataTables_wrapper .dataTables_length select {
-          background-color: rgba(26, 20, 20, 0.521) !important;
+      label {
+          color: rgb(0, 0, 0);
+      }
+      .dataTables_wrapper .dataTables_filter {
+          margin-bottom: 20px;
+      } 
+      .text-center {
+          text-align: justify !important;
+      }
+      .animate__fadeInDown {
+        --animate-duration: 0.5s;
+      }
+      .form-control, .form-select {
+        border: var(--bs-border-width) solid #8693a1 !important;
+      }
+      .password-input-wrapper {
+        position: relative;
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+        /* table.dataTable.no-footer {
+          border-bottom: 1px solid rgb(255 255 255) !important;
+          border-top: 1px solid rgb(255 255 255);
+      } */
+      /* table.dataTable {
+          border-color: white !important;
+      } */
+      /* table.dataTable th.dt-center, table.dataTable td.dt-center, table.dataTable td.dataTables_empty 
+      {
           color: white;
-        }
-        table.dataTable.display tbody tr.even>.sorting_1, table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
-            background-color: #191C24 !important;
-        }
+      }
+      .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+          color: rgb(0, 0, 0) !important;
+      } */
+      /* td {
+        color: #fff;  
+      } */
+      /* .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        border: 1px solid rgb(255 255 255);
+      } */
+      /* .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border: 1px solid #f8f8f84e;
+      } */
+      /* .dataTables_wrapper .dataTables_length select {
+        background-color: rgba(26, 20, 20, 0.521) !important;
+        color: white;
+      } */
+      /* table.dataTable.display tbody tr.even>.sorting_1, table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
+          background-color: #191C24 !important;
+      } */
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
 @endsection
 
 @section('content')
 <div class="container-fluid pt-4 px-4">
     <div class="bg-white shadow-lg text-center rounded p-4">
-      <div class="d-flex align-items-center justify-content-between mb-4">
-        <h6 class="mb-0">Data User</h6>
-        <a href="javascript:void(0)" class="btn btn-info mb-2" id="newUser">
+      <div class="justify-content-between">
+        <h3 class="mb-0">Data User</h3>
+        <a href="javascript:void(0)" class="btn btn-primary my-3" id="newUser">
           Tambah Data
         </a>
       </div>
-      <div class="table-responsive">
-        <table id="myTable" class="table table-bordered dt-responsive display responsive nowrap table-striped table-light"
-        width="100%">
+      <div>
+        <table id="myTable" class="table table-striped table-hover border responsive nowrap"  width="100%">
           <thead>
-            <tr class="text-white">
+            <tr>
               <th scope="col"  class="col-md-2">#</th>
               <th scope="col"  class="col-md-6">NIP</th>
               <th scope="col"  class="col-md-6">Nama User</th>
-              <th scope="col"  class="col-md-6">Default Password</th>
               <th scope="col"  class="col-md-6">Bidang</th>
               <th scope="col"  class="col-md-6">Jabatan</th>
               <th scope="col"  class="col-md-6">Hak Akses</th>
+              <th scope="col"  class="col-md-6">Default Password</th>
               <th scope="col"  class="col-md-4">Aksi</th>
             </tr>
           </thead>
@@ -91,41 +109,73 @@
           <form method="POST" id="userForm" action="javascript:void(0)">
             <input type="hidden" name="id" id="id">
             <input type="hidden" name="action" id="action">
-
-            <label for="name" class="col-form-label" style="color: black">NIP</label>
-            <input type="text" class="form-control" id="nip" name="nip" placeholder="Isi nomor Nip" required>
             
-            <label for="name" class="col-form-label" style="color: black">Nama User</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Isi nama User" required>
+            <div class="mb-2">
+              <label for="name" class="col-form-label" style="color: black">NIP</label>
+              <input type="text" class="form-control" id="nip" name="nip" placeholder="Isi Nomor Nip" required>
+            </div>
+            
+            <div class="mb-2">
+              <label for="name" class="col-form-label" style="color: black">Nama User</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Isi Nama User" required>
+            </div>
 
-            <label for="name" class="col-form-label" style="color: black">Bidang</label>
-            <select class="form-select" aria-label="Default select example" name="bidang_id" id="bidang">
-              <option value="" disabled selected hidden>Pilih Bidang</option>
-              @foreach($bidangs as $bidang)
-                <option value="{{ $bidang->id }}"> {{ $bidang->name }}</option>
-              @endforeach
-            </select>
+            <div class="mb-2" id="password-input">
+              <label for="password" class="col-form-label" style="color: black">
+                Password User
+              </label>
+              <div class="password-input-wrapper">
+                <input type="password" class="form-control" id="password" placeholder="Isi Passwor User" name="password" required/>
+                <span toggle="#password" class="toggle-password" onclick="togglePasswordVisibility()">
+                  <i class="bi bi-eye-fill" id="eye" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
 
-            <label for="name" class="col-form-label" style="color: black">Jabatan</label>
-            <select class="form-select" aria-label="Default select example" name="jabatan_id" id="jabatan">
-              <option value="" disabled selected hidden>Pilih Jabatan</option>
-              @foreach($jabatans as $jabatan)
-                <option value="{{ $jabatan->id }}"> {{ $jabatan->name }}</option>
-              @endforeach
-            </select>
+            <div class="mb-2">
+              <label for="name" class="col-form-label" style="color: black">Bidang</label>
+              <select class="form-select" aria-label="Default select example" name="bidang_id" id="bidang">
+                <option value="" disabled selected hidden>Pilih Bidang</option>
+                @foreach($bidangs as $bidang)
+                  <option value="{{ $bidang->id }}"> {{ $bidang->name }}</option>
+                @endforeach
+              </select>
+            </div>
 
-            <label for="name" class="col-form-label" style="color: black">Hak Akses</label>
-            <select class="form-select" aria-label="Default select example" name="hak_akses_id" id="hak_akses">
-              <option value="" disabled selected hidden>Pilih Hak Akses</option>
-              @foreach($hakakseses as $hakakses)
-                <option value="{{ $hakakses->id }}"> {{ $hakakses->name }}</option>
-              @endforeach
-            </select>
+            <div class="mb-2">
+              <label for="name" class="col-form-label" style="color: black">Jabatan</label>
+              <select class="form-select" aria-label="Default select example" name="jabatan_id" id="jabatan">
+                <option value="" disabled selected hidden>Pilih Jabatan</option>
+                @foreach($jabatans as $jabatan)
+                  <option value="{{ $jabatan->id }}"> {{ $jabatan->name }}</option>
+                @endforeach
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label for="name" class="col-form-label" style="color: black">Hak Akses</label>
+              <select class="form-select" aria-label="Default select example" name="hak_akses_id" id="hak_akses">
+                <option value="" disabled selected hidden>Pilih Hak Akses</option>
+                @foreach($hakakseses as $hakakses)
+                  <option value="{{ $hakakses->id }}"> {{ $hakakses->name }}</option>
+                @endforeach
+              </select>
+            </div>
+
+            <div class="mb-2" id="inputEselon">
+              <label for="name" class="col-form-label" style="color: black">Tingkatan Eselon</label>
+              <select class="form-select" aria-label="Default select example" name="tingkatan_eselon" id="tingkatEselon">
+                <option value="" disabled selected hidden>Pilih Tingkatan</option>
+                  <option value="2"> Tingkatan II</option>
+                  <option value="3"> Tingkatan III</option>
+                  <option value="4"> Tingkatan IV</option>
+              </select>
+            </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel" title="Batal">Batal</button>
-          <button class="btn btn-info btn-md waves-effect rounded waves-light" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
+          <button class="btn btn-primary btn-md waves-effect rounded waves-light" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
         </div>
       </div>
     </div>
@@ -142,7 +192,23 @@
 
 
     <script>
+        function togglePasswordVisibility() {
+          var passwordInput = $('#password');
+          var eyeIcon = $('#eye');
+
+          if (passwordInput.attr('type') === "password") {
+              passwordInput.attr('type', 'text');
+              eyeIcon.removeClass('bi-eye-fill');
+              eyeIcon.addClass('bi-eye-slash-fill');
+          } else {
+              passwordInput.attr('type', 'password');
+              eyeIcon.removeClass('bi-eye-slash-fill');
+              eyeIcon.addClass('bi-eye-fill');
+          }
+        }
+
         $(document).ready(function() {
+
 //---------------------------------------------------- CSRF
 
           var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -151,7 +217,6 @@
                 'X-CSRF-TOKEN': csrfToken
                 },
             });
-
 //---------------------------------------------------- Table
 
             $('#myTable').DataTable({
@@ -160,30 +225,35 @@
                 serverSide: true,
                 ajax: '{{ route("user.show") }}',
                 columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, responsivePriority: 1 },
                     { data: 'NIP', name: 'NIP' },
                     { data: 'name', name: 'name', responsivePriority: 1},
-                    { data: 'default_password', name: 'default_password' },
-                    { data: 'bidang', name: 'bidang',
-                      render: function (data, type, row) {
-                          if (type === 'display' && window.innerWidth < 768) {
-                              var match = data.match(/\((.*?)\)/);
-
-                              if (match) {
-                                  return match[0];
-                              } else {
-                                  return data.length > 20 ? data.substr(0, 20) + '...' : data;
-                              }
-                          } else {
-                              return data;
-                          }
-                      }
-                    },
-                    { data: 'jabatan', name: 'jabatan' },
+                    { data: 'bidang', name: 'bidang'},
+                    { data: 'jabatan', name: 'jabatan'},
                     { data: 'hak_akses', name: 'hak_akses' },
-                    { data: 'action', name: 'action', responsivePriority: 1}
+                    { data: 'default_password', name: 'default_password' },
+                    { data: 'action', name: 'action',  responsivePriority: 1, orderable: false, searchable: false}
+                ],
+                columnDefs: [
+                    { targets: [3], className: 'wrap' } // Apply wrap class to all columns
                 ]
             });
+
+            function handleResponsive() {
+            var isMobile = window.innerWidth <= 486;
+
+            if (isMobile) {
+              $('#myTable').removeClass('nowrap');
+            } else {
+              $('#myTable').addClass('nowrap');
+            }
+          }
+
+          handleResponsive();
+
+          $(window).resize(function() {
+            handleResponsive();
+          });
 
 //---------------------------------------------------- Tambah
 
@@ -195,9 +265,12 @@
               $('#id').val('');
               $('#nip').val('');
               $('#name').val('');
+              $('#password-input').css('display', 'block');
+              $('#password').val('');
               $('#bidang').val('');
               $('#jabatan').val('');
               $('#hak_akses').val('');
+              $('#tingkatEselon').val('');
               $("#name-error").html('');
             });
 
@@ -227,7 +300,6 @@
                         cache: false,
                         processData: false,
                         success: function (response) {
-                          // console.log(response);
                             if(response.status == true) {
                                 Swal.fire({
                                     title: "Berhasil!",
@@ -259,6 +331,19 @@
                 }, 800);
             });
 
+            $('#inputEselon').hide();
+            
+            $('#hak_akses').on('change', function() {
+              var selectedValue = $(this).val()
+
+              if (selectedValue == 3) {
+                $('#tingkatEselon').val('');
+                $('#inputEselon').removeClass('animate__animated animate__fadeOutDown').addClass('animate__animated animate__fadeInDown').show();
+              } else {
+                $('#inputEselon').removeClass('animate__animated animate__fadeInDown').addClass('animate__animated animate__fadeOutDown').hide();
+              }
+            });
+
 
 //---------------------------------------------------- Edit
 
@@ -268,6 +353,17 @@
               let id = $(this).data('id');
               let url = '{{ route('user.edit', ':id') }}';
               url = url.replace(':id', id);
+              
+              $('#password-input').css('display', 'none');
+
+              $('#Modal').modal("show");
+              $('#id').val('');
+              $('#nip').val('');
+              $('#name').val('');
+              $('#bidang').val('');
+              $('#jabatan').val('');
+              $('#hak_akses').val('');
+              $('#tingkatEselon').val('');
 
               Swal.fire({
                   title: 'Loading',
@@ -291,14 +387,19 @@
                           $('#bidang option[value="' + response.data.bidang_id + '"]').prop('selected',true);
                           $('#jabatan option[value="' + response.data.jabatan_id + '"]').prop('selected',true);
                           $('#hak_akses option[value="' + response.data.hak_akses_id + '"]').prop('selected',true);
+                          if (response.data.hak_akses_id == 3) {
+                            $('#tingkatEselon').val('');
+                            $('#inputEselon').removeClass('animate__animated animate__fadeOutDown').addClass('animate__animated animate__fadeInDown').show();
+                            $('#tingkatEselon option[value="' + response.data.tingkatan_eselon + '"]').prop('selected',true);
+                          }else {
+                            $('#inputEselon').removeClass('animate__animated animate__fadeInDown').addClass('animate__animated animate__fadeOutDown').hide();
+                          }
 
                           $('#action').val('edit');
-                          $('#Modal').modal("show");
                           $('#saveButton').text('Update');
                           $('#labelModal').text('Edit Data User');
                       },
                       error: function(error) {
-                          console.error(error);
                           Swal.fire({
                               title: 'Error',
                               text: 'An error occurred',
@@ -351,7 +452,6 @@
                             url: url,
                             type: 'GET',
                             success: function (res) {
-                              // console.log(res);
                                 if(res.status == true) {
                                     Swal.fire({
                                         title: 'Berhasil!',
@@ -382,27 +482,19 @@
               })
             });
 //---------------------------------------------------- Reset
-
             $(document).on('click', '.btnReset', function (e) {
               e.preventDefault();
               var id = $(this).data("id");
               let nama = $(this).data('name');
               Swal.fire({
-                  title: 'Yakin ?',
-                  html: '<p>Apakah anda yakin ingin mengatur ulang Sandi :</p>' +
-                      '<p><b>' + nama + '</b></p>',
-                  showCancelButton: true,
-                  confirmButtonText: 'Reset Password',
-                  icon: 'question',
-                  cancelButtonColor: '#d61c0f',
-                  confirmButtonColor: '#198754',
-                  cancelButtonText: 'Batal',
-                  customClass: {
-                      actions: 'my-actions',
-                      cancelButton: 'order-1 right-gap',
-                      confirmButton: 'order-2',
-                      denyButton: 'order-3',
-                  }
+                html: "<h3>Masukkan Password Baru Untuk</h3><h2>" + nama + "</h2>",
+                input: "password",
+                inputPlaceholder: "Masukkan password baru",
+                inputAttributes: {
+                  autocapitalize: "off"
+                },
+                showCancelButton: true,
+                confirmButtonText: "Reset Password",  
               }).then((result) => {
                   if (result.isConfirmed) {
                       let url = '{{ route('user.reset', ':id') }}';
@@ -422,8 +514,10 @@
                         $.ajax({
                             url: url,
                             type: 'POST',
+                            data: {
+                              password: result.value,
+                            },
                             success: function (res) {
-                              console.log(res);
                                 if(res.status == true) {
                                     Swal.fire({
                                         title: 'Berhasil!',

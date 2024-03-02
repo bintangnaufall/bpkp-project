@@ -203,9 +203,13 @@
                                     position: "topCenter",
                                     closeOnClick: true,
                                     onClosing: function () {
+                                      if (response.status == "admin") {
                                         window.location.href = '/dashboard';
+                                    }else {
+                                      window.location.href = '/surat/disposisi_surat';
                                     }
-                                })
+                                }
+                              })
                             } else if (response.error) {
                                 showToast("error", "Login Error", response.error);
                             }

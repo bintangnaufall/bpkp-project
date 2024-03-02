@@ -12,6 +12,9 @@ class BidangController extends Controller
 {
     public function index( Request $request )
     {
+        if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+            abort(403);
+        }
         if ($request->ajax()) {
             $data = bidang::orderBy('id', 'desc')->get();
 

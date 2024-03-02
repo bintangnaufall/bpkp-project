@@ -128,25 +128,29 @@
                 Hal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
             </td>
             <td style="width: 330px; text-align: justify;">
-                {{ $data['perihal_surat']}}
+                {!! $data['perihal_surat'] !!}
             </td>
         </tr>
     </table>
 
-    <p style="margin-left: 40px; margin-bottom: -5px">Yth.</p>
-    <table style="margin-left: 50px;">
+    {{-- <p style="margin-left: 40px; margin-bottom: -5px">Yth. </p> --}}
+    <table style="margin-left: 50px; margin-left: 40px; margin-bottom: -5px">
         <thead>
             <tr>
                 <td style="width: 10px">
-                    
+                    Yth.&nbsp;
                 </td>   
-                <td style="width: 100px">
-                    
+                <td style="width: 600px">
+                    @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) == 1)
+                        @foreach ($data['tujuan_surat'] as $index => $surat)
+                            {{$surat}}
+                        @endforeach
+                    @endif 
                 </td>   
             </tr>
         </thead>
         <tbody>
-            @if (isset($data['tujuan_surat']))
+            @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) != 1)
                 @foreach ($data['tujuan_surat'] as $index => $tujuan_surat)
                     <tr>
                         <td style="width: 10px">
@@ -161,22 +165,25 @@
         </tbody>
     </table>
 
-    <p style="margin-left: 40px; margin-bottom: -5px;">Di</p>
-    <table style="margin-left: 50px;">
+    {{-- <p style="margin-left: 40px; margin-bottom: -5px; margin-top: 10px;"></p> --}}
+    <table style="margin-left: 50px; margin-left: 40px; margin-bottom: -5px; margin-top: 10px;">
         <thead>
             <tr>
-                <td style="width: 500px">
-                    
+                <td style="width: 20px">
+                    Di
                 </td>   
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
                 <td style="width: 500px">
                     {{ $data["alamat_tujuan"] }}
                 </td>   
             </tr>
-        </tbody>
+        </thead>
+        {{-- <tbody>
+            <tr>
+                <td style="width: 500px">
+                   
+                </td>   
+            </tr>
+        </tbody> --}}
     </table>
 
     <p style="margin-left: 80px; margin-top: 20px; margin-bottom:-2px;">Berdasarkan:</p>
@@ -209,12 +216,12 @@
         </tbody>
     </table>
 
-    <p style="margin-left: 40px; text-align: justify">Kami akan {{ $data["rincian_pelaksanaan_penugasan"] }} dengan jangka waktu dan susunan tim
+    <p style="margin-left: 40px; text-align: justify">Kami akan {!! $data["rincian_pelaksanaan_penugasan"] !!} dengan jangka waktu dan susunan tim
         sebagaimana surat tugas terlampir.
     </p>
 
     <p style="margin-left: 40px; text-align: justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        Biaya perjalanan dinas sehubungan dengan penugasan ini menjadi beban {{ $data["beban_anggaran"] }}
+        Biaya perjalanan dinas sehubungan dengan penugasan ini menjadi beban {!! $data["beban_anggaran"] !!}
     </p>
 
     <p style="margin-left: 40px;  margin-bottom:30px; text-align: justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

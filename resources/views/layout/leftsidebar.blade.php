@@ -1,27 +1,17 @@
 <div class="sidebar pe-4 pb-3">
-    <nav class="navbar bg-secondary navbar-dark">
+    <nav class="navbar navbar-dark">
       <a href="{{ route('dashboard')}}" class="navbar-brand mx-4 mb-3">
         <h3 class="text-white">
-          <img
-            class="me-2"
-            src="{{ asset('img/bpkp_logo.png')}}"
-            alt="bpkp"
-            style="width: 40px; height: 40px"
-          />BPKP Kalbar
+          <img class="me-2" src="{{ asset('img/bpkp_logo.png')}}" alt="bpkp" style="width: 40px; height: 40px">
+          BPKP Kalbar
         </h3>
       </a>
       <div class="d-flex align-items-center ms-4 mb-4">
         <div class="position-relative">
-          <img
-            class="rounded-circle"
-            src="{{ asset('img/user.jpg')}}"
-            alt=""
-            style="width: 40px; height: 40px"
-          />
-          {{-- <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div> --}}
-        </div>
-        <div class="ms-3">
-          <h4 class="mb-0 text-white">{{ auth()->user()->name }}</h4>
+          <img class="rounded-circle" src="{{ asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px">
+          </div>
+        <div class="ms-3 text-white">
+          <h4 class="mb-0">{{ auth()->user()->name }}</h4>
           <span>{{ auth()->user()->jabatan->name }}</span>
         </div>
       </div>
@@ -30,10 +20,11 @@
           <i class="fa fa-tachometer-alt me-2"></i>
           Dashboard
         </a>
-        <a href="{{ route('surat.buat_surat.show') }}" class=" nav-item nav-link {{ Request::is('surat*') ? 'active' : '' }}">
+        <a href="{{ route('surat.manajemen_surat.show') }}" class=" nav-item nav-link {{ Request::is('surat*') ? 'active' : '' }}">
           <i class="fa fa-envelope" aria-hidden="true"></i>
           Surat
         </a>
+        @can('admin')
         <a href="{{ route('user.show') }}" class="nav-item nav-link {{ Request::is('user') ? 'active' : '' }}">
           <i class="fa fa-user" aria-hidden="true"></i>
           User
@@ -61,6 +52,8 @@
             </a>
           </div>
         </div>
+        @endcan
+
         {{-- <a href="#" class="nav-item nav-link"
           ><i class="fa fa-th me-2"></i>XXXX</a
         >

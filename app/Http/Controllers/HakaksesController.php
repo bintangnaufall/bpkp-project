@@ -12,6 +12,9 @@ class HakaksesController extends Controller
 {
     public function index( Request $request )
     {
+        if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+            abort(403);
+        }
         if ($request->ajax()) {
             $data = hakakses::orderBy('id', 'desc')->get();
 

@@ -41,11 +41,14 @@ class surat extends Model
     public function lampiran(){
         return $this->hasMany('App\Models\lampiran');
     }
+    public function riwayat_surat(){
+        return $this->hasMany('App\Models\RiwayatSurat');
+    }
     
     public function nama_pejabat(){
         return $this->belongsTo('App\Models\User', 'nama_pejabat');
     }
-    public function pembuat_surat(){
+    public function nama_pembuat(){
         return $this->belongsTo('App\Models\User', 'pembuat_surat');
     }
 }

@@ -5,67 +5,70 @@
 @section('css')
 
     <style>
-        label {
-            color: rgb(0, 0, 0);
-        }
-        table.dataTable.no-footer {
-            border-bottom: 1px solid rgb(255 255 255) !important;
-            border-top: 1px solid rgb(255 255 255);
-        }
-        table.dataTable {
-            border-color: white !important;
-        }
-        .dataTables_wrapper .dataTables_filter {
-            margin-bottom: 20px;
-        }
-        table.dataTable th.dt-center, table.dataTable td.dt-center, table.dataTable td.dataTables_empty 
-        {
-            color: white;
-        }
-        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-            color: rgb(0, 0, 0) !important;
-        }
-        .form-control {
-          background-color: #fff !important;
-        }
-        .text-center {
-            text-align: justify !important;
-        }
-        td {
-          color: #fff;  
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-          border: 1px solid rgb(255 255 255);
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-          border: 1px solid #f8f8f84e;
-        }
-        .dataTables_wrapper .dataTables_length select {
-          background-color: rgba(26, 20, 20, 0.521) !important;
+      label {
+          color: rgb(0, 0, 0);
+      }
+      .dataTables_wrapper .dataTables_filter {
+          margin-bottom: 20px;
+      } 
+      .text-center {
+          text-align: justify !important;
+      }
+      .animate__fadeInDown {
+        --animate-duration: 0.5s;
+      }
+      .form-control, .form-select {
+        border: var(--bs-border-width) solid #8693a1 !important;
+      }
+      /* table.dataTable.no-footer {
+          border-bottom: 1px solid rgb(255 255 255) !important;
+          border-top: 1px solid rgb(255 255 255);
+      } */
+      /* table.dataTable {
+          border-color: white !important;
+      } */
+      /* table.dataTable th.dt-center, table.dataTable td.dt-center, table.dataTable td.dataTables_empty 
+      {
           color: white;
-        }
+      }
+      .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+          color: rgb(0, 0, 0) !important;
+      } */
+      /* td {
+        color: #fff;  
+      } */
+      /* .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        border: 1px solid rgb(255 255 255);
+      } */
+      /* .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border: 1px solid #f8f8f84e;
+      } */
+      /* .dataTables_wrapper .dataTables_length select {
+        background-color: rgba(26, 20, 20, 0.521) !important;
+        color: white;
+      } */
+      /* table.dataTable.display tbody tr.even>.sorting_1, table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
+          background-color: #191C24 !important;
+      } */
     </style>
 @endsection
 
 @section('content')
 <div class="container-fluid pt-4 px-4">
     <div class="bg-white shadow-lg text-center rounded p-4">
-      <div class="d-flex align-items-center justify-content-between mb-4">
-        <h6 class="mb-0">Data Jabatan</h6>
-        <a href="javascript:void(0)" class="btn btn-info mb-2" id="newjabatan">
+      <div class="justify-content-between">
+        <h3 class="mb-0">Data Jabatan</h3>
+        <a href="javascript:void(0)" class="btn btn-primary my-3" id="newjabatan">
           Tambah Data
         </a>
       </div>
-      <div class="table-responsive">
-        <table id="myTable" class="table table-bordered dt-responsive nowrap table-striped table-light"
-        width="100%">
+      <div>
+        <table id="myTable" class="table table-striped table-hover border responsive nowrap" width="100%">
           <thead>
-            <tr class="text-white">
-              <th scope="col"  class="col-md-2">#</th>
+            <tr>
+              <th scope="col"  class="col-md-1">#</th>
               <th scope="col"  class="col-md-6">Nama Jabatan</th>
-              <th scope="col"  class="col-md-6">Kategori Jabatan</th>
-              <th scope="col"  class="col-md-4">Aksi</th>
-
+              <th scope="col"  class="col-md-5">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -91,19 +94,11 @@
 
             <label for="name" class="col-form-label" style="color: black">Nama Jabatan</label>
             <input type="text" class="form-control" id="name" name="name" placeholder="Isi nama jabatan" required>
-
-            <label for="name" class="col-form-label" style="color: black">Kategori Jabatan</label>
-            <select class="form-select" aria-label="Default select example" name="eselon" id="eselon">
-              <option value="" selected hidden disabled>Pilih Kategori Jabatan</option>
-              <option value="2">E2</option>
-              <option value="3">E3</option>
-              <option value="4">E4</option>
-            </select>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel" title="Batal">Batal</button>
-          <button class="btn btn-info" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
+          <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
         </div>
       </div>
     </div>
@@ -139,9 +134,27 @@
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'name', name: 'name' },
-                    { data: 'eselon', name: 'eselon' },
-                    { data: 'action', name: 'action' }
+                    { data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                columnDefs: [
+                    { targets: [1], className: 'wrap' } // Apply wrap class to all columns
                 ]
+            });
+
+            function handleResponsive() {
+              var isMobile = window.innerWidth <= 486;
+
+              if (isMobile) {
+                $('#myTable').removeClass('nowrap');
+              } else {
+                $('#myTable').addClass('nowrap');
+              }
+            }
+
+            handleResponsive();
+
+            $(window).resize(function() {
+              handleResponsive();
             });
 
 //---------------------------------------------------- Tambah
@@ -153,8 +166,6 @@
               $('#action').val('tambah');
               $('#id').val('');
               $('#name').val('');
-              $('#eselon').val('');
-              $("#name-error").html('');
             });
 
 //---------------------------------------------------- Submit
@@ -244,8 +255,6 @@
                           Swal.close(); 
                           $('#id').val(response.encryptedID);
                           $('#name').val(response.data.name);
-                          $('#eselon option[value="' + response.data.eselon + '"]').prop('selected',true);
-
 
                           $('#action').val('edit');
                           $('#Modal').modal("show");

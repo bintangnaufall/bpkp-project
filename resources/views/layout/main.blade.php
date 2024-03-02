@@ -27,46 +27,58 @@
     <link href="{{asset('css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet"/>
 
     <!-- Custom Bootstrap disini je-->
-    <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet" />
+    {{-- <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet" /> --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 
     <!-- Stylesheet -->
     <link href="{{asset('css/style.css')}}" rel="stylesheet" />
     <style>
-      .svg {
-          width: 35px;
-          height: 35px;
+     .svg {
+          width: 30px;
+          height: 30px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           background: var(--dark);
           border-radius: 40px;
       }
-      table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
+      .bg-dark {
+          --bs-bg-opacity: 1;
+          background-color: #191c24 !important;
+      }
+      .content .navbar .dropdown-item {
+          color: #ffffff !important;
+      }
+      body{
+          padding-right: 0 !important;
+      }
+      /* table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
         background-color: #eb1616 !important;
       }
       table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd {
-          background-color: #ffffff00 !important;
+        background-color: #ffffff00 !important;
       }
       table.dataTable.display tbody tr.odd>.sorting_1, table.dataTable.order-column.stripe tbody tr.odd>.sorting_1 {
-          background-color: #ffffff00 !important;
+        background-color: #ffffff00 !important;
       }
       .table > :not(caption) > * > * {
-          padding: 0.5rem 0.5rem;
-          background-color: #191C24;
-          border-bottom-width: 1px;
-          box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+        padding: 0.5rem 0.5rem;
+        background-color: #191C24;
+        border-bottom-width: 1px;
+        box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
       }
       .dataTables_wrapper .dataTables_filter input {
-          background-color: white !important;
+        background-color: white !important;
       }
       .form-select {
-          background-color: #fff !important;
-          color: black !important;
-        }
-        .form-control {
-          background-color: #fff !important;
-          color: black !important;
-        }
+        background-color: #fff !important;
+        color: black !important;
+      }
+      .form-control {
+        background-color: #fff !important;
+        color: black !important;
+      }  */
     </style>
     @yield('css')
   </head>
@@ -89,11 +101,13 @@
       <!-- Spinner Akhir -->
 
       <!-- Sidebar Awal -->
+      @if (auth()->user()->hak_akses_id == 1 || auth()->user()->hak_akses_id == 3)
       @include('layout.leftsidebar')
+      @endif
       <!-- Sidebar Akhir -->
 
       <!-- Konten Awal -->
-      <div class="content">
+      <div class='{{ auth()->user()->hak_akses_id != 1 && auth()->user()->hak_akses_id != 3 ? "content open" : "content" }}'>
         
         <!-- Navbar Awal -->
         @include('layout.topbar')

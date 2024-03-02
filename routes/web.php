@@ -8,6 +8,8 @@ use App\Http\Controllers\BuatSuratController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\HakaksesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ManajemenSuratController;
+use App\Http\Controllers\DisposisiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +47,17 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/create', [BuatSuratController::class, 'store'])->name('create'); 
             Route::post('/api/fetchjabatan', [BuatSuratController::class, 'fetchjabatan'])->name('api-jabatan'); 
             Route::post('/api/fetchnip', [BuatSuratController::class, 'fetchnip'])->name('api-nip'); 
+            Route::post('/pdf', [BuatSuratController::class, 'pdflink'])->name('pdf'); 
             Route::match(['get', 'post'], 'pdfview', [BuatSuratController::class, 'pdfview'])->name('pdfview');
+        });
+        Route::prefix('disposisi_surat')->name('manajemen_surat.')->group(function() {
+            Route::get('/', [ManajemenSuratController::class, 'index'])->name('show'); 
+            Route::post('/update', [ManajemenSuratController::class, 'update'])->name('update'); 
+            Route::get('/detail/{id}', [ManajemenSuratController::class, 'detail'])->name('detail'); 
+            Route::post('/change-e4/{id}', [ManajemenSuratController::class, 'e4'])->name('change_e4'); 
+            Route::post('/change-e3/{id}', [ManajemenSuratController::class, 'e3'])->name('change_e3'); 
+            Route::post('/change-e2/{id}', [ManajemenSuratController::class, 'e2'])->name('change_e2');
+            // Route::get('/edit_surat/{id}', [ManajemenSuratController::class, 'edit'])->name('edit_surat');
         });
     });
     

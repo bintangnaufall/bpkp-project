@@ -23,7 +23,7 @@ class LoginController extends Controller
         ]);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return response()->json(['success' => 'selamat datang <b>' . auth()->user()->name . '</b>']);
+            return response()->json(['success' => 'selamat datang <b>' . auth()->user()->name . '</b>', 'status' => auth()->user()->hak_akses_id == 1 ? 'admin' : 'user']);
         } 
         return response()->json(['error' => 'email atau password anda tidak valid']);
     }

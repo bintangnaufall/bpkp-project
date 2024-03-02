@@ -12,7 +12,7 @@ class lampiran extends Model
 
 
     protected $fillable = [
-        'tujuan_surat',
+        'lampiran',
         'surat_id',
     ];
 

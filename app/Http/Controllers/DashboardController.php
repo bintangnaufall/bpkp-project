@@ -11,6 +11,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        if ( auth()->user()->hak_akses->name !== 'Admin' && auth()->user()->hak_akses_id !== 3) {
+            abort(403);
+        }
         return view('dashboard');
     }
 

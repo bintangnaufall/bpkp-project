@@ -5,65 +5,70 @@
 @section('css')
 
     <style>
-        label {
-            color: rgb(0, 0, 0);
-        }
-        table.dataTable.no-footer {
-            border-bottom: 1px solid rgb(255 255 255) !important;
-            border-top: 1px solid rgb(255 255 255);
-        }
-        table.dataTable {
-            border-color: white !important;
-        }
-        .dataTables_wrapper .dataTables_filter {
-            margin-bottom: 20px;
-        }
-        table.dataTable th.dt-center, table.dataTable td.dt-center, table.dataTable td.dataTables_empty 
-        {
-            color: white;
-        }
-        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-            color: rgb(0, 0, 0) !important;
-        }
-        .form-control {
-          background-color: #fff !important;current
-        }
-        .text-center {
-            text-align: justify !important;
-        }
-        td {
-          color: #fff;  
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-          border: 1px solid rgb(255 255 255);
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-          border: 1px solid #f8f8f84e;
-        }
-        .dataTables_wrapper .dataTables_length select {
-          background-color: rgba(26, 20, 20, 0.521) !important;
+      label {
+          color: rgb(0, 0, 0);
+      }
+      .dataTables_wrapper .dataTables_filter {
+          margin-bottom: 20px;
+      } 
+      .text-center {
+          text-align: justify !important;
+      }
+      .animate__fadeInDown {
+        --animate-duration: 0.5s;
+      }
+      .form-control, .form-select {
+        border: var(--bs-border-width) solid #8693a1 !important;
+      }
+        /* table.dataTable.no-footer {
+          border-bottom: 1px solid rgb(255 255 255) !important;
+          border-top: 1px solid rgb(255 255 255);
+      } */
+      /* table.dataTable {
+          border-color: white !important;
+      } */
+      /* table.dataTable th.dt-center, table.dataTable td.dt-center, table.dataTable td.dataTables_empty 
+      {
           color: white;
-        }
+      }
+      .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+          color: rgb(0, 0, 0) !important;
+      } */
+      /* td {
+        color: #fff;  
+      } */
+      /* .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        border: 1px solid rgb(255 255 255);
+      } */
+      /* .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border: 1px solid #f8f8f84e;
+      } */
+      /* .dataTables_wrapper .dataTables_length select {
+        background-color: rgba(26, 20, 20, 0.521) !important;
+        color: white;
+      } */
+      /* table.dataTable.display tbody tr.even>.sorting_1, table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
+          background-color: #191C24 !important;
+      } */
     </style>
 @endsection
 
 @section('content')
 <div class="container-fluid pt-4 px-4">
     <div class="bg-white shadow-lg text-center rounded p-4">
-      <div class="d-flex align-items-center justify-content-between mb-4">
-        <h6 class="mb-0 text-dark">Data Bidang</h6>
-        <a href="javascript:void(0)" class="btn btn-info mb-2" id="newBidang">
+      <div class="justify-content-between">
+        <h3 class="mb-0">Data Bidang</h3>
+        <a href="javascript:void(0)" class="btn btn-primary my-3" id="newBidang">
           Tambah Data
         </a>
       </div>
-      <div class="table-responsive">
-        <table id="myTable" class="table table-bordered dt-responsive display responsive nowrap table-striped table-light"
-        width="100%">
+      <div>
+        <table id="myTable" class="table table-striped table-hover border responsive nowrap" width="100%">
           <thead>
-            <tr class="text-white">
-              <th scope="col"  class="col-md-2">#</th>
+            <tr>
+              <th scope="col"  class="col-md-1">#</th>
               <th scope="col"  class="col-md-6">Nama Bidang</th>
-              <th scope="col"  class="col-md-4">Aksi</th>
+              <th scope="col"  class="col-md-5">Aksi</th>
 
             </tr>
           </thead>
@@ -94,7 +99,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel" title="Batal">Batal</button>
-          <button class="btn btn-info" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
+          <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
         </div>
       </div>
     </div>
@@ -128,28 +133,29 @@
                 serverSide: true,
                 ajax: '{{ route("master_data.bidang.show") }}',
                 columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'name', name: 'name',
-                      render: function (data, type, row) {
-                          if (type === 'display' && window.innerWidth < 768) {
-                              // Check if the data contains parentheses
-                              var match = data.match(/\((.*?)\)/);
-
-                              // If parentheses are found, return the content within the parentheses with parentheses
-                              if (match) {
-                                  return match[0];
-                              } else {
-                                  // If no parentheses, display the original data or truncate if too long
-                                  return data.length > 20 ? data.substr(0, 20) + '...' : data;
-                              }
-                          } else {
-                              // For other types or when not on mobile, use the original data
-                              return data;
-                          }
-                      }
-                    },
-                    { data: 'action', name: 'action' }
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, responsivePriority: 1},
+                    { data: 'name', name: 'name', responsivePriority: 1, width: 10},
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ],
+                columnDefs: [
+                    { targets: [1], className: 'wrap' } // Apply wrap class to all columns
                 ]
+            });
+
+            function handleResponsive() {
+              var isMobile = window.innerWidth <= 486;
+
+              if (isMobile) {
+                $('#myTable').removeClass('nowrap');
+              } else {
+                $('#myTable').addClass('nowrap');
+              }
+            }
+
+            handleResponsive();
+
+            $(window).resize(function() {
+              handleResponsive();
             });
 
 //---------------------------------------------------- Tambah
