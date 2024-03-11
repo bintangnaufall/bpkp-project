@@ -99,7 +99,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel" title="Batal">Batal</button>
-          <button class="btn btn-info" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
+          <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" id="saveButton" data-bs-toggle="modal">Save</button>
         </div>
       </div>
     </div>

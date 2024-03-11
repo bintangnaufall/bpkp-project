@@ -11,11 +11,9 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
-    <link rel="stylesheet" href="{{asset('css/iziToast.min.css')}}">
-
     <link rel="stylesheet" href={{ asset('/css/bootstrap.min.css') }} type="text/css">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">s  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet"/>
 
@@ -86,25 +84,46 @@
           <div class="text-center pb-3 bold fw-semibold">
             Badan Pengawasan Keuangan dan Pembangunan
           </div>
-          <form id="loginForm">
+
+          @if(session()->has('loginError'))
+            <script src="{{ asset('js/iziToast.min.js') }}"></script>
+            <script>
+                iziToast.show({
+                    title: 'Login Gagal',
+                    message: "NIP atau Password anda tidak sesuai",
+                    position: 'topRight',
+                    color: 'red',
+                });
+            </script>
+          @endif
+
+          <form id="loginForm" action="/login" method="post">
+            @csrf
             <div class="mb-3">
               <label for="nip" class="form-label fw-medium">
                 NIP
               </label>
-              <input type="text" class="form-control" pattern="[0-9]" id="nip" name="nip" required/>
+              <input type="text" class="form-control block-mask" id="nip" name="nip" value="{{ old('nip') }}" autofocus/>
+              @error('nip')
+                <small style="color:red;">{{ $message }} </small>
+              @enderror
             </div>
+            
             <div class="mb-3 pb-3">
               <label for="password" class="form-label fw-medium">
                 Password
               </label>
               <div class="password-input-wrapper">
-                <input type="password" class="form-control" id="password" name="password" required/>
+                <input type="password" class="form-control" id="password" name="password" value="{{ old('password') }}"/>
+                @error('password')
+                  <small style="color:red;">{{ $message }}</small>
+                @enderror
                 <span toggle="#password" class="toggle-password" onclick="togglePasswordVisibility()">
                   <i class="bi bi-eye-fill" id="eye" aria-hidden="true"></i>
                 </span>
               </div>
             </div>
-            <button type="button" class="btn btn-info w-100" id="btnlogin">
+            <button type="submit" class="btn btn-info w-100" id="btnlogin">
               LOGIN
             </button>
           </form>
@@ -114,8 +133,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/iziToast.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js')}}"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js')}}"></script>
+    <script src="{{ asset('assets/js/forms-extras.js')}}"></script>
 
-    {{-- <script src="{{asset('js/script.js')}}"></script>   --}}
     <script>
           function togglePasswordVisibility() {
               var passwordInput = $('#password');
@@ -131,97 +152,96 @@
                   eyeIcon.addClass('bi-eye-fill');
               }
           }
+          // $(document).ready(function () {
+          //     var csrfToken = $('meta[name="csrf-token"]').attr('content');
+          //         $.ajaxSetup({
+          //             headers: {
+          //             'X-CSRF-TOKEN': csrfToken
+          //             },
+          //         });
+  
+          //         let openToasts = 0;
+  
+          //         function showToast( jenis, title, message) {   
+          //             if (openToasts < 3) {
+          //                 iziToast[jenis]({
+          //                     title: title,
+          //                     message: message,
+          //                     position: "topCenter",
+          //                     timeout: 3000,
+          //                     onOpening: function () {
+          //                         openToasts++;
+          //                     },
+          //                     onClosing: function () {
+          //                         openToasts--;
+          //                     }
+          //                 });
+          //             }
+          //         }
+  
+          //     // $('#btnlogin').click(function (e) {
+          //     //     e.preventDefault();
+  
+          //     //     var nip = $("#nip").val();
+          //     //     var password = $("#password").val();
+          //     //     var token = csrfToken;
+  
+          //     //     // if(nip.length == "") {
+          //     //     //     showToast("warning", "Oops..", "Please enter your <b>NIP</b>");
+          //     //     // } else if(password.length == "") {
+          //     //     //     showToast("warning", "Oops..", "please enter your <b>password</b>");
+          //     //     // } else if (!/^\d+$/.test(nip)) {
+          //     //     //     showToast("warning", "Oops..", "Please enter your NIP using only <b>numbers</b>");
+          //     //     //     return false;
+          //     //     // } else {
+          //     //     //   iziToast.warning({
+          //     //     //       icon: 'fas fa-spinner fa-spin',
+          //     //     //       title: 'Loading...',
+          //     //     //       message: 'Mohon Tunggu Sebentar',
+          //     //     //       position: 'topCenter',
+          //     //     //   });
 
-          $(document).ready(function () {
-              var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                  $.ajaxSetup({
-                      headers: {
-                      'X-CSRF-TOKEN': csrfToken
-                      },
-                  });
-  
-                  let openToasts = 0;
-  
-                  function showToast( jenis, title, message) {   
-                      if (openToasts < 3) {
-                          iziToast[jenis]({
-                              title: title,
-                              message: message,
-                              position: "topCenter",
-                              timeout: 3000,
-                              onOpening: function () {
-                                  openToasts++;
-                              },
-                              onClosing: function () {
-                                  openToasts--;
-                              }
-                          });
-                      }
-                  }
-  
-              $('#btnlogin').click(function (e) {
-                  e.preventDefault();
-  
-                  var nip = $("#nip").val();
-                  var password = $("#password").val();
-                  var token = csrfToken;
-  
-                  if(nip.length == "") {
-                      showToast("warning", "Oops..", "Please enter your <b>NIP</b>");
-                  } else if(password.length == "") {
-                      showToast("warning", "Oops..", "please enter your <b>password</b>");
-                  } else if (!/^\d+$/.test(nip)) {
-                      showToast("warning", "Oops..", "Please enter your NIP using only <b>numbers</b>");
-                      return false;
-                  } else {
-                    iziToast.warning({
-                        icon: 'fas fa-spinner fa-spin',
-                        title: 'Loading...',
-                        message: 'Mohon Tunggu Sebentar',
-                        position: 'topCenter',
-                    });
-
-                    setTimeout(function() {
-                      iziToast.destroy();
-                      $.ajax({
-                        url: '{{route('login')}}',
-                        type: "POST",
-                        dataType: "JSON",
-                        cache: false,
-                        data: {
-                            "nip": nip,
-                            "password": password,
-                            "_token": token
-                        },
-                        success:function(response){
-                          console.log(response);
-                            if (response.success) {
-                                iziToast.success({
-                                    title: "Login Success",
-                                    message: response.success,
-                                    timeout: 2000,
-                                    position: "topCenter",
-                                    closeOnClick: true,
-                                    onClosing: function () {
-                                      if (response.status == "admin") {
-                                        window.location.href = '/dashboard';
-                                    }else {
-                                      window.location.href = '/surat/disposisi_surat';
-                                    }
-                                }
-                              })
-                            } else if (response.error) {
-                                showToast("error", "Login Error", response.error);
-                            }
-                        },
-                        error:function(error){
-                            showToast("error", "Login Error", "something went wrong");
-                        }
-                      });
-                    },2000);
-                  }
-              });
-          });
+          //     //       // setTimeout(function() {
+          //     //         iziToast.destroy();
+          //     //         $.ajax({
+          //     //           url: '{{route('login')}}',
+          //     //           type: "POST",
+          //     //           dataType: "JSON",
+          //     //           cache: false,
+          //     //           data: {
+          //     //               "nip": nip,
+          //     //               "password": password,
+          //     //               "_token": token
+          //     //           },
+          //     //           success:function(response){
+          //     //             console.log(response);
+          //     //               if (response.success) {
+          //     //                   iziToast.success({
+          //     //                       title: "Login Success",
+          //     //                       message: response.success,
+          //     //                       timeout: 2000,
+          //     //                       position: "topCenter",
+          //     //                       closeOnClick: true,
+          //     //                       onClosing: function () {
+          //     //                         if (response.status == "admin") {
+          //     //                           window.location.href = '/dashboard';
+          //     //                       }else {
+          //     //                         window.location.href = '/surat/disposisi_surat';
+          //     //                       }
+          //     //                   }
+          //     //                 })
+          //     //               } else if (response.error) {
+          //     //                   showToast("error", "Login Error", response.error);
+          //     //               }
+          //     //           },
+          //     //           error:function(error){
+          //     //               showToast("error", "Login Error", "something went wrong");
+          //     //           }
+          //     //         });
+          //     //       // },2000);
+          //     //     // }
+          //     // });
+          // });
   </script>
   </body>
 </html>

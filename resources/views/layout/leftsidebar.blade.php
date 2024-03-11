@@ -8,11 +8,15 @@
       </a>
       <div class="d-flex align-items-center ms-4 mb-4">
         <div class="position-relative">
-          <img class="rounded-circle" src="{{ asset('img/user.jpg')}}" alt="" style="width: 40px; height: 40px">
+          @if (auth()->user()->path_image == null)
+            <img src="{{ asset('img/user.jpg')}}" alt="" class="rounded-circle" style="width: 40px; height: 40px">
+          @else
+            <img src="{{ asset(auth()->user()->path_image)}}" alt="" class="rounded-circle" style="width: 40px; height: 40px">
+          @endif
           </div>
         <div class="ms-3 text-white">
           <h4 class="mb-0">{{ auth()->user()->name }}</h4>
-          <span>{{ auth()->user()->jabatan->name }}</span>
+          <p style="font-size: 12px; color:rgb(202, 193, 193);">{{ auth()->user()->jabatan->name }}</p>
         </div>
       </div>
       <div class="navbar-nav w-100">

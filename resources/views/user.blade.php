@@ -112,7 +112,7 @@
             
             <div class="mb-2">
               <label for="name" class="col-form-label" style="color: black">NIP</label>
-              <input type="text" class="form-control" id="nip" name="nip" placeholder="Isi Nomor Nip" required>
+              <input type="text" class="form-control block-mask" id="nip" name="nip" placeholder="Isi Nomor Nip" required>
             </div>
             
             <div class="mb-2">
@@ -189,6 +189,10 @@
     <script src="{{ asset('assets/libs/datatables/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.11/dist/sweetalert2.all.js"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js')}}"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js')}}"></script>
+    <script src="{{ asset('assets/js/forms-extras.js')}}"></script>
+
 
 
     <script>
@@ -382,7 +386,12 @@
                       success: function(response) {
                           Swal.close(); 
                           $('#id').val(response.encryptedID);
-                          $('#nip').val(response.data.NIP);
+                          var nip = response.data.NIP;
+
+                          var formattedNIP = nip.slice(0, 8) + ' ' + nip.slice(8, 14) + ' ' + nip.slice(14, 15) + ' ' + nip.slice(15);
+    
+                          $('#nip').val(formattedNIP);
+                          // $('#nip').val(response.data.NIP);
                           $('#name').val(response.data.name);
                           $('#bidang option[value="' + response.data.bidang_id + '"]').prop('selected',true);
                           $('#jabatan option[value="' + response.data.jabatan_id + '"]').prop('selected',true);
@@ -420,7 +429,8 @@
               Swal.fire({
                   title: 'Yakin ?',
                   html: '<p>Apakah anda yakin ingin menghapus User :</p>' +
-                      '<p><b>' + nama + '</b></p>',
+                      '<p><b>' + nama + '</b></p>' + 
+                      '<p>Semua surat yang menyangkut dari akun ini juga akan ikut terhapus!</p>',
                   showCancelButton: true,
                   confirmButtonText: 'Hapus',
                   icon: 'question',

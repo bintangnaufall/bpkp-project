@@ -129,7 +129,7 @@
   <span class="desktop-text">Buat Surat</span>
   <span class="mobile-logo"><i class="bi bi-envelope"></i></span>
 </a>
-<a href="#" class="button raise">
+<a href="{{ route('surat.arsip_surat.show') }}" class="button raise">
   <span class="desktop-text">Arsip</span>
   <span class="mobile-logo"><i class="bi bi-archive"></i></span>
 </a>
@@ -261,7 +261,7 @@
                     <div class="col-md-6">
                       <label for="nip">NIP</label>
                       <div class="input-group">
-                        <input type="text" name="nip_pejabat"  id="nip" class="form-control" placeholder="NIP">
+                        <input type="text" name="nip_pejabat"  id="nip" class="form-control block-mask" placeholder="NIP">
                         <div class="input-group-append">
                           <button class="btn-1 btn-primary" id="search_nip" type="button">
                             <i class="fa fa-search"></i>
@@ -385,6 +385,9 @@
     <script src="{{ asset('assets/libs/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.11/dist/sweetalert2.all.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.js"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js')}}"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js')}}"></script>
+    <script src="{{ asset('assets/js/forms-extras.js')}}"></script>
 
     <script>
       const quill_rincian_pelaksanaan_penugasan = new Quill('#editor_rincian_pelaksanaan_penugasan', {
@@ -639,7 +642,10 @@
               success: function (response) {
                 if (response.status == true) {
                   $("#nama_pejabat").val(response.data[0].name);
-                  $("#nip").val(response.data[0].nip);
+                  var nip = response.data[0].nip;
+
+                  var formattedNIP = nip.slice(0, 8) + ' ' + nip.slice(8, 14) + ' ' + nip.slice(14, 15) + ' ' + nip.slice(15);
+                  $("#nip").val(formattedNIP);
                 }else {
                   $("#nama_pejabat").val('');
                   $("#nip").val('');

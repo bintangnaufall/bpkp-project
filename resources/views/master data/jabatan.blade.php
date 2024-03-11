@@ -283,7 +283,8 @@
               Swal.fire({
                   title: 'Yakin ?',
                   html: '<p>Apakah anda yakin ingin menghapus Jabatan :</p>' +
-                      '<p><b>' + nama + '</b></p>',
+                      '<p><b>' + nama + '</b></p>' +
+                      '<p>Semua akun yang memiliki jabatan ini juga akan terhapus!</p>',
                   showCancelButton: true,
                   confirmButtonText: 'Hapus',
                   icon: 'question',

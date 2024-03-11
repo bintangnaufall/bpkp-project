@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\user;
+use App\Models\surat;
 use App\Models\jabatan;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -49,59 +51,88 @@ class JabatanController extends Controller
     public function storeOrUpdate( Request $request)
     {
         try {
-            $validator = $this->validator($request->all());
-
-            if ($validator->fails()) {
-                $errors = null;
-                $j = 0;
-                foreach ($validator->getMessageBag()->toArray() as $key => $error) {
-                    foreach ($error as $key => $pesan_error) {
-                        $errors .=  ($j + 1) . '. ' . $pesan_error . '</br>';
+            if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+                abort(403);
+            }else {
+                $validator = $this->validator($request->all());
+    
+                if ($validator->fails()) {
+                    $errors = null;
+                    $j = 0;
+                    foreach ($validator->getMessageBag()->toArray() as $key => $error) {
+                        foreach ($error as $key => $pesan_error) {
+                            $errors .=  ($j + 1) . '. ' . $pesan_error . '</br>';
+                        }
+                        $j++;
                     }
-                    $j++;
-                }
-                return ['error' => $errors];
-            } else {
-                $id = ($request->id == null) ? '' : Crypt::decryptString($request->id);
-
-                $storeOrUpdate = jabatan::findOrNew($id);
-
-                if($request->action == 'tambah') {
-                    if(jabatan::where('name', $request->name)->exists()) {
-                        return ['error' => 'Nama Jabatan sudah ada'];
+                    return ['error' => $errors];
+                } else {
+                    $id = ($request->id == null) ? '' : Crypt::decryptString($request->id);
+    
+                    $storeOrUpdate = jabatan::findOrNew($id);
+    
+                    if($request->action == 'tambah') {
+                        if(jabatan::where('name', $request->name)->exists()) {
+                            return ['error' => 'Nama Jabatan sudah ada'];
+                        }
                     }
+    
+                    $storeOrUpdate->name = $request->name;
+                    $storeOrUpdate->save();
+    
+                    $message = ($id == null) ? 'menambahkan' : 'mengubah';
+                    return ['status' => true, 'pesan' => 'Anda berhasil '.$message.' data Jabatan'];
                 }
-
-                $storeOrUpdate->name = $request->name;
-                $storeOrUpdate->save();
-
-                $message = ($id == null) ? 'menambahkan' : 'mengubah';
-                return ['status' => true, 'pesan' => 'Anda berhasil '.$message.' data Jabatan'];
             }
         } catch(\Exception $e) {
-            // return dd($e);
             return ['status' => false, 'error' => 'Terjadi kesalahan pada sistem dengan kode : 500'];
         }
     }
 
     public function edit($id)
     {
-        $id = Crypt::decryptString($id);
-
-        $jabatan = jabatan::find($id);
-        $encryptedID = Crypt::encryptString($jabatan->id);
-
-        $jabatan->makeHidden(['id', 'created_at', 'updated_at']);
-        return ['data' => $jabatan, 'encryptedID' => $encryptedID];
+        if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+            abort(403);
+        }else {
+            $id = Crypt::decryptString($id);
+    
+            $jabatan = jabatan::find($id);
+            $encryptedID = Crypt::encryptString($jabatan->id);
+    
+            $jabatan->makeHidden(['id', 'created_at', 'updated_at']);
+            return ['data' => $jabatan, 'encryptedID' => $encryptedID];
+        }
     }
 
     public function destroy($id)
     {
         try {
-            $id = Crypt::decryptString($id);
-            $hapus = jabatan::where('id', $id)->delete();
+            if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+                abort(403);
+            }else {
+                $id = Crypt::decryptString($id);
+                $jabatan = Jabatan::find($id);
 
-            return ['status' => true, 'pesan' => 'Anda berhasil menghapus data Jabatan'];
+                if ($jabatan) {
+                    $users = User::where('jabatan_id', $jabatan->id)->get();
+
+                    if ($users->isNotEmpty()) {
+                        foreach ($users as $user) {
+                            // Delete related records in the 'surat' table
+                            Surat::where('pembuat_surat', $user->id)->delete();
+                            Surat::where('nama_pejabat', $user->id)->delete();
+
+                            // Delete the user
+                            $user->delete();
+                        }
+                    }
+
+                    // Delete the jabatan
+                    $jabatan->delete();
+
+                    return ['status' => true, 'pesan' => 'Anda berhasil menghapus data Jabatan'];
+                }
+            }
         } catch(\Exception $e) {
             return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];
         }

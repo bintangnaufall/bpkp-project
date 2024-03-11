@@ -137,7 +137,7 @@
   <span class="desktop-text">Buat Surat</span>
   <span class="mobile-logo"><i class="bi bi-envelope"></i></span>
 </a>
-<a href="#" class="button raise">
+<a href="{{ route('surat.arsip_surat.show') }}" class="button raise">
   <span class="desktop-text">Arsip</span>
   <span class="mobile-logo"><i class="bi bi-archive"></i></span>
 </a>
@@ -169,6 +169,19 @@
       </div>
     </div>
   </div>
+
+  @if(session()->has('loginSuccess'))
+    <link rel="stylesheet" href="{{ asset('css/iziToast.min.css') }}">
+    <script src="{{ asset('js/iziToast.min.js') }}"></script>
+    <script>
+        iziToast.show({
+            title: 'Login Berhasil',
+            message: "Selamat Datang Kembali {{ auth()->user()->name }}",
+            position: 'topRight',
+            color: 'green',
+        });
+    </script>
+  @endif
 
   <!----------------------------------------------------------Modal Detail-------------------------------------->
   <div class="modal fade" id="ModalDetail" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
@@ -1198,74 +1211,72 @@
             });
 //---------------------------------------------------- Delete
 
-            // $(document).on('click', '.btnDelete', function (e) {
-            //   e.preventDefault();
-            //   var id = $(this).data("id");
-            //   let nama = $(this).data('name');
-            //   Swal.fire({
-            //       title: 'Yakin ?',
-            //       html: '<p>Apakah anda yakin ingin menghapus User :</p>' +
-            //           '<p><b>' + nama + '</b></p>',
-            //       showCancelButton: true,
-            //       confirmButtonText: 'Hapus',
-            //       icon: 'question',
-            //       cancelButtonColor: '#d61c0f',
-            //       cancelButtonText: 'Batal',
-            //       customClass: {
-            //           actions: 'my-actions',
-            //           cancelButton: 'order-1 right-gap',
-            //           confirmButton: 'order-2',
-            //           denyButton: 'order-3',
-            //       }
-            //   }).then((result) => {
-            //       if (result.isConfirmed) {
-            //           let url = '{{ route('user.delete', ':id') }}';
-            //           url = url.replace(':id', id);
+            $(document).on('click', '.btnDelete', function (e) {
+              e.preventDefault();
+              var id = $(this).data("id");
+              Swal.fire({
+                  title: 'Yakin ?',
+                  html: '<p>Apakah anda yakin ingin menghapus Surat ?</p>',
+                  showCancelButton: true,
+                  confirmButtonText: 'Hapus',
+                  icon: 'question',
+                  cancelButtonColor: '#d61c0f',
+                  cancelButtonText: 'Batal',
+                  customClass: {
+                      actions: 'my-actions',
+                      cancelButton: 'order-1 right-gap',
+                      confirmButton: 'order-2',
+                      denyButton: 'order-3',
+                  }
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      let url = '{{ route('surat.manajemen_surat.delete', ':id') }}';
+                      url = url.replace(':id', id);
 
-            //           Swal.fire({
-            //             title: 'Loading',
-            //             html: 'Please Wait....',
-            //             allowOutsideClick: false,
-            //             showConfirmButton: false,
-            //             willOpen: () => {
-            //               swal.showLoading();
-            //             }
-            //           });
+                      Swal.fire({
+                        title: 'Loading',
+                        html: 'Please Wait....',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                          swal.showLoading();
+                        }
+                      });
 
-            //           setTimeout(function () {
-            //             $.ajax({
-            //                 url: url,
-            //                 type: 'GET',
-            //                 success: function (res) {
-            //                     if(res.status == true) {
-            //                         Swal.fire({
-            //                             title: 'Berhasil!',
-            //                             text: res.pesan,
-            //                             icon: 'success',
-            //                             confirmButtonText: 'Ok'
-            //                         });
-            //                         $('#myTable').DataTable().ajax.reload();
-            //                     } else if(res.status == false) {
-            //                         Swal.fire({
-            //                             title: 'Gagal!',
-            //                             text: res.pesan,
-            //                             icon: 'error',
-            //                             confirmButtonText: 'Ok'
-            //                         });
-            //                     }else {
-            //                         Swal.fire({
-            //                             title: 'Gagal!',
-            //                             html: res.error,
-            //                             icon: 'error',
-            //                             confirmButtonText: 'Redo'
-            //                         })
-            //                     }
-            //                 }
-            //             })
-            //           },800);
-            //       }
-            //   })
-            // });
+                      setTimeout(function () {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function (res) {
+                                if(res.status == true) {
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: res.pesan,
+                                        icon: 'success',
+                                        confirmButtonText: 'Ok'
+                                    });
+                                    $('#myTable').DataTable().ajax.reload();
+                                } else if(res.status == false) {
+                                    Swal.fire({
+                                        title: 'Gagal!',
+                                        text: res.pesan,
+                                        icon: 'error',
+                                        confirmButtonText: 'Ok'
+                                    });
+                                }else {
+                                    Swal.fire({
+                                        title: 'Gagal!',
+                                        html: res.error,
+                                        icon: 'error',
+                                        confirmButtonText: 'Redo'
+                                    })
+                                }
+                            }
+                        })
+                      },800);
+                  }
+              })
+            });
 //---------------------------------------------------- tombol batal
             $(document).on('click', '.btnCancel', function (e) {
                 $('#Modal').modal("hide");
@@ -1438,6 +1449,70 @@
                     })
 
                     let url = '{{ route('surat.manajemen_surat.change_e2', ':id') }}';
+                    url = url.replace(':id', id);
+                    setTimeout(function() {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        success: function (res) {
+                        swal.close();
+                          if (res.status == true) {
+                            Swal.fire({
+                              title: 'Berhasil!',
+                              text: res.pesan,
+                              icon: 'success',
+                              confirmButtonText: 'Ok'
+                            });
+                            $('#myTable').DataTable().ajax.reload();
+                          }else{
+                            Swal.fire({
+                              title: 'Gagal!',
+                              text: res.pesan,
+                              icon: 'error',
+                              confirmButtonText: 'Ok'
+                            });
+                          }
+                        },
+                        error: function (err) {
+                          swal.close();
+                        }
+                    });
+                  }, 800);
+                  }
+              });
+            });
+
+
+            $(document).on('click', '.btnArsip', function (e) { 
+              var id = $(this).data('id');
+              Swal.fire({
+                  title: 'Yakin ?',
+                  html: '<p>Arsipkan surat ini ?</p>',
+                  showCancelButton: true,
+                  confirmButtonText: 'Yakin',
+                  icon: 'question',
+                  cancelButtonColor: '#d61c0f',
+                  confirmButtonColor: '#198754',
+                  cancelButtonText: 'Batal',
+                  customClass: {
+                      actions: 'my-actions',
+                      cancelButton: 'order-1 right-gap',
+                      confirmButton: 'order-2',
+                      denyButton: 'order-3',
+                  }
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                    Swal.fire({
+                      title: 'Loading',
+                      html: 'Please Wait....',
+                      allowOutsideClick: false,
+                      showConfirmButton: false,
+                      willOpen: () => {
+                        swal.showLoading();
+                      }
+                    })
+
+                    let url = '{{ route('surat.manajemen_surat.arsip', ':id') }}';
                     url = url.replace(':id', id);
                     setTimeout(function() {
                     $.ajax({

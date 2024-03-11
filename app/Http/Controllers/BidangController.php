@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\surat;
 use App\Models\bidang;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -49,59 +51,85 @@ class BidangController extends Controller
     public function storeOrUpdate( Request $request)
     {
         try {
-            $validator = $this->validator($request->all());
-
-            if ($validator->fails()) {
-                $errors = null;
-                $j = 0;
-                foreach ($validator->getMessageBag()->toArray() as $key => $error) {
-                    foreach ($error as $key => $pesan_error) {
-                        $errors .=  ($j + 1) . '. ' . $pesan_error . '</br>';
+            if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+                abort(403);
+            }else {
+                $validator = $this->validator($request->all());
+    
+                if ($validator->fails()) {
+                    $errors = null;
+                    $j = 0;
+                    foreach ($validator->getMessageBag()->toArray() as $key => $error) {
+                        foreach ($error as $key => $pesan_error) {
+                            $errors .=  ($j + 1) . '. ' . $pesan_error . '</br>';
+                        }
+                        $j++;
                     }
-                    $j++;
-                }
-                return ['error' => $errors];
-            } else {
-                $id = ($request->id == null) ? '' : Crypt::decryptString($request->id);
-
-                $storeOrUpdate = bidang::findOrNew($id);
-
-                if($request->action == 'tambah') {
-                    if(bidang::where('name', $request->name)->exists()) {
-                        return ['error' => 'Nama bidang sudah ada'];
+                    return ['error' => $errors];
+                } else {
+                    $id = ($request->id == null) ? '' : Crypt::decryptString($request->id);
+    
+                    $storeOrUpdate = bidang::findOrNew($id);
+    
+                    if($request->action == 'tambah') {
+                        if(bidang::where('name', $request->name)->exists()) {
+                            return ['error' => 'Nama bidang sudah ada'];
+                        }
                     }
+    
+                    $storeOrUpdate->name = $request->name;
+                    $storeOrUpdate->save();
+    
+                    $message = ($id == null) ? 'menambahkan' : 'mengubah';
+                    return ['status' => true, 'pesan' => 'Anda berhasil '.$message.' data bidang'];
                 }
-
-                $storeOrUpdate->name = $request->name;
-                $storeOrUpdate->save();
-
-                $message = ($id == null) ? 'menambahkan' : 'mengubah';
-                return ['status' => true, 'pesan' => 'Anda berhasil '.$message.' data bidang'];
             }
         } catch(\Exception $e) {
-            // return dd($e);
             return ['status' => false, 'error' => 'Terjadi kesalahan pada sistem dengan kode : 500'];
         }
     }
 
     public function edit($id)
     {
-        $id = Crypt::decryptString($id);
-
-        $bidang = bidang::find($id);
-        $encryptedID = Crypt::encryptString($bidang->id);
-
-        $bidang->makeHidden(['id', 'created_at', 'updated_at']);
-        return ['data' => $bidang, 'encryptedID' => $encryptedID];
+        if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+            abort(403);
+        }else {
+            $id = Crypt::decryptString($id);
+    
+            $bidang = bidang::find($id);
+            $encryptedID = Crypt::encryptString($bidang->id);
+    
+            $bidang->makeHidden(['id', 'created_at', 'updated_at']);
+            return ['data' => $bidang, 'encryptedID' => $encryptedID];
+        }
     }
 
     public function destroy($id)
     {
         try {
-            $id = Crypt::decryptString($id);
-            $hapus = bidang::where('id', $id)->delete();
+            if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+                abort(403);
+            }else {
+                $id = Crypt::decryptString($id);
+                $bidang = bidang::find($id);
 
-            return ['status' => true, 'pesan' => 'Anda berhasil menghapus data bidang'];
+                if ($bidang) {
+                    $users = User::where('bidang_id', $bidang->id)->get();
+
+                    if ($users->isNotEmpty()) {
+                        foreach ($users as $user) {
+                            surat::where('pembuat_surat', $user->id)->delete();
+                            surat::where('nama_pejabat', $user->id)->delete();
+
+                            $user->delete();
+                        }
+                    }
+
+                    $bidang->delete();
+
+                    return ['status' => true, 'pesan' => 'Anda berhasil menghapus data Bidang'];
+                }
+            }
         } catch(\Exception $e) {
             return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];
         }

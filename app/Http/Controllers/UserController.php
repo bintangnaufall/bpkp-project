@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\surat;
 use App\Models\bidang;
 use App\Models\jabatan;
 use App\Models\hakakses;
@@ -45,6 +46,11 @@ class UserController extends Controller
                 $hak_akses =  $data->hak_akses->name;
                 return $hak_akses;
             })
+            ->addColumn('NIP', function ($data) {
+                $nip = $data->NIP;
+                $formattedNIP = substr($nip, 0, 8) . ' ' . substr($nip, 8, 6) . ' ' . substr($nip, 14, 1) . ' ' . substr($nip, 15, 3);
+                return $formattedNIP;
+            })
             ->rawColumns(['action'])
             ->make(true);
         }
@@ -59,7 +65,7 @@ class UserController extends Controller
     {
         $rules = [
             'id' => ($data['action'] == 'tambah') ? '' : 'required',
-            'nip' => 'required|numeric',
+            'nip' => 'required|size:21',
             'name' => 'required',
             'bidang_id' => 'required',
             'jabatan_id' => 'required',
@@ -71,7 +77,7 @@ class UserController extends Controller
             'id.required' => 'ID tidak boleh kosong',
             'name.required' => 'Nama User tidak boleh kosong',
             'nip.required' => 'NIP tidak boleh kosong',
-            'nip.numeric' => 'NIP harus berupa angka',
+            'nip.size' => 'NIP minimum harus memiliki 18 digit',
             'bidang_id.required' => 'Bidang tidak boleh kosong',
             'jabatan_id.required' => 'Jabatan tidak boleh kosong',
             'hak_akses_id.required' => 'Hak Akses tidak boleh kosong',
@@ -119,8 +125,8 @@ class UserController extends Controller
                     }
                 }
 
-
-                $storeOrUpdate->NIP = $request->nip;
+                $nip = str_replace(' ', '', $request->nip);
+                $storeOrUpdate->NIP = $nip;
                 $storeOrUpdate->name = $request->name;
                 $storeOrUpdate->bidang_id = $request->bidang_id;
                 $storeOrUpdate->jabatan_id = $request->jabatan_id;
@@ -144,41 +150,65 @@ class UserController extends Controller
                 return ['status' => true, 'pesan' => 'Anda berhasil '.$message.' data User'];
             }
         } catch(\Exception $e) {
-            return dd($e);
             return ['status' => false, 'error' => 'Terjadi kesalahan pada sistem dengan kode : 500'];
         }
     }
 
     public function edit($id)
     {
-        $id = Crypt::decryptString($id);
+        if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+            abort(403);
+        }else {
+            $id = Crypt::decryptString($id);
 
-        $user = User::find($id);
-        $encryptedID = Crypt::encryptString($user->id);
-
-        $user->makeHidden(['id', 'created_at', 'updated_at']);
-        return ['data' => $user, 'encryptedID' => $encryptedID];
+            $user = User::find($id);
+            $encryptedID = Crypt::encryptString($user->id);
+    
+            $user->makeHidden(['id', 'created_at', 'updated_at']);
+            return ['data' => $user, 'encryptedID' => $encryptedID];
+        }
     }
 
     public function destroy($id)
     {
         try {
-            $id = Crypt::decryptString($id);
+            if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+                abort(403);
+            }else {
+                $id = Crypt::decryptString($id);
 
-            $userToDelete = User::find($id);
-        
-            if ($userToDelete->jabatan_id == 1) {
-
-                $superAdminCount = User::where('jabatan_id', 1)->count();
-        
-                if ($superAdminCount == 1) {
-                    return ['status' => false, 'pesan' => 'Tidak dapat menghapus User Super Admin terakhir'];
+                $userToDelete = User::find($id);
+            
+                if ($userToDelete->jabatan_id == 1) {
+    
+                    $superAdminCount = User::where('jabatan_id', 1)->count();
+            
+                    if ($superAdminCount == 1) {
+                        return ['status' => false, 'pesan' => 'Tidak dapat menghapus User Admin terakhir'];
+                    }else {
+                        $userToDelete->delete();
+                        return ['status' => true, 'pesan' => 'Anda berhasil menghapus data User'];
+                    }
                 }else {
-                    $hapus = $userToDelete->delete();
-                    return ['status' => true, 'pesan' => 'Anda berhasil menghapus data User'];
+
+                    $pembuat_surat = surat::where('pembuat_surat', $userToDelete->id)->get();
+                    if ($pembuat_surat) {
+                        $pembuat_surat->each(function ($pivot) {
+                            $pivot->delete();
+                        });
+                    }
+
+                    $pejabat_surat = surat::where('nama_pejabat', $userToDelete->id)->get();
+                    if ($pejabat_surat) {
+                        $pejabat_surat->each(function ($pivot) {
+                            $pivot->delete();
+                        });
+                    }
+
+                    $userToDelete->delete();
+                    return ['status' => true, 'pesan' => 'Anda berhasil menghapus akun'];
                 }
             }
-        
         
         } catch(\Exception $e) {
             return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];
@@ -188,21 +218,21 @@ class UserController extends Controller
     public function reset(Request $req ,$id)
     {
         try {
-            // dd($req->all());
-            $id = Crypt::decryptString($id);
+            if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+                abort(403);
+            }else {
+                $id = Crypt::decryptString($id);
 
-            $userToReset = User::find($id);
+                $userToReset = User::find($id);
 
-            // $symbols = ['!', '@', '#', '$', '%', '^', '&', '*'];
-            // $randomKataSandi= Str::random(8) . $symbols[array_rand($symbols, 1)];
-            $encryptedKataSandi= bcrypt($req->password);
+                $encryptedKataSandi= bcrypt($req->password);
 
-            $userToReset->default_password = $req->password;
-            $userToReset->password = $encryptedKataSandi;
-            $userToReset->save();
+                $userToReset->default_password = $req->password;
+                $userToReset->password = $encryptedKataSandi;
+                $userToReset->save();
 
-            return ['status' => true, 'pesan' => 'Anda berhasil mengatur ulang kata sandi'];
-        
+                return ['status' => true, 'pesan' => 'Anda berhasil mengatur ulang kata sandi'];
+            }
         } catch(\Exception $e) {
             return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];
         }

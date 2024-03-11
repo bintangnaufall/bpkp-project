@@ -25,12 +25,13 @@ class ManajemenSuratController extends Controller
         if ($request->ajax()) {
             if (auth()->user()->hak_akses->id == 1) {
 
-                $data = surat::orderBy('id', 'desc')->get();
+                $data = surat::where('is_archive', 0)->orderBy('id', 'desc')->get();
 
             }else {
 
                 $data = surat::join('users', 'surats.pembuat_surat', '=', 'users.id')
                 ->where('users.bidang_id', auth()->user()->bidang_id)
+                ->where('is_archive', 0)
                 ->orderBy('surats.id', 'desc')
                 ->get(['surats.*', 'users.id as user_id']);
 
@@ -58,11 +59,17 @@ class ManajemenSuratController extends Controller
                     // Tombol edit dinonaktifkan
                     $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit mx-2 disabled"><i class="bi bi-pencil-square"></i></a>';
                 }
-                
+
+                if ((auth()->user()->hak_akses->id == 4 || auth()->user()->hak_akses->id == 1) && $data->nomor_surat != null) {
+                    $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Arsip" class="btn btn-secondary btn-sm btnArsip"><i class="bi bi-archive-fill"></i></a>';
+                } else {
+                    $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Arsip" class="btn btn-secondary btn-sm btnArsip disabled"><i class="bi bi-archive-fill"></i></a>';
+                }
 
                 if (auth()->user()->hak_akses->name == "Admin") {
-                    $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Delete" class="btn btn-danger btn-sm btnDelete"><i class="bi bi-trash-fill"></i></a>';
-                }   
+                    $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Delete" class="btn btn-danger btn-sm btnDelete" style="margin-left:8px;"><i class="bi bi-trash-fill"></i></a>';
+                }
+
                 return $btn;
             })   
             ->addColumn('nomor_surat', function ($data) {
@@ -80,7 +87,7 @@ class ManajemenSuratController extends Controller
 
                 $bidang_pembuat = $data->nama_pembuat->bidang->name;
 
-                $result = '<p>'.$pembuat_surat . ' <br>  (' . $bidang_pembuat . ')</p>';
+                $result = '<p>'.$pembuat_surat . ' <br> <small style="font-size:10px;"> (' . $bidang_pembuat . ') </small></p>';
                 
                 return $result;
             })
@@ -140,33 +147,37 @@ class ManajemenSuratController extends Controller
     public function e2($id) 
     {
         try {
-            $id = Crypt::decryptString($id);
-
-            $surat = surat::findOrFail($id);
-
-            if ($surat->e2 == 0) {
-                $statusSurat = "Disetujui";
-                if (auth()->user()->hak_akses->name == "Admin") {
-                    $statusUSer = "Admin";
-                }else {
-                    $statusUSer = "Pejabat eselon 2";
-                }
+            if ( auth()->user()->hak_akses->name == 'Pegawai' || auth()->user()->hak_akses->name == 'Sekretaris') {
+                abort(403);
             }else {
-                $statusSurat = "Dibatalkan Pesetujuan Eselon 2";
-                $statusUSer = "Admin";
+                $id = Crypt::decryptString($id);
+    
+                $surat = surat::findOrFail($id);
+    
+                if ($surat->e2 == 0) {
+                    $statusSurat = "Disetujui";
+                    if (auth()->user()->hak_akses->name == "Admin") {
+                        $statusUSer = "Admin";
+                    }else {
+                        $statusUSer = "Pejabat eselon 2";
+                    }
+                }else {
+                    $statusSurat = "Dibatalkan Pesetujuan Eselon 2";
+                    $statusUSer = "Admin";
+                }
+    
+                $riwayat_surat = new RiwayatSurat();
+                $riwayat_surat->riwayat = "Surat Telah " . $statusSurat . " Oleh " . $statusUSer;
+                $riwayat_surat->surat_id = $surat->id;
+                $riwayat_surat->save();
+    
+                $status = $surat->e2 == 1 ? 0 : 1;
+                $surat->e2 = $status;
+                $surat->save();
+    
+                
+                return ['status' => true, 'pesan' => 'Surat Telah Disetujui'];
             }
-
-            $riwayat_surat = new RiwayatSurat();
-            $riwayat_surat->riwayat = "Surat Telah " . $statusSurat . " Oleh " . $statusUSer;
-            $riwayat_surat->surat_id = $surat->id;
-            $riwayat_surat->save();
-
-            $status = $surat->e2 == 1 ? 0 : 1;
-            $surat->e2 = $status;
-            $surat->save();
-
-            
-            return ['status' => true, 'pesan' => 'Surat Telah Disetujui'];
         }catch(\Exception $e) {
             return ['status' => false, 'pesan' => 'Terjadi kesalahan pada sistem dengan kode : 500'];
         }
@@ -174,33 +185,37 @@ class ManajemenSuratController extends Controller
     public function e3($id) 
     {
         try {
-            $id = Crypt::decryptString($id);
-
-            $surat = surat::findOrFail($id);
-            
-            if ($surat->e3 == 0) {
-                $statusSurat = "Disetujui";
-                if (auth()->user()->hak_akses->name == "Admin") {
-                    $statusUSer = "Admin";
-                }else {
-                    $statusUSer = "Pejabat eselon 3";
-                }
+            if ( auth()->user()->hak_akses->name == 'Pegawai' || auth()->user()->hak_akses->name == 'Sekretaris') {
+                abort(403);
             }else {
-                $statusSurat = "Dibatalkan Pesetujuan Eselon 3";
-                $statusUSer = "Admin";
+                $id = Crypt::decryptString($id);
+    
+                $surat = surat::findOrFail($id);
+                
+                if ($surat->e3 == 0) {
+                    $statusSurat = "Disetujui";
+                    if (auth()->user()->hak_akses->name == "Admin") {
+                        $statusUSer = "Admin";
+                    }else {
+                        $statusUSer = "Pejabat eselon 3";
+                    }
+                }else {
+                    $statusSurat = "Dibatalkan Pesetujuan Eselon 3";
+                    $statusUSer = "Admin";
+                }
+    
+                $riwayat_surat = new RiwayatSurat();
+                $riwayat_surat->riwayat = "Surat Telah " . $statusSurat . " Oleh " . $statusUSer;
+                $riwayat_surat->surat_id = $surat->id;
+                $riwayat_surat->save();
+    
+                $status = $surat->e3 == 1 ? 0 : 1;
+                $surat->e3 = $status;
+                $surat->save();
+    
+    
+                return ['status' => true, 'pesan' => 'Surat Telah Disetujui'];
             }
-
-            $riwayat_surat = new RiwayatSurat();
-            $riwayat_surat->riwayat = "Surat Telah " . $statusSurat . " Oleh " . $statusUSer;
-            $riwayat_surat->surat_id = $surat->id;
-            $riwayat_surat->save();
-
-            $status = $surat->e3 == 1 ? 0 : 1;
-            $surat->e3 = $status;
-            $surat->save();
-
-
-            return ['status' => true, 'pesan' => 'Surat Telah Disetujui'];
         }catch(\Exception $e) {
             return ['status' => false, 'pesan' => 'Terjadi kesalahan pada sistem dengan kode : 500'];
         }
@@ -208,33 +223,60 @@ class ManajemenSuratController extends Controller
     public function e4($id) 
     {
         try {
-            $id = Crypt::decryptString($id);
-
-            $surat = surat::findOrFail($id);
-            
-            if ($surat->e4 == 0) {
-                $statusSurat = "Disetujui";
-                if (auth()->user()->hak_akses->name == "Admin") {
-                    $statusUSer = "Admin";
-                }else {
-                    $statusUSer = "Pejabat eselon 4";
-                }
+            if ( auth()->user()->hak_akses->name == 'Pegawai' || auth()->user()->hak_akses->name == 'Sekretaris') {
+                abort(403);
             }else {
-                $statusSurat = "Dibatalkan Pesetujuan Eselon 4";
-                $statusUSer = "Admin";
-            }
-
-            $riwayat_surat = new RiwayatSurat();
-            $riwayat_surat->riwayat = "Surat Telah " . $statusSurat . " Oleh " . $statusUSer;
-            $riwayat_surat->surat_id = $surat->id;
-            $riwayat_surat->save();
-
-            $status = $surat->e4 == 1 ? 0 : 1;
-            $surat->e4 = $status;
-            $surat->save();
-
+                $id = Crypt::decryptString($id);
+    
+                $surat = surat::findOrFail($id);
+                
+                if ($surat->e4 == 0) {
+                    $statusSurat = "Disetujui";
+                    if (auth()->user()->hak_akses->name == "Admin") {
+                        $statusUSer = "Admin";
+                    }else {
+                        $statusUSer = "Pejabat eselon 4";
+                    }
+                }else {
+                    $statusSurat = "Dibatalkan Pesetujuan Eselon 4";
+                    $statusUSer = "Admin";
+                }
+    
+                $riwayat_surat = new RiwayatSurat();
+                $riwayat_surat->riwayat = "Surat Telah " . $statusSurat . " Oleh " . $statusUSer;
+                $riwayat_surat->surat_id = $surat->id;
+                $riwayat_surat->save();
+    
+                $status = $surat->e4 == 1 ? 0 : 1;
+                $surat->e4 = $status;
+                $surat->save();
+            }    
 
             return ['status' => true, 'pesan' => 'Surat Telah Disetujui'];
+        }catch(\Exception $e) {
+            return ['status' => false, 'pesan' => 'Terjadi kesalahan pada sistem dengan kode : 500'];
+        }
+    }
+
+    public function arsip($id) 
+    {
+        try {
+            if (auth()->user()->hak_akses_id == 4 || auth()->user()->hak_akses_id == 1) {
+                $id = Crypt::decryptString($id);
+
+                $surat = surat::findOrFail($id);
+                $status = $surat->is_archive == 0 ? "Arsipkan" : "Keluarkan Dari Arsip";
+                if ($surat->is_archive == 0) {
+                    $surat->is_archive = 1;
+                }else {
+                    $surat->is_archive = 0;
+                }
+                $surat->save();
+
+                return ['status' => true, 'pesan' => 'Surat Telah Di ' . $status];
+            }else {
+                return ['status' => false, 'pesan' => 'Terjadi kesalahan pada sistem dengan kode : 500'];
+            }
         }catch(\Exception $e) {
             return ['status' => false, 'pesan' => 'Terjadi kesalahan pada sistem dengan kode : 500'];
         }
@@ -426,5 +468,58 @@ class ManajemenSuratController extends Controller
         $riwayat_surat->riwayat = "Surat Telah Diperbarui Oleh " . $statusUSer;
         $riwayat_surat->surat_id = $surat->id;
         $riwayat_surat->save();
+    }
+
+    public function destroy($id)
+    {
+        try {
+            if ( auth()->user()->hak_akses->name !== 'Admin' ) {
+                abort(403);
+            }else {
+                $id = Crypt::decryptString($id);
+                $surat = Surat::find($id);
+
+                $dasar_acuan_surat = dasaracuansurat::where('surat_id', $surat->id)->get();
+                if ($dasar_acuan_surat) {
+                    $dasar_acuan_surat->each(function ($pivot) {
+                        $pivot->delete();
+                    });
+                }
+
+                $lampiran = lampiran::where('surat_id', $surat->id)->get();
+                if ($lampiran) {
+                    $lampiran->each(function ($pivot) {
+                        $pivot->delete();
+                    });
+                }
+                
+                $riwayat_surat = RiwayatSurat::where('surat_id', $surat->id)->get();
+                if ($riwayat_surat) {
+                    $riwayat_surat->each(function ($pivot) {
+                        $pivot->delete();
+                    });
+                }
+
+                $tembusan_surat = tembusansurat::where('surat_id', $surat->id)->get();
+                if ($tembusan_surat) {
+                    $tembusan_surat->each(function ($pivot) {
+                        $pivot->delete();
+                    });
+                }
+
+                $tujuan_surat = tujuansurat::where('surat_id', $surat->id)->get();
+                if ($tujuan_surat) {
+                    $tujuan_surat->each(function ($pivot) {
+                        $pivot->delete();
+                    });
+                }
+
+                $surat->delete();
+    
+                return ['status' => true, 'pesan' => 'Anda berhasil menghapus Surat'];
+            }
+        } catch(\Exception $e) {
+            return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];
+        }
     }
 }

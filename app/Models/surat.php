@@ -51,4 +51,7 @@ class surat extends Model
     public function nama_pembuat(){
         return $this->belongsTo('App\Models\User', 'pembuat_surat');
     }
+    public function bidang(){
+        return $this->belongsTo('App\Models\bidang', 'bidang_id');
+    }
 }

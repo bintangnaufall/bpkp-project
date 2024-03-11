@@ -4,12 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\BidangController;
-use App\Http\Controllers\BuatSuratController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HakaksesController;
+use App\Http\Controllers\BuatSuratController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ArsipSuratController;
 use App\Http\Controllers\ManajemenSuratController;
-use App\Http\Controllers\DisposisiController;
+// use App\Http\Controllers\DisposisiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +42,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/delete/{id}', [UserController::class, 'destroy'])->name('delete'); 
         Route::post('/reset/{id}', [UserController::class, 'reset'])->name('reset'); 
     });
+
+    Route::prefix('profile')->name('profile.')->group(function() {
+        Route::get('/{id}', [ProfileController::class, 'index'])->name('show'); 
+        Route::post('/update/{id}', [ProfileController::class, 'update'])->name('update'); 
+    });
     
     Route::prefix('surat')->name('surat.')->group(function() {
         Route::prefix('buat_surat')->name('buat_surat.')->group(function() {
@@ -57,7 +64,11 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/change-e4/{id}', [ManajemenSuratController::class, 'e4'])->name('change_e4'); 
             Route::post('/change-e3/{id}', [ManajemenSuratController::class, 'e3'])->name('change_e3'); 
             Route::post('/change-e2/{id}', [ManajemenSuratController::class, 'e2'])->name('change_e2');
-            // Route::get('/edit_surat/{id}', [ManajemenSuratController::class, 'edit'])->name('edit_surat');
+            Route::post('/arsip/{id}', [ManajemenSuratController::class, 'arsip'])->name('arsip');
+            Route::get('/delete/{id}', [ManajemenSuratController::class, 'destroy'])->name('delete'); 
+        });
+        Route::prefix('arsip_surat')->name('arsip_surat.')->group(function() {
+            Route::get('/', [ArsipSuratController::class, 'index'])->name('show'); 
         });
     });
     

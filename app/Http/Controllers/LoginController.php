@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class LoginController extends Controller
 {
@@ -17,15 +18,31 @@ class LoginController extends Controller
 
     public function authenticate(Request $request) 
     {
-        $credentials=$request->validate([
-            'nip' => 'required|numeric',
+
+        $request->validate([
+            'nip' => 'required',
             'password' => 'required',
         ]);
+
+        $nip = str_replace(' ', '',$request->nip);
+        
+        $credentials = [
+            "NIP" =>  $nip,
+            "password" => $request->password
+        ];
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return response()->json(['success' => 'selamat datang <b>' . auth()->user()->name . '</b>', 'status' => auth()->user()->hak_akses_id == 1 ? 'admin' : 'user']);
+            if (auth()->user()->hak_akses_id == 1 || auth()->user()->hak_akses_id == 3) 
+            { 
+                return redirect()->intended('dashboard')->with('loginSuccess', 'Selamat Datang....');
+            }
+            else 
+            {
+                return redirect()->intended('/surat/disposisi_surat')->with('loginSuccess', 'Selamat Datang....');
+            }
         } 
-        return response()->json(['error' => 'email atau password anda tidak valid']);
+        return back()->with('loginError', 'Login Gagal')->withInput();
     }
 
     public function logout(Request $request) 

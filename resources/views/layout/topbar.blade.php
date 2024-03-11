@@ -20,24 +20,24 @@
           class="nav-link dropdown-toggle"
           data-bs-toggle="dropdown"
         >
-          <img
-            class="rounded-circle me-lg-2"
-            src="{{ asset('img/user.jpg') }}"
-            alt=""
-            style="width: 40px; height: 40px"
-          />
+        @if (auth()->user()->path_image == null)
+          <img src="{{ asset('img/user.jpg')}}" alt="" class="rounded-circle me-lg-2" style="width: 40px; height: 40px">
+        @else
+          <img src="{{ asset(auth()->user()->path_image)}}" alt="" class="rounded-circle me-lg-2" style="width: 40px; height: 40px">
+        @endif
+        
           <span class="d-none d-lg-inline-flex">{{ auth()->user()->name}}</span>
         </a>
         <div
           class="dropdown-menu dropdown-menu-end bg-dark border-0 rounded-0 rounded-bottom m-0"
         >
-          <a href="#" class="dropdown-item">
-            <i class="bi bi-person-circle"></i> 
-            My Profile
-          </a>
-          <a href="#" class="dropdown-item">
-            <i class="bi bi-gear"></i>
-            Settings
+        @php
+            $id = Crypt::encryptString(auth()->user()->id);
+        @endphp
+        
+          <a href="{{ route('profile.show', ['id' => $id]) }}" class="dropdown-item">
+              <i class="bi bi-person-circle"></i> 
+              My Profile
           </a>
           <a href="{{ route('logout') }}" class="dropdown-item">
             <i class="bi bi-box-arrow-in-right"></i>

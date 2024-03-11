@@ -52,7 +52,7 @@ class BuatSuratController extends Controller
 
     public function fetchjabatan(Request $request)
     {
-        $data['jabatan'] = User::where("jabatan_id", $request->jabatan_id)->get(["name", "nip"]);
+        $data['jabatan'] = User::where("jabatan_id", $request->jabatan_id)->where('hak_akses_id', 3)->get(["name", "nip"]);
 
         if ($data['jabatan']->isEmpty()) {
             return response()->json(['status' => false, 'message' => 'No data found']);
@@ -63,7 +63,9 @@ class BuatSuratController extends Controller
 
     public function fetchnip(Request $request)
     {
-        $data['user'] = User::where('NIP', $request->nip)->where('hak_akses_id', 3)->with('jabatan')->first(['name', 'jabatan_id']);    
+        $nip = str_replace(' ', '', $request->nip);
+
+        $data['user'] = User::where('NIP', $nip)->where('hak_akses_id', 3)->with('jabatan')->first(['name', 'jabatan_id']);    
         
         if (!$data['user']) {
             return response()->json(['status' => false, 'message' => 'No data found']);
@@ -136,10 +138,12 @@ class BuatSuratController extends Controller
         $surat->rincian_pelaksanaan_penugasan = $request->rincian_pelaksanaan_penugasan;
         $surat->beban_anggaran = $request->beban_anggaran;
 
-        $user = User::where("NIP" , $request->nip_pejabat)->first();
+        $nip_pejabat = str_replace(' ', '', $request->nip_pejabat);
+        $user = User::where("NIP" , $nip_pejabat)->first();
         $surat->nama_pejabat = $user->id;
 
         $surat->pembuat_surat = auth()->user()->id;
+        $surat->bidang_id = auth()->user()->bidang_id;
 
         $jabatan = jabatan::find($request->jabatan_id);
 

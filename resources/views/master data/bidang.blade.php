@@ -284,7 +284,8 @@
               Swal.fire({
                   title: 'Yakin ?',
                   html: '<p>Apakah anda yakin ingin menghapus Bidang :</p>' +
-                      '<p><b>' + nama + '</b></p>',
+                      '<p><b>' + nama + '</b></p>' +
+                      '<p>Semua akun yang memiliki Bidang ini juga akan terhapus!</p>',
                   showCancelButton: true,
                   confirmButtonText: 'Hapus',
                   icon: 'question',

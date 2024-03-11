@@ -19,4 +19,8 @@ class bidang extends Model
     public function user(){
         return $this->hasMany('App\Models\User');
     }
+
+    public function surat(){
+        return $this->hasMany('App\Models\surat');
+    }
 }

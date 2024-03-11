@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\bidang;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -14,7 +15,10 @@ class DashboardController extends Controller
         if ( auth()->user()->hak_akses->name !== 'Admin' && auth()->user()->hak_akses_id !== 3) {
             abort(403);
         }
-        return view('dashboard');
+
+        $bidang = bidang::with('surat')->get();
+
+        return view('dashboard', compact('bidang'));
     }
 
     /**
