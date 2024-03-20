@@ -56,7 +56,7 @@
         </script>
     @endif
 
-           
+
 @endsection
 
 
@@ -108,7 +108,7 @@
     var seriesCount = chart2.length;
 
     var randomColors = generateRandomColors(seriesCount);
-    
+
     const labelNames = chart2.map(item => item.name);
 
     const count = chart2.map((item, index) => chart2[index].surat.length);

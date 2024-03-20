@@ -24,7 +24,7 @@ class UserController extends Controller
             $data = User::orderBy('id', 'desc')->get();
 
             return Datatables::of($data)
-            ->addIndexColumn() 
+            ->addIndexColumn()
             ->addColumn('action', function($data){
 
                 $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.Crypt::encryptString($data->id).'" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit"><i class="bi bi-pencil-square"></i></a>';
@@ -33,7 +33,7 @@ class UserController extends Controller
 
                 $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.Crypt::encryptString($data->id).'" data-name="'.$data->name.'" data-original-title="Reset" class="reset btn btn-success btn-sm mx-1 btnReset"><i class="bi bi-arrow-repeat"></i></a>';
                 return $btn;
-            })   
+            })
             ->addColumn('bidang', function ($data) {
                 $bidang =  $data->bidang->name;
                 return $bidang;
@@ -111,7 +111,7 @@ class UserController extends Controller
                 $id = ($request->id == null) ? '' : Crypt::decryptString($request->id);
 
                 $storeOrUpdate = User::findOrNew($id);
-                
+
                 $isAddingNew = $id == '';
 
                 if ($isAddingNew && User::where('NIP', $request->nip)->exists()) {
@@ -143,7 +143,7 @@ class UserController extends Controller
                     $storeOrUpdate->password = $encryptedPassword;
                     $storeOrUpdate->default_password = $request->password;
                 }
-                
+
                 $storeOrUpdate->save();
 
                 $message = ($id == null) ? 'menambahkan' : 'mengubah';
@@ -163,7 +163,7 @@ class UserController extends Controller
 
             $user = User::find($id);
             $encryptedID = Crypt::encryptString($user->id);
-    
+
             $user->makeHidden(['id', 'created_at', 'updated_at']);
             return ['data' => $user, 'encryptedID' => $encryptedID];
         }
@@ -178,11 +178,11 @@ class UserController extends Controller
                 $id = Crypt::decryptString($id);
 
                 $userToDelete = User::find($id);
-            
-                if ($userToDelete->jabatan_id == 1) {
-    
-                    $superAdminCount = User::where('jabatan_id', 1)->count();
-            
+
+                if ($userToDelete->hak_akses_id == 1) {
+
+                    $superAdminCount = User::where('hak_akses_id', 1)->count();
+
                     if ($superAdminCount == 1) {
                         return ['status' => false, 'pesan' => 'Tidak dapat menghapus User Admin terakhir'];
                     }else {
@@ -209,7 +209,7 @@ class UserController extends Controller
                     return ['status' => true, 'pesan' => 'Anda berhasil menghapus akun'];
                 }
             }
-        
+
         } catch(\Exception $e) {
             return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];
         }
