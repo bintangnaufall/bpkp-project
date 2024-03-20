@@ -2,6 +2,8 @@
 
 @section('css')
 
+@section('title', 'Dashboard')
+
 <link href="{{ asset('assets/css/app.min.css') }}" id="app-stylesheet" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="{{ asset('css/iziToast.min.css') }}">
 
@@ -38,8 +40,14 @@
 @section('content')
     <div class="container-fluid pt-4 px-4">
         <div class="bg-white shadow-lg text-center rounded p-4">
-            <div style="width: 800px;">
-                <canvas id="myPieChart" style="margin-left:40%;" width="400" height="400"></canvas>
+            <div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <canvas id="myPieChart" style="" width="400" height="400"></canvas>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -139,6 +147,7 @@
     // Konfigurasi chart
     var options = {
         responsive: true,
+        aspectRatio: 1.5,
         plugins: {
             legend: {
                 position: 'top',
