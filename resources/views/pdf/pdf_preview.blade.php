@@ -76,9 +76,13 @@
         }
     </style>
 </head>
+<<<<<<< HEAD
 
 <body
     style="padding-left: 50px; padding-right:50px; padding-top: 50px; padding-bottom: 50px; font-family: Arial, sans-serif;">
+=======
+<body style="padding-left: 50px; padding-right:72px; padding-top: 50px; padding-bottom: 50px; font-family: Arial, sans-serif;">
+>>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
 
     <table class="border" style="border-collapse: collapse; margin-left: 0pt; margin-top: 0px" cellspacing="0">
         <tr style="height: 57pt">
@@ -112,7 +116,7 @@
 
     <div style="background-color: black; height:2px; width:650px; margin-left:20px;" class="mb-4"></div>
 
-    <table style="margin-left: 50px; margin-top: -10px">
+    <table style="margin-left: 50px; margin-left: 40px; margin-top: -10px">
         <tr>
             <td style="width: 100px">
                 Nomor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
@@ -120,11 +124,15 @@
             <td style="width: 390px; text-align: justify;">
                 {{ $data['nomor_surat'] }}
             </td>
+<<<<<<< HEAD
             <td>&nbsp;&nbsp;{{ $data['tanggal_surat'] }}</td>
+=======
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data['tanggal_surat']}}</td>
+>>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
         </tr>
     </table>
 
-    <table style="margin-left: 50px; margin-bottom:10px">
+    <table style="margin-left: 50px; margin-left: 40px; margin-bottom:10px">
         <tr>
             <td style="width: 100px">
                 Lampiran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
@@ -135,7 +143,7 @@
         </tr>
     </table>
 
-    <table style="margin-left: 50px; margin-bottom:30px">
+    <table style="margin-left: 50px; margin-left: 40px; margin-bottom:30px">
         <tr>
             <td style="width: 100px">
                 Hal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
@@ -207,12 +215,22 @@
 
                 </td>
                 <td style="width: 100px">
+<<<<<<< HEAD
 
                 </td>
+=======
+                    @if (isset($data['dasar_acuan']) && count($data['dasar_acuan']) == 1)
+                        @foreach ($data['dasar_acuan'] as $index => $acuan)
+                            {{$acuan}}
+                        @endforeach
+                    @endif 
+                </td>  
+>>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
             </tr>
         </thead>
         <tbody>
             <tr>
+<<<<<<< HEAD
                 @if (isset($data['dasar_acuan']))
                     @foreach ($data['dasar_acuan'] as $index => $dasar_acuan)
             <tr>
@@ -224,6 +242,19 @@
                 </td>
             </tr>
             @endforeach
+=======
+                @if (isset($data['dasar_acuan']) && count($data['dasar_acuan']) != 1)
+                @foreach ($data['dasar_acuan'] as $index => $dasar_acuan)
+                    <tr>
+                        <td style="width: 10px">
+                            {{$index + 1}}.
+                        </td> 
+                        <td style="width: 627px; text-align: justify">
+                            {{ $dasar_acuan }}
+                        </td>   
+                    </tr>
+                @endforeach
+>>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
             @endif
             </tr>
         </tbody>
@@ -274,6 +305,7 @@
         </thead>
         <tbody>
             <tr>
+<<<<<<< HEAD
                 @if (isset($data['tembusan_surat']))
                     @foreach ($data['tembusan_surat'] as $index => $tembusan_surat)
             <tr>
@@ -285,6 +317,19 @@
                 </td>
             </tr>
             @endforeach
+=======
+                @if (isset($data['tembusan_surat']) && $data['tembusan_surat'][0] != "")
+                @foreach ($data['tembusan_surat'] as $index => $tembusan_surat)
+                    <tr>
+                        <td style="width: 10px">
+                            {{$index + 1}}.
+                        </td> 
+                        <td style="width: 627px; text-align: justify">
+                            {{ $tembusan_surat }}
+                        </td>   
+                    </tr>
+                @endforeach
+>>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
             @endif
             </tr>
         </tbody>
