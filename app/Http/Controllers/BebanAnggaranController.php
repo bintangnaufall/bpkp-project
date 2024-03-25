@@ -2,58 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\surat;
-use App\Models\bidang;
 use Illuminate\Http\Request;
+use App\Models\BebanAnggaran;
+use App\Models\surat;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
-class BidangController extends Controller
+class BebanAnggaranController extends Controller
 {
+
     public function index( Request $request )
     {
         if ( auth()->user()->hak_akses->name !== 'Admin' ) {
             abort(403);
         }
         if ($request->ajax()) {
-            $data = bidang::orderBy('id', 'desc')->get();
+            $data = BebanAnggaran::orderBy('id', 'desc')->get();
 
             return Datatables::of($data)
             ->addIndexColumn() 
             ->addColumn('action', function($data){
                 $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.Crypt::encryptString($data->id).'" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit"><i class="bi bi-pencil-square"></i></a>';
-                $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-name="'.$data->name.'" data-original-title="Delete" class="btn btn-danger btn-sm btnDelete"><i class="bi bi-trash-fill"></i></a>';
+                $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-name="'.$data->nama_lembaga.'" data-original-title="Delete" class="btn btn-danger btn-sm btnDelete"><i class="bi bi-trash-fill"></i></a>';
                 return $btn;
+            })   
+            ->addColumn('jenis_lembaga', function($data){
+                $lembaga = $data->jenis_lembaga == 1 ? "Dipa" : "Mitra";
+                return $lembaga;
             })   
             ->rawColumns(['action'])
             ->make(true);
         }
-        return view('master data.bidang');
+        return view('master data.bebanAnggaran');
     }
 
     protected function validator($data)
     {
         $rules = [
             'id' => ($data['action'] == 'tambah') ? '' : 'required',
-            'name' => 'required'
+            'jenisLembagaNegara' => 'required',
+            'namaLembagaNegara' => 'required'
+
         ];
 
         $message = [
             'id.required' => 'ID tidak boleh kosong',
-            'name.required' => 'Nama bidang tidak boleh kosong'
+            'jenisLembagaNegara.required' => 'Jenis Lembaga Negara tidak boleh kosong',
+            'namaLembagaNegara.required' => 'Nama Lembaga Negara tidak boleh kosong'
         ];
 
         return Validator::make($data, $rules, $message);
     }
-
-    public function storeOrUpdate( Request $request )
+    
+    public function storeOrUpdate(  Request $request )
     {
         try {
             if ( auth()->user()->hak_akses->name !== 'Admin' ) {
                 abort(403);
             }else {
+                $jenisLembaga = $request->jenisLembagaNegara;
+
+                if ($jenisLembaga != 1 && $jenisLembaga != 2) {
+                    return ['error' => 'Jenis Lembaga Negara tidak valid'];
+                }
+    
                 $validator = $this->validator($request->all());
     
                 if ($validator->fails()) {
@@ -69,19 +82,20 @@ class BidangController extends Controller
                 } else {
                     $id = ($request->id == null) ? '' : Crypt::decryptString($request->id);
     
-                    $storeOrUpdate = bidang::findOrNew($id);
+                    $storeOrUpdate = BebanAnggaran::findOrNew($id);
     
                     if($request->action == 'tambah') {
-                        if(bidang::where('name', $request->name)->exists()) {
-                            return ['error' => 'Nama bidang sudah ada'];
+                        if(BebanAnggaran::where('nama_lembaga', $request->namaLembagaNegara)->exists()) {
+                            return ['error' => 'Nama Lembaga sudah ada'];
                         }
                     }
-    
-                    $storeOrUpdate->name = $request->name;
+                    
+                    $storeOrUpdate->jenis_lembaga = $request->jenisLembagaNegara;
+                    $storeOrUpdate->nama_lembaga = $request->namaLembagaNegara;
                     $storeOrUpdate->save();
     
                     $message = ($id == null) ? 'menambahkan' : 'mengubah';
-                    return ['status' => true, 'pesan' => 'Anda berhasil '.$message.' data bidang'];
+                    return ['status' => true, 'pesan' => 'Anda berhasil '.$message.' data Lembaga Negara'];
                 }
             }
         } catch(\Exception $e) {
@@ -96,11 +110,11 @@ class BidangController extends Controller
         }else {
             $id = Crypt::decryptString($id);
     
-            $bidang = bidang::find($id);
-            $encryptedID = Crypt::encryptString($bidang->id);
+            $bebanAnggaran = BebanAnggaran::find($id);
+            $encryptedID = Crypt::encryptString($bebanAnggaran->id);
     
-            $bidang->makeHidden(['id', 'created_at', 'updated_at']);
-            return ['data' => $bidang, 'encryptedID' => $encryptedID];
+            $bebanAnggaran->makeHidden(['id', 'created_at', 'updated_at']);
+            return ['data' => $bebanAnggaran, 'encryptedID' => $encryptedID];
         }
     }
 
@@ -111,23 +125,17 @@ class BidangController extends Controller
                 abort(403);
             }else {
                 $id = Crypt::decryptString($id);
-                $bidang = bidang::find($id);
+                $bebanAnggaran = BebanAnggaran::find($id);
 
-                if ($bidang) {
-                    $users = User::where('bidang_id', $bidang->id)->get();
-
-                    if ($users->isNotEmpty()) {
-                        foreach ($users as $user) {
-                            surat::where('pembuat_surat', $user->id)->delete();
-                            surat::where('nama_pejabat', $user->id)->delete();
-
-                            $user->delete();
+                if ($bebanAnggaran) {
+                    $surats = surat::where('beban_anggaran_id', $bebanAnggaran->id)->get();
+                    if ($surats) {
+                        foreach ($surats as $surat) {
+                            $surat->delete();
                         }
                     }
-
-                    $bidang->delete();
-
-                    return ['status' => true, 'pesan' => 'Anda berhasil menghapus data Bidang'];
+                    $bebanAnggaran->delete();
+                    return ['status' => true, 'pesan' => 'Anda berhasil menghapus data Lembaga Negara'];
                 }
             }
         } catch(\Exception $e) {

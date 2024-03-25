@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BebanAnggaran;
 use PDF;
 use Carbon\Carbon;
 use App\Models\User;
@@ -46,6 +47,8 @@ class BuatSuratController extends Controller
         // return dd($jabatanUsers);
         return view('surat.buatSurat',[
             "jabatans" => $jabatanUsers,
+            "Dipa" => BebanAnggaran::where('jenis_lembaga', 1 )->get(),
+            "Mitra"=>BebanAnggaran::where('jenis_lembaga', 2 )->get()
         ]);
     }
     
@@ -80,7 +83,7 @@ class BuatSuratController extends Controller
 
     public function pdfview(Request $request)
     {        
-        // dd($request->all());
+        // return $request->all();
         $jabatan = jabatan::find($request->jabatan_id);
 
         if ($jabatan) {
@@ -88,6 +91,8 @@ class BuatSuratController extends Controller
         } else {
             $nama_jabatan = "<Jabatan>";
         }
+        
+        $bebanAnggaran = BebanAnggaran::find($request->beban_anggaran_id);
 
         if (
             (strpos($request->perihal_surat, '&lt;script&gt;') !== false || strpos($request->perihal_surat, '&lt;link&gt;') !== false) ||
@@ -110,7 +115,7 @@ class BuatSuratController extends Controller
 
             "dasar_acuan" => $request->dasar_acuan,
             "rincian_pelaksanaan_penugasan" => $request->rincian_pelaksanaan_penugasan ? $request->rincian_pelaksanaan_penugasan : "<Rincian_pelaksanaan_penugasan>",
-            "beban_anggaran" => $request->beban_anggaran ? $request->beban_anggaran : "<Beban_Anggaran>",
+            "beban_anggaran" => $bebanAnggaran->nama_lembaga ? $bebanAnggaran->nama_lembaga : "<Beban_Anggaran>",
 
 
             "Jabatan" => $nama_jabatan,
@@ -136,7 +141,7 @@ class BuatSuratController extends Controller
         
         $surat->{'alamat_instansi/pejabat'} = $request->alamat_tujuan;
         $surat->rincian_pelaksanaan_penugasan = $request->rincian_pelaksanaan_penugasan;
-        $surat->beban_anggaran = $request->beban_anggaran;
+        $surat->beban_anggaran_id = $request->beban_anggaran_id;
 
         $nip_pejabat = str_replace(' ', '', $request->nip_pejabat);
         $user = User::where("NIP" , $nip_pejabat)->first();
@@ -160,6 +165,8 @@ class BuatSuratController extends Controller
             ) {
             return response()->json(['error' => 'Input tidak valid. Tolong hapus tag <script> atau <link>'], 400);
         }
+
+        $bebanAnggaran = BebanAnggaran::find($request->beban_anggaran_id);
         
         $data = [
             "nomor_surat" => $request->nomor_surat ? $request->nomor_surat : "<Nomor_Surat>",
@@ -173,7 +180,7 @@ class BuatSuratController extends Controller
 
             "dasar_acuan" => $request->dasar_acuan,
             "rincian_pelaksanaan_penugasan" => $request->rincian_pelaksanaan_penugasan ? $request->rincian_pelaksanaan_penugasan : "<Rincian_pelaksanaan_penugasan>",
-            "beban_anggaran" => $request->beban_anggaran ? $request->beban_anggaran : "<Beban_Anggaran>",
+            "beban_anggaran" => $bebanAnggaran->nama_lembaga ? $bebanAnggaran->nama_lembaga : "<Beban_Anggaran>",
 
 
             "Jabatan" => $nama_jabatan,
@@ -182,6 +189,7 @@ class BuatSuratController extends Controller
 
             "tembusan_surat" => $request->tembusan_surat,
         ];
+        
         $pdf = PDF::loadView('pdf.pdf_preview', compact('data'));
         $uniq = uniqid();
         $pdfPath = 'public/pdf/' . $uniq . '.pdf';

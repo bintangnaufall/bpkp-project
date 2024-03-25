@@ -4,6 +4,8 @@
 
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.3/tutorials/timelines/timeline-4/assets/css/timeline-4.css">
@@ -23,14 +25,14 @@
       .form-control, .form-select {
         border: var(--bs-border-width) solid #8693a1 !important;
       }
-      .form-check-input[type=checkbox] {
+      .form-check-input-1[type=checkbox] {
           border-radius: 50% !important;
       }
-      .form-check-input:checked {
+      .form-check-input-1:checked {
           background-color: #40d52a !important;
           border-color: #40d52a !important;
       }
-      .form-check-input {
+      .form-check-input-1 {
         width: 30px !important;
         height: 30px !important;
         border: 2px solid rgba(0, 0, 0, 0.351) !important;
@@ -366,12 +368,27 @@
                   </div>
               </div>
             </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
-                  <label for="beban_anggaran">Beban Anggaran</label>
-                  <textarea type="text" name="beban_anggaran" id="beban_anggaran_input" class="form-control d-none" placeholder="Beban Anggaran" rows="3"></textarea>
-                  <div id="editor_beban_anggaran" class="beban_anggaran" style="font-size: 14px;">
-                  </div>
+            <div class="row mb-3" style="margin-top: 80px;">
+              <label for="beban_anggaran" class="mb-3">Beban Anggaran</label>
+              <div class="col-md-6">
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                  <label class="form-check-label mb-2" for="flexRadioDefault1">
+                    Dipa
+                  </label>
+                  <select name="beban_anggaran_id" class="form-select" id="beban_anggaran_id_dipa" disabled>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                  <label class="form-check-label mb-2" for="flexRadioDefault2">
+                    Mitra
+                  </label>
+                  <select name="beban_anggaran_id" class="form-select" id="beban_anggaran_id_mitra" disabled>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -641,6 +658,8 @@
     <script src="{{ asset('assets/libs/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.11/dist/sweetalert2.all.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <script>
       var userHakAksesId = {{ auth()->user()->hak_akses_id }};
@@ -660,6 +679,49 @@
 
     <script>
         $(document).ready(function() {
+
+//----------------------------------------------------------------
+        var dipa = <?php echo json_encode($Dipa); ?>;
+
+        $(document).on("change", "#flexRadioDefault1", function() {
+            if ($(this).is(":checked")) {
+                $("#beban_anggaran_id_dipa").prop("disabled", false);
+                $("#beban_anggaran_id_mitra").prop("disabled", true);
+                $("#beban_anggaran_id_dipa").val(null);
+                $("#beban_anggaran_id_mitra").empty()
+                loadDropdownOptionsDipa();
+            }
+        });
+
+        function loadDropdownOptionsDipa() {
+          var optionsHtml = dipa.map(function(option) {
+              return `<option value="" disabled selected hidden>Pilih salah satu...</option>
+              <option value="${option.id}">${option.nama_lembaga}</option>`;
+          }).join('');
+          $("#beban_anggaran_id_dipa").html(optionsHtml);
+        }
+
+//----------------------------------------------------------------
+
+          var mitra = <?php echo json_encode($Mitra); ?>;
+
+          $(document).on("change", "#flexRadioDefault2", function() {
+            if ($(this).is(":checked")) {
+              $("#beban_anggaran_id_mitra").prop("disabled", false);
+              $("#beban_anggaran_id_dipa").prop("disabled", true);
+              $("#beban_anggaran_id_mitra").val(null);
+              $("#beban_anggaran_id_dipa").empty()
+              loadDropdownOptionsMitra();
+            }
+          });
+
+          function loadDropdownOptionsMitra() {
+            var optionsHtml = mitra.map(function(option) {
+                return `<option value="" disabled selected hidden>Pilih salah satu...</option>
+                <option value="${option.id}">${option.nama_lembaga}</option>`;
+            }).join('');
+            $("#beban_anggaran_id_mitra").html(optionsHtml);
+          }
 //---------------------------------------------------- CSRF
 
           var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -817,6 +879,7 @@
                       type: "GET",
                       success: function(response) {
                         Swal.close(); 
+                        console.log(response);
                         $('#id').val(id);
                         $('#nomor_surat_input').val(response.surat.nomor_surat);
                         if (response.surat.e2 == 1 && userHakAksesId == 4) {
@@ -830,7 +893,23 @@
                         $('#editor_perihal_surat div').html('<p>' + response.surat.perihal_surat + '</p>');
                         $('#alamat_tujuan_input').val(response.surat['alamat_instansi/pejabat']);
                         $('#editor_rincian_pelaksanaan_penugasan div').html('<p>' + response.surat.rincian_pelaksanaan_penugasan + '</p>');
-                        $('#editor_beban_anggaran div').html('<p>' + response.surat.beban_anggaran + '</p>');
+                        if (response.surat.beban_anggaran.jenis_lembaga == 1) {
+                          $("#flexRadioDefault1").prop('checked', true);
+                          $("#beban_anggaran_id_dipa").prop("disabled", false);
+                          $("#beban_anggaran_id_mitra").prop("disabled", true);
+                          $("#beban_anggaran_id_dipa").val(null);
+                          $("#beban_anggaran_id_mitra").empty()
+                          loadDropdownOptionsDipa();
+                          $('#beban_anggaran_id_dipa option[value="' + response.surat.beban_anggaran.id + '"]').prop('selected',true);
+                        }else if (response.surat.beban_anggaran.jenis_lembaga == 2) {
+                          $("#flexRadioDefault2").prop('checked', true);
+                          $("#beban_anggaran_id_mitra").prop("disabled", false);
+                          $("#beban_anggaran_id_dipa").prop("disabled", true);
+                          $("#beban_anggaran_id_mitra").val(null);
+                          $("#beban_anggaran_id_dipa").empty()
+                          loadDropdownOptionsMitra();
+                          $('#beban_anggaran_id_mitra option[value="' + response.surat.beban_anggaran.id + '"]').prop('selected',true);
+                        }
                         $('#jabatan_id_input option[value="' + response.surat.nama_pejabat.bidang_id + '"]').prop('selected',true);
                         $('#nama_pejabat_input').val(response.surat.nama_pejabat.name);
                         $('#nip_input').val(response.surat.nama_pejabat.NIP);
