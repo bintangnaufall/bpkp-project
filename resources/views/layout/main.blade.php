@@ -9,7 +9,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
 
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- icon LOgo bpkp -->
     <link href="{{asset('img/bpkp_logo.ico')}}" rel="icon" />
 

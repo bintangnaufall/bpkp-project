@@ -54,4 +54,7 @@ class surat extends Model
     public function bidang(){
         return $this->belongsTo('App\Models\bidang', 'bidang_id');
     }
+    public function beban_anggaran(){
+        return $this->belongsTo('App\Models\BebanAnggaran', 'beban_anggaran_id');
+    }
 }

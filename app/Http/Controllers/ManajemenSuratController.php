@@ -11,6 +11,7 @@ use App\Models\lampiran;
 use App\Models\tujuansurat;
 use App\Models\RiwayatSurat;
 use Illuminate\Http\Request;
+use App\Models\BebanAnggaran;
 use App\Models\tembusansurat;
 use App\Models\dasaracuansurat;
 use Yajra\DataTables\DataTables;
@@ -95,7 +96,7 @@ class ManajemenSuratController extends Controller
                 $checked = $data->e4 == 1 ? 'checked' : '';
                 $status = $data->e4 == 1 ? 1 : 0;
                 $disabled = auth()->user()->hak_akses_id == 1 || auth()->user()->tingkatan_eselon == 4 && $data->e4 == 0 && $data->e2 == 0 ? '' : 'disabled';
-                $e4 = '<input class="form-check-input e4" type="checkbox" data-status="'. $status .'" data-id="'.Crypt::encryptString($data->id).'" '. $disabled.' '. $checked .'>';
+                $e4 = '<input class="form-check-input-1 e4" type="checkbox" data-status="'. $status .'" data-id="'.Crypt::encryptString($data->id).'" '. $disabled.' '. $checked .'>';
                 
                 return $e4;
             })
@@ -103,7 +104,7 @@ class ManajemenSuratController extends Controller
                 $checked = $data->e3 == 1 ? 'checked' : '';
                 $status = $data->e3 == 1 ? 1 : 0;
                 $disabled = auth()->user()->hak_akses_id == 1 || auth()->user()->tingkatan_eselon == 3 && $data->e3 == 0 && $data->e4 != 0 && $data->e2 == 0 ? '' : 'disabled';
-                $e3 = '<input class="form-check-input e3" type="checkbox" data-status="'. $status .'" data-id="'.Crypt::encryptString($data->id).'" '. $disabled.' '. $checked .'>';
+                $e3 = '<input class="form-check-input-1 e3" type="checkbox" data-status="'. $status .'" data-id="'.Crypt::encryptString($data->id).'" '. $disabled.' '. $checked .'>';
                 
                 return $e3;
             })
@@ -111,7 +112,7 @@ class ManajemenSuratController extends Controller
                 $checked = $data->e2 == 1 ? 'checked' : '';
                 $status = $data->e2 == 1 ? 1 : 0;
                 $disabled = auth()->user()->hak_akses_id == 1 || auth()->user()->tingkatan_eselon == 2 && $data->e2 == 0 ? '' : 'disabled';
-                $e2 = '<input class="form-check-input e2" type="checkbox" data-status="'. $status .'" data-id="'.Crypt::encryptString($data->id).'" '. $disabled.' '. $checked .'>';
+                $e2 = '<input class="form-check-input-1 e2" type="checkbox" data-status="'. $status .'" data-id="'.Crypt::encryptString($data->id).'" '. $disabled.' '. $checked .'>';
                 
                 return $e2;
             })
@@ -140,7 +141,9 @@ class ManajemenSuratController extends Controller
             }
         }
         return view('surat.manajemenSurat',[
-            "jabatans" => $jabatanUsers
+            "jabatans" => $jabatanUsers,
+            "Dipa" => BebanAnggaran::where('jenis_lembaga', 1 )->get(),
+            "Mitra"=> BebanAnggaran::where('jenis_lembaga', 2 )->get()
         ]);
     }
 
@@ -286,7 +289,7 @@ class ManajemenSuratController extends Controller
     {
         $id = Crypt::decryptString($id);
 
-        $surat = surat::with('tujuan_surat', 'dasar_acuan_surat', 'nama_pejabat', 'tembusan_surat', 'lampiran', 'riwayat_surat')->find($id);
+        $surat = surat::with('tujuan_surat', 'dasar_acuan_surat', 'nama_pejabat', 'tembusan_surat', 'lampiran', 'riwayat_surat', 'beban_anggaran')->find($id);
 
         foreach ($surat->tujuan_surat as $tujuan) {
             $tujuan->makeHidden('id', 'surat_id', 'created_at', 'updated_at');
@@ -340,7 +343,7 @@ class ManajemenSuratController extends Controller
         
         $surat->{'alamat_instansi/pejabat'} = $request->alamat_tujuan;
         $surat->rincian_pelaksanaan_penugasan = $request->rincian_pelaksanaan_penugasan;
-        $surat->beban_anggaran = $request->beban_anggaran;
+        $surat->beban_anggaran_id = $request->beban_anggaran_id;
 
         $user = User::where("NIP" , $request->nip_pejabat)->first();
         $surat->nama_pejabat = $user->id;
@@ -361,6 +364,8 @@ class ManajemenSuratController extends Controller
             return response()->json(['error' => 'Input tidak valid. Tolong hapus tag <script>, <style> atau <link>'], 400);
         }
 
+        $bebanAnggaran = BebanAnggaran::find($request->beban_anggaran_id);
+
         $data = [
             "nomor_surat" => $request->nomor_surat ? $request->nomor_surat : "<Nomor_Surat>",
             "lampiran_surat" => $request->lampiran_surat ? $request->lampiran_surat : "<Lampiran_Surat>",
@@ -373,7 +378,7 @@ class ManajemenSuratController extends Controller
 
             "dasar_acuan" => $request->dasar_acuan,
             "rincian_pelaksanaan_penugasan" => $request->rincian_pelaksanaan_penugasan ? $request->rincian_pelaksanaan_penugasan : "<Rincian_pelaksanaan_penugasan>",
-            "beban_anggaran" => $request->beban_anggaran ? $request->beban_anggaran : "<Beban_Anggaran>",
+            "beban_anggaran" =>$bebanAnggaran->nama_lembaga ? $bebanAnggaran->nama_lembaga : "<Beban_Anggaran>",
 
 
             "Jabatan" => $nama_jabatan,

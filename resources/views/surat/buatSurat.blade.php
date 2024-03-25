@@ -4,6 +4,8 @@
 
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
     <style>
       label {
@@ -231,11 +233,26 @@
                   </div>
                 </div>
                 <div class="row mb-3" style="margin-top: 80px;">
-                  <div class="col-md-12">
-                      <label for="beban_anggaran">Beban Anggaran</label>
-                      <textarea type="text" name="beban_anggaran" id="beban_anggaran" class="form-control d-none" placeholder="Beban Anggaran" rows="3"></textarea>
-                      <div id="editor_beban_anggaran" class="beban_anggaran" style="font-size: 14px;">
-                      </div>
+                  <label for="beban_anggaran" class="mb-3">Beban Anggaran</label>
+                  <div class="col-md-6">
+                    <div class="form-check mb-3">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                      <label class="form-check-label mb-2" for="flexRadioDefault1">
+                        Dipa
+                      </label>
+                      <select name="beban_anggaran_id" class="form-select js-example-basic-single" id="beban_anggaran_id_dipa" disabled>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                      <label class="form-check-label mb-2" for="flexRadioDefault2">
+                        Mitra
+                      </label>
+                      <select name="beban_anggaran_id" class="form-select js-example-basic-single" id="beban_anggaran_id_mitra" disabled>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -388,6 +405,8 @@
     <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js')}}"></script>
     <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js')}}"></script>
     <script src="{{ asset('assets/js/forms-extras.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <script>
       const quill_rincian_pelaksanaan_penugasan = new Quill('#editor_rincian_pelaksanaan_penugasan', {
@@ -404,7 +423,50 @@
       
     <script>
       $(document).ready(function () {
+//----------------------------------------------------------------
+        var dipa = <?php echo json_encode($Dipa); ?>;
 
+        $(document).on("change", "#flexRadioDefault1", function() {
+            if ($(this).is(":checked")) {
+                $("#beban_anggaran_id_dipa").prop("disabled", false);
+                $("#beban_anggaran_id_mitra").prop("disabled", true);
+                $("#beban_anggaran_id_dipa").val(null);
+                $("#beban_anggaran_id_mitra").empty()
+                loadDropdownOptionsDipa();
+            }
+        });
+
+        function loadDropdownOptionsDipa() {
+          var optionsHtml = dipa.map(function(option) {
+              return `<option value="" disabled selected hidden>Pilih salah satu...</option>
+              <option value="${option.id}">${option.nama_lembaga}</option>`;
+          }).join('');
+          $("#beban_anggaran_id_dipa").html(optionsHtml);
+        }
+
+//----------------------------------------------------------------
+
+        var mitra = <?php echo json_encode($Mitra); ?>;
+
+        $(document).on("change", "#flexRadioDefault2", function() {
+          if ($(this).is(":checked")) {
+            $("#beban_anggaran_id_mitra").prop("disabled", false);
+            $("#beban_anggaran_id_dipa").prop("disabled", true);
+            $("#beban_anggaran_id_mitra").val(null);
+            $("#beban_anggaran_id_dipa").empty()
+            loadDropdownOptionsMitra();
+          }
+        });
+
+        function loadDropdownOptionsMitra() {
+          var optionsHtml = mitra.map(function(option) {
+              return `<option value="" disabled selected hidden>Pilih salah satu...</option>
+              <option value="${option.id}">${option.nama_lembaga}</option>`;
+          }).join('');
+          $("#beban_anggaran_id_mitra").html(optionsHtml);
+        }
+
+    
         $('.ql-formats').eq(0).remove(); 
         $('.ql-formats').eq(3).remove(); 
         $('.ql-formats').eq(2).remove();
@@ -681,7 +743,7 @@
           var alamat_tujuan = $("#alamat_tujuan").val();
           var dasar_acuan = $("#dasar_acuan").val();
           var rincian_pelaksanaan_penugasan = $("#rincian_pelaksanaan_penugasan").val();
-          var beban_anggaran = $("#beban_anggaran").val();
+          var beban_anggaran = $("#beban_anggaran_id_dipa").val();
           var jabatan_id = $("#jabatan_id").val();
           var nama_pejabat = $("#nama_pejabat").val();
           var nip = $("#nip").val();
@@ -785,9 +847,10 @@
                 }
               },
               error: function(error) {
+                console.log(error);
                   Swal.fire({
                       title: 'Error',
-                      text: error.responseJSON.error,
+                      text: "Lengkapi Semua Field Terlebih Dahulu",
                       icon: 'error',
                       confirmButtonText: 'OK'
                   });

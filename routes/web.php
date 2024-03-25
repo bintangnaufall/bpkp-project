@@ -10,7 +10,10 @@ use App\Http\Controllers\HakaksesController;
 use App\Http\Controllers\BuatSuratController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ArsipSuratController;
+use App\Http\Controllers\BebanAnggaranController;
 use App\Http\Controllers\ManajemenSuratController;
+use App\Models\BebanAnggaran;
+
 // use App\Http\Controllers\DisposisiController;
 
 /*
@@ -93,6 +96,13 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/create-update', [HakaksesController::class, 'storeOrUpdate'])->name('create_update'); 
             Route::get('/edit/{id}', [HakaksesController::class, 'edit'])->name('edit'); 
             Route::get('/delete/{id}', [HakaksesController::class, 'destroy'])->name('delete'); 
+        });
+
+        Route::prefix('lembaga_negara')->name('lembaga_negara.')->group(function() {
+            Route::get('/', [BebanAnggaranController::class, 'index'])->name('show'); 
+            Route::post('/create-update', [BebanAnggaranController::class, 'storeOrUpdate'])->name('create_update'); 
+            Route::get('/edit/{id}', [BebanAnggaranController::class, 'edit'])->name('edit'); 
+            Route::get('/delete/{id}', [BebanAnggaranController::class, 'destroy'])->name('delete'); 
         });
 
     });    
