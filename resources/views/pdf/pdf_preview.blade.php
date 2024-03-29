@@ -76,13 +76,7 @@
         }
     </style>
 </head>
-<<<<<<< HEAD
-
-<body
-    style="padding-left: 50px; padding-right:50px; padding-top: 50px; padding-bottom: 50px; font-family: Arial, sans-serif;">
-=======
 <body style="padding-left: 50px; padding-right:72px; padding-top: 50px; padding-bottom: 50px; font-family: Arial, sans-serif;">
->>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
 
     <table class="border" style="border-collapse: collapse; margin-left: 0pt; margin-top: 0px" cellspacing="0">
         <tr style="height: 57pt">
@@ -124,11 +118,7 @@
             <td style="width: 390px; text-align: justify;">
                 {{ $data['nomor_surat'] }}
             </td>
-<<<<<<< HEAD
-            <td>&nbsp;&nbsp;{{ $data['tanggal_surat'] }}</td>
-=======
             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data['tanggal_surat']}}</td>
->>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
         </tr>
     </table>
 
@@ -148,7 +138,7 @@
             <td style="width: 100px">
                 Hal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
             </td>
-            <td style="width: 330px; text-align: justify;">
+            <td style="width: 300px; text-align: justify;">
                 {!! $data['perihal_surat'] !!}
             </td>
         </tr>
@@ -161,7 +151,7 @@
                 <td style="width: 10px">
                     Yth.&nbsp;
                 </td>
-                <td style="width: 600px">
+                <td style="width: 600px; margin-left: 20px;">
                     @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) == 1)
                         @foreach ($data['tujuan_surat'] as $index => $surat)
                             {{ $surat }}
@@ -215,46 +205,27 @@
 
                 </td>
                 <td style="width: 100px">
-<<<<<<< HEAD
-
-                </td>
-=======
                     @if (isset($data['dasar_acuan']) && count($data['dasar_acuan']) == 1)
                         @foreach ($data['dasar_acuan'] as $index => $acuan)
                             {{$acuan}}
                         @endforeach
-                    @endif 
-                </td>  
->>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
+                    @endif
+                </td>
             </tr>
         </thead>
         <tbody>
             <tr>
-<<<<<<< HEAD
-                @if (isset($data['dasar_acuan']))
-                    @foreach ($data['dasar_acuan'] as $index => $dasar_acuan)
-            <tr>
-                <td style="width: 10px">
-                    {{ $index + 1 }}.
-                </td>
-                <td style="width: 600px; text-align: justify">
-                    {{ $dasar_acuan }}.
-                </td>
-            </tr>
-            @endforeach
-=======
                 @if (isset($data['dasar_acuan']) && count($data['dasar_acuan']) != 1)
                 @foreach ($data['dasar_acuan'] as $index => $dasar_acuan)
                     <tr>
                         <td style="width: 10px">
                             {{$index + 1}}.
-                        </td> 
+                        </td>
                         <td style="width: 627px; text-align: justify">
                             {{ $dasar_acuan }}
-                        </td>   
+                        </td>
                     </tr>
                 @endforeach
->>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
             @endif
             </tr>
         </tbody>
@@ -305,31 +276,17 @@
         </thead>
         <tbody>
             <tr>
-<<<<<<< HEAD
-                @if (isset($data['tembusan_surat']))
-                    @foreach ($data['tembusan_surat'] as $index => $tembusan_surat)
-            <tr>
-                <td style="width: 10px">
-                    {{ $index + 1 }}.
-                </td>
-                <td style="width: 627px; text-align: justify">
-                    {{ $tembusan_surat }}
-                </td>
-            </tr>
-            @endforeach
-=======
                 @if (isset($data['tembusan_surat']) && $data['tembusan_surat'][0] != "")
                 @foreach ($data['tembusan_surat'] as $index => $tembusan_surat)
                     <tr>
                         <td style="width: 10px">
                             {{$index + 1}}.
-                        </td> 
+                        </td>
                         <td style="width: 627px; text-align: justify">
                             {{ $tembusan_surat }}
-                        </td>   
+                        </td>
                     </tr>
                 @endforeach
->>>>>>> 3e890b0aa61ea83c8fe400d25eeb37e6c7ec7200
             @endif
             </tr>
         </tbody>
