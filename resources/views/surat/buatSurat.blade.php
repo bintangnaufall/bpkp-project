@@ -188,7 +188,7 @@
               <div class="row mb-3">
                   <div class="col-md-12">
                       <label for="lampiran_surat">Lampiran Surat</label>
-                      <input type="text" name="lampiran_surat" id="lampiran_surat" class="form-control" placeholder="Lampiran Surat">
+                      <input type="text" name="lampiran_surat" id="lampiran_surat" class="form-control" placeholder="1 Lampiran">
                   </div>
               </div>
               <div class="row mb-3">
