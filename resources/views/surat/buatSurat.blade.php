@@ -35,14 +35,20 @@
               font-size: 1.1rem;
           }
         }
+
         input:disabled {
-            background-color: #c6c6c6 !important; /* Warna abu-abu */
-            color: #ffffff; /* Warna teks yang sesuai */
-            cursor: not-allowed; /* Ganti kursor menjadi "not-allowed" */
+            background-color: #c6c6c6 !important;
+            /* Warna abu-abu */
+            color: #ffffff;
+            /* Warna teks yang sesuai */
+            cursor: not-allowed;
+            /* Ganti kursor menjadi "not-allowed" */
         }
+
         hr:not([size]) {
             color: white;
         }
+
         .btn-1 {
             display: inline-block;
             font-weight: 400;
@@ -58,51 +64,64 @@
             border-radius: 3px 20px 20px 3px !important;
             transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
-        @media (min-width: 1200px){
-          .modal-xl {
-              max-width: 1030px;
-          }
+
+        @media (min-width: 1200px) {
+            .modal-xl {
+                max-width: 1030px;
+            }
         }
+
         @media (min-width: 992px) {
-            .modal-lg, .modal-xl {
-            max-width: 830px  !important;
-          }
+
+            .modal-lg,
+            .modal-xl {
+                max-width: 830px !important;
+            }
         }
+
         .button {
-          color: rgb(255, 255, 255);
-          transition: color 0.25s, border-color 1s;
-          text-decoration: none;
+            color: rgb(255, 255, 255);
+            transition: color 0.25s, border-color 1s;
+            text-decoration: none;
         }
+
         .button {
-          background: none;
-          border-bottom: 2px solid;
-          font: inherit;
-          line-height: 1;
-          margin: 0.5em;
-          padding: .2em .5em;
+            background: none;
+            border-bottom: 2px solid;
+            font: inherit;
+            line-height: 1;
+            margin: 0.5em;
+            padding: .2em .5em;
         }
+
         .active {
-          border-color: #0d6efd;
+            border-color: #0d6efd;
         }
+
         .button:hover,
         .button:focus {
-          border-color: #0d6efd;
-          color: #fff;
+            border-color: #0d6efd;
+            color: #fff;
         }
+
         .raise:hover,
         .raise:focus {
-          box-shadow: 0 0.5em 0.5em -0.4em rgba(0, 128, 0, 0.4);
-          transform: translateY(-0.25em);
+            box-shadow: 0 0.5em 0.5em -0.4em rgba(0, 128, 0, 0.4);
+            transform: translateY(-0.25em);
         }
+
         a {
-          text-decoration: none;
+            text-decoration: none;
         }
+
         .ratio-16x9 {
             --bs-aspect-ratio: 100%;
         }
+
         .desktop-text {
             display: inline;
         }
+
         .mobile-logo {
             display: none;
         }
@@ -112,29 +131,32 @@
             .desktop-text {
                 display: none;
             }
+
             .mobile-logo {
                 display: inline;
             }
         }
+
         .ql-container {
             height: 80%;
         }
     </style>
 @endsection
 
-@section('navtop') 
-<a href="{{ route("surat.manajemen_surat.show") }}" class="button raise">
-  <span class="desktop-text">{{ auth()->user()->hak_akses_id == 1 ? "Manajemen Surat" : "Disposisi Surat"}}</span>
-  <span class="mobile-logo"><i class="bi bi-kanban-fill"></i></span>
-</a>
-<a href="{{ route('surat.buat_surat.show') }}" class="mx-3 button raise {{ Request::is('*buat_surat') ? 'active' : '' }}">
-  <span class="desktop-text">Buat Surat</span>
-  <span class="mobile-logo"><i class="bi bi-envelope"></i></span>
-</a>
-<a href="{{ route('surat.arsip_surat.show') }}" class="button raise">
-  <span class="desktop-text">Arsip</span>
-  <span class="mobile-logo"><i class="bi bi-archive"></i></span>
-</a>
+@section('navtop')
+    <a href="{{ route('surat.manajemen_surat.show') }}" class="button raise">
+        <span class="desktop-text">{{ auth()->user()->hak_akses_id == 1 ? 'Manajemen Surat' : 'Disposisi Surat' }}</span>
+        <span class="mobile-logo"><i class="bi bi-kanban-fill"></i></span>
+    </a>
+    <a href="{{ route('surat.buat_surat.show') }}"
+        class="mx-3 button raise {{ Request::is('*buat_surat') ? 'active' : '' }}">
+        <span class="desktop-text">Buat Surat</span>
+        <span class="mobile-logo"><i class="bi bi-envelope"></i></span>
+    </a>
+    <a href="{{ route('surat.arsip_surat.show') }}" class="button raise">
+        <span class="desktop-text">Arsip</span>
+        <span class="mobile-logo"><i class="bi bi-archive"></i></span>
+    </a>
 @endsection
 
 @section('content')
@@ -364,42 +386,47 @@
     </div>
   </div>
 
-  {{-- modal --}}
-  <div class="modal fade" id="ModalPDf" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="labelModal" style="color: black"></h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Preview</button>
-            </li>
-            {{-- <li class="nav-item" role="presentation">
+    {{-- modal --}}
+    <div class="modal fade" id="ModalPDf" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="labelModal" style="color: black"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                data-bs-target="#home-tab-pane" type="button" role="tab"
+                                aria-controls="home-tab-pane" aria-selected="true">Preview</button>
+                        </li>
+                        {{-- <li class="nav-item" role="presentation">
               <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Lampiran 1</button>
             </li> --}}
-          </ul>
-          <div class="tab-content mt-2" id="myTabContent">
-            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-              <div class="ratio ratio-16x9">
-                <iframe id="pdfViewer" src="" loading="lazy"></iframe>
-              </div>
-            </div>
-            {{-- <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                    </ul>
+                    <div class="tab-content mt-2" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel"
+                            aria-labelledby="home-tab" tabindex="0">
+                            <div class="ratio ratio-16x9">
+                                <iframe id="pdfViewer" src="" loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        {{-- <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
               <iframe id="pdfViewerlampiran1" src="" loading="lazy" width="800px" height="1000px"></iframe>
             </div> --}}
-          </div>  
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel"
+                        title="Batal" data-bs-dismiss="modal">Batal</button>
+                    <button class="btn btn-primary btn-md waves-effect rounded waves-light" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalToggle2" id="saveButton">Save</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel" title="Batal" data-bs-dismiss="modal">Batal</button>
-          <button class="btn btn-primary btn-md waves-effect rounded waves-light" data-bs-toggle="modal" data-bs-target="#exampleModalToggle2" id="saveButton">Save</button>
-        </div>
-      </div>
     </div>
-  </div>
-  
+
 @endsection
 
 @section('js')
@@ -409,25 +436,25 @@
     <script src="{{ asset('assets/libs/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.11/dist/sweetalert2.all.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.js"></script>
-    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js')}}"></script>
-    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js')}}"></script>
-    <script src="{{ asset('assets/js/forms-extras.js')}}"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js') }}"></script>
+    <script src="{{ asset('assets/js/forms-extras.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
     <script>
-      const quill_rincian_pelaksanaan_penugasan = new Quill('#editor_rincian_pelaksanaan_penugasan', {
-        theme: 'snow'
-      });
-      const quill_perihal_surat = new Quill('#editor_perihal_surat', {
-        theme: 'snow'
-      });
-      const quill_beban_anggaran = new Quill('#editor_beban_anggaran', {
-        theme: 'snow'
-      });
+        const quill_rincian_pelaksanaan_penugasan = new Quill('#editor_rincian_pelaksanaan_penugasan', {
+            theme: 'snow'
+        });
+        const quill_perihal_surat = new Quill('#editor_perihal_surat', {
+            theme: 'snow'
+        });
+        const quill_beban_anggaran = new Quill('#editor_beban_anggaran', {
+            theme: 'snow'
+        });
     </script>
-    
-      
+
+
     <script>
       $(document).ready(function () {
 
@@ -458,17 +485,17 @@
             }
         });
 
-        function loadDropdownOptionsDipa() {
-          var optionsHtml = dipa.map(function(option) {
-              return `<option value="" disabled selected hidden>Pilih salah satu...</option>
+            function loadDropdownOptionsDipa() {
+                var optionsHtml = dipa.map(function(option) {
+                    return `<option value="" disabled selected hidden>Pilih salah satu...</option>
               <option value="${option.id}">${option.nama_lembaga}</option>`;
-          }).join('');
-          $("#beban_anggaran_id_dipa").html(optionsHtml);
-        }
+                }).join('');
+                $("#beban_anggaran_id_dipa").html(optionsHtml);
+            }
 
-//----------------------------------------------------------------
+            //----------------------------------------------------------------
 
-        var mitra = <?php echo json_encode($Mitra); ?>;
+            var mitra = <?php echo json_encode($Mitra); ?>;
 
         $(document).on("change", "#flexRadioDefault2", function() {
           if ($(this).is(":checked")) {
@@ -484,77 +511,78 @@
           }
         });
 
-        function loadDropdownOptionsMitra() {
-          var optionsHtml = mitra.map(function(option) {
-              return `<option value="" disabled selected hidden>Pilih salah satu...</option>
+            function loadDropdownOptionsMitra() {
+                var optionsHtml = mitra.map(function(option) {
+                    return `<option value="" disabled selected hidden>Pilih salah satu...</option>
               <option value="${option.id}">${option.nama_lembaga}</option>`;
-          }).join('');
-          $("#beban_anggaran_id_mitra").html(optionsHtml);
-        }
-
-    
-        $('.ql-formats').eq(0).remove(); 
-        $('.ql-formats').eq(3).remove(); 
-        $('.ql-formats').eq(2).remove();
-        $('.ql-formats').eq(1).remove();
-        $('.ql-formats').eq(4).remove();
-
-        $('.ql-header.ql-picker').empty();
-        $('.ql-clean').remove();
-        $('.ql-list').remove();
-        $('.ql-link').remove();
+                }).join('');
+                $("#beban_anggaran_id_mitra").html(optionsHtml);
+            }
 
 
-        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+            $('.ql-formats').eq(0).remove();
+            $('.ql-formats').eq(3).remove();
+            $('.ql-formats').eq(2).remove();
+            $('.ql-formats').eq(1).remove();
+            $('.ql-formats').eq(4).remove();
 
-        let pdfLinks = [];
-        // let currentIndex = 0;
+            $('.ql-header.ql-picker').empty();
+            $('.ql-clean').remove();
+            $('.ql-list').remove();
+            $('.ql-link').remove();
 
-        $(document).on("change", ".formFile", function(event) {
-          const file = event.target.files[0];
-          const reader = new FileReader();
 
-          reader.onload = function(event) {
-            const pdfUrl = event.target.result;
-            pdfLinks.push(pdfUrl);
-          };
+            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+            const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(
+                popoverTriggerEl))
 
-          reader.readAsDataURL(file);
-        });
-        
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        $.ajaxSetup({
-            headers: {
-            'X-CSRF-TOKEN': csrfToken
-            },
-        });
-        
-        function addFormsss() {
-          var addrow = '<div class="form-group baru-data-4" style="margin-bottom: -25px">\
-              <div class="col-md-12">\
-                <input class="form-control formFile" type="file" name="lampiran[]" id="formFile">\
-              </div>\
-              <div class="button-group d-flex justify-content-center mt-4 mb-4">\
-                  <button type="button" class="btn btn-success btn-tambah-4 mx-2">\
-                    <span class="desktop-text">Tambah Lampiran Surat</span>\
-                    <span class="mobile-logo"><i class="fa fa-plus"></i></span>\
-                  </button>\
-                  <button type="button" class="btn btn-danger btn-hapus-4">\
-                    <span class="desktop-text">Hapus</span>\
-                    <span class="mobile-logo"><i class="fa fa-times"></i></span>\
-                  </button>\
-              </div>\
-          </div>';
-          $("#dynamic_form-4").append(addrow);
-        }
+            let pdfLinks = [];
+            // let currentIndex = 0;
 
-        $("#dynamic_form-4").on("click", ".btn-tambah-4", function () {
-            addFormsss();
-            $(this).css("display", "none");
-            $(".btn-hapus-4").css("display", "none");
-            $(".baru-data-4:last .btn-hapus-4").show();
-        });
+            $(document).on("change", ".formFile", function(event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    const pdfUrl = event.target.result;
+                    pdfLinks.push(pdfUrl);
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+            });
+
+            function addFormsss() {
+                var addrow = '<div class="form-group baru-data-4" style="margin-bottom: -25px">\
+                  <div class="col-md-12">\
+                    <input class="form-control formFile" type="file" name="lampiran[]" id="formFile">\
+                  </div>\
+                  <div class="button-group d-flex justify-content-center mt-4 mb-4">\
+                      <button type="button" class="btn btn-success btn-tambah-4 mx-2">\
+                        <span class="desktop-text">Tambah Lampiran Surat</span>\
+                        <span class="mobile-logo"><i class="fa fa-plus"></i></span>\
+                      </button>\
+                      <button type="button" class="btn btn-danger btn-hapus-4">\
+                        <span class="desktop-text">Hapus</span>\
+                        <span class="mobile-logo"><i class="fa fa-times"></i></span>\
+                      </button>\
+                  </div>\
+              </div>';
+                $("#dynamic_form-4").append(addrow);
+            }
+
+            $("#dynamic_form-4").on("click", ".btn-tambah-4", function() {
+                addFormsss();
+                $(this).css("display", "none");
+                $(".btn-hapus-4").css("display", "none");
+                $(".baru-data-4:last .btn-hapus-4").show();
+            });
 
         $("#dynamic_form-4").on("click", ".btn-hapus-4", function () {
           $(this).closest('.baru-data-4').remove();
@@ -586,12 +614,12 @@
             $("#dynamic_form").append(addrow);
         }
 
-        $("#dynamic_form").on("click", ".btn-tambah", function () {
-            addForm();
-            $(this).css("display", "none");
-            $(".btn-hapus").css("display", "none");
-            $(".baru-data:last .btn-hapus").show();
-        });
+            $("#dynamic_form").on("click", ".btn-tambah", function() {
+                addForm();
+                $(this).css("display", "none");
+                $(".btn-hapus").css("display", "none");
+                $(".baru-data:last .btn-hapus").show();
+            });
 
         $("#dynamic_form").on("click", ".btn-hapus", function () {
           $(this).closest('.baru-data').remove();
@@ -631,12 +659,12 @@
             $("#dynamic_form-2").append(addrow);
         }
 
-        $("#dynamic_form-2").on("click", ".btn-tambah-2", function () {
-            addForms();
-            $(this).css("display", "none");
-            $(".btn-hapus-2").css("display", "none");
-            $(".baru-data-2:last .btn-hapus-2").show();
-        });
+            $("#dynamic_form-2").on("click", ".btn-tambah-2", function() {
+                addForms();
+                $(this).css("display", "none");
+                $(".btn-hapus-2").css("display", "none");
+                $(".baru-data-2:last .btn-hapus-2").show();
+            });
 
         $("#dynamic_form-2").on("click", ".btn-hapus-2", function () {
           $(this).closest('.baru-data-2').remove();
@@ -669,127 +697,129 @@
             $("#dynamic_form-3").append(addrow);
         }
 
-        $("#dynamic_form-3").on("click", ".btn-tambah-3", function () {
-            addFormss();
-            $(this).css("display", "none");
-            $(".btn-hapus-3").css("display", "none");
-            $(".baru-data-3:last .btn-hapus-3").show();
-        });
+            $("#dynamic_form-3").on("click", ".btn-tambah-3", function() {
+                addFormss();
+                $(this).css("display", "none");
+                $(".btn-hapus-3").css("display", "none");
+                $(".baru-data-3:last .btn-hapus-3").show();
+            });
 
-        $("#dynamic_form-3").on("click", ".btn-hapus-3", function () {
-          $(this).closest('.baru-data-3').remove();
-            $(".baru-data-3:last .btn-tambah-3").show(); 
-              var bykrow = $(".baru-data-3").length;
-              if (bykrow == 1) {
-                  $(".btn-hapus-3").css("display", "none");
-                  // $(".btn-tambah").css("display", "");
-              } else {
-                  $('.baru-data-3:last .btn-hapus-3').css("display", "");
-              }
-        });
-
-        $("#search_nip").click(function () {
-          var nip = $("#nip").val(); ;
-          $("#nama_pejabat").val('');
-          $('#jabatan_id').val('');
-          Swal.fire({
-              title: 'Loading',
-              html: 'Please Wait....',
-              allowOutsideClick: false,
-              showConfirmButton: false,
-              willOpen: () => {
-                  swal.showLoading();
-              }
-          });
-          $.ajax({
-              url: "{{route('surat.buat_surat.api-nip')}}",
-              type: "POST",
-              data: {
-                  nip: nip,
-                  _token: '{{csrf_token()}}'
-              },
-              dataType: 'json',
-              success: function (response) {
-                Swal.close(); 
-                if (response.status == true) {
-                  $("#nama_pejabat").val(response.data.name);
-                  $('#jabatan_id option[value="' + response.data.jabatan_id + '"]').prop('selected',true);
-                }else {
-                  $("#nama_pejabat").val('');
-                  $('#jabatan_id').val('');
+            $("#dynamic_form-3").on("click", ".btn-hapus-3", function() {
+                $(this).closest('.baru-data-3').remove();
+                $(".baru-data-3:last .btn-tambah-3").show();
+                var bykrow = $(".baru-data-3").length;
+                if (bykrow == 1) {
+                    $(".btn-hapus-3").css("display", "none");
+                    // $(".btn-tambah").css("display", "");
+                } else {
+                    $('.baru-data-3:last .btn-hapus-3').css("display", "");
                 }
-              }
-          });
-        });
+            });
 
-        $('#jabatan_id').on('change', function () {
-          var idjabatan = this.value;
-          $("#nama_pejabat").html('');
-          $("#nip").html('');
-          $.ajax({
-              url: "{{route('surat.buat_surat.api-jabatan')}}",
-              type: "POST",
-              data: {
-                  jabatan_id: idjabatan,
-                  _token: '{{csrf_token()}}'
-              },
-              dataType: 'json',
-              success: function (response) {
-                if (response.status == true) {
-                  $("#nama_pejabat").val(response.data[0].name);
-                  var nip = response.data[0].nip;
+            $("#search_nip").click(function() {
+                var nip = $("#nip").val();;
+                $("#nama_pejabat").val('');
+                $('#jabatan_id').val('');
+                Swal.fire({
+                    title: 'Loading',
+                    html: 'Please Wait....',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        swal.showLoading();
+                    }
+                });
+                $.ajax({
+                    url: "{{ route('surat.buat_surat.api-nip') }}",
+                    type: "POST",
+                    data: {
+                        nip: nip,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        Swal.close();
+                        if (response.status == true) {
+                            $("#nama_pejabat").val(response.data.name);
+                            $('#jabatan_id option[value="' + response.data.jabatan_id + '"]')
+                                .prop('selected', true);
+                        } else {
+                            $("#nama_pejabat").val('');
+                            $('#jabatan_id').val('');
+                        }
+                    }
+                });
+            });
 
-                  var formattedNIP = nip.slice(0, 8) + ' ' + nip.slice(8, 14) + ' ' + nip.slice(14, 15) + ' ' + nip.slice(15);
-                  $("#nip").val(formattedNIP);
-                }else {
-                  $("#nama_pejabat").val('');
-                  $("#nip").val('');
-                }
-              }
-          });
-        });
-          
-        $("#show_layout").click(function () {
-          $("#ModalPDf").modal("show");
-          $("#pdfViewer").attr("src", "{{ asset('pdf/Format_Surat.pdf')}}");
-          $("#labelModal").html('Contoh Format Surat');
-          $("#saveButton").css("display", "none");
-          $(".btnCancel").css("display", "none");
-        });
+            $('#jabatan_id').on('change', function() {
+                var idjabatan = this.value;
+                $("#nama_pejabat").html('');
+                $("#nip").html('');
+                $.ajax({
+                    url: "{{ route('surat.buat_surat.api-jabatan') }}",
+                    type: "POST",
+                    data: {
+                        jabatan_id: idjabatan,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status == true) {
+                            $("#nama_pejabat").val(response.data[0].name);
+                            var nip = response.data[0].nip;
 
-        $("#show_preview").click( function () {
+                            var formattedNIP = nip.slice(0, 8) + ' ' + nip.slice(8, 14) + ' ' +
+                                nip.slice(14, 15) + ' ' + nip.slice(15);
+                            $("#nip").val(formattedNIP);
+                        } else {
+                            $("#nama_pejabat").val('');
+                            $("#nip").val('');
+                        }
+                    }
+                });
+            });
+
+            $("#show_layout").click(function() {
+                $("#ModalPDf").modal("show");
+                $("#pdfViewer").attr("src", "{{ asset('pdf/Format_Surat.pdf') }}");
+                $("#labelModal").html('Contoh Format Surat');
+                $("#saveButton").css("display", "none");
+                $(".btnCancel").css("display", "none");
+            });
+
+            $("#show_preview").click(function() {
 
 
-          var editorContentPenugasan = $('#editor_rincian_pelaksanaan_penugasan p').html();
-          $("#rincian_pelaksanaan_penugasan").val(editorContentPenugasan);
-          
-          var editorContentPerihal = $('#editor_perihal_surat p').html();
-          $("#perihal_surat").val(editorContentPerihal);
+                var editorContentPenugasan = $('#editor_rincian_pelaksanaan_penugasan p').html();
+                $("#rincian_pelaksanaan_penugasan").val(editorContentPenugasan);
 
-          var editorContentAnggaran = $('#editor_beban_anggaran p').html();
-          $("#beban_anggaran").val(editorContentAnggaran);    
+                var editorContentPerihal = $('#editor_perihal_surat p').html();
+                $("#perihal_surat").val(editorContentPerihal);
 
-          var tanggal_surat = $("#tanggal_surat").val();
-          var lampiran_surat = $("#lampiran_surat").val();
-          var perihal_surat = $("#perihal_surat").val();
-          var tujuan_surat = $("#tujuan_surat").val();
-          var alamat_tujuan = $("#alamat_tujuan").val();
-          var dasar_acuan = $("#dasar_acuan").val();
-          var rincian_pelaksanaan_penugasan = $("#rincian_pelaksanaan_penugasan").val();
-          var beban_anggaran = $("#beban_anggaran_id_dipa").val();
-          var jabatan_id = $("#jabatan_id").val();
-          var nama_pejabat = $("#nama_pejabat").val();
-          var nip = $("#nip").val();
-          var tembusan_surat = $("#tembusan_surat").val();        
+                var editorContentAnggaran = $('#editor_beban_anggaran p').html();
+                $("#beban_anggaran").val(editorContentAnggaran);
 
-          $("#myTab").empty();
-          $("#myTabContent").empty();
+                var tanggal_surat = $("#tanggal_surat").val();
+                var lampiran_surat = $("#lampiran_surat").val();
+                var perihal_surat = $("#perihal_surat").val();
+                var tujuan_surat = $("#tujuan_surat").val();
+                var alamat_tujuan = $("#alamat_tujuan").val();
+                var dasar_acuan = $("#dasar_acuan").val();
+                var rincian_pelaksanaan_penugasan = $("#rincian_pelaksanaan_penugasan").val();
+                var beban_anggaran = $("#beban_anggaran_id_dipa").val();
+                var jabatan_id = $("#jabatan_id").val();
+                var nama_pejabat = $("#nama_pejabat").val();
+                var nip = $("#nip").val();
+                var tembusan_surat = $("#tembusan_surat").val();
 
-          $("#myTab").append(`<li class="nav-item" role="presentation">
+                $("#myTab").empty();
+                $("#myTabContent").empty();
+
+                $("#myTab").append(`<li class="nav-item" role="presentation">
               <button class="nav-link active" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview-tab-pane" type="button" role="tab" aria-controls="preview-tab-pane" aria-selected="true">Preview</button>
           </li>`);
 
-          $("#myTabContent").append(`<div class="tab-pane fade show active" id="preview-tab-pane" role="tabpanel" aria-labelledby="preview-tab" tabindex="0">
+                $("#myTabContent").append(`<div class="tab-pane fade show active" id="preview-tab-pane" role="tabpanel" aria-labelledby="preview-tab" tabindex="0">
             <div class="ratio ratio-16x9">
                 <iframe id="pdfViewer" src="" loading="lazy"></iframe>
               </div>
@@ -856,142 +886,146 @@
             });
           } else {
 
-            $("#pdfViewer").attr("src", "");
-            $("#labelModal").html('Preview Surat');
-            $("#saveButton").css("display", "block");
-            $(".btnCancel").css("display", "block");
+                    $("#pdfViewer").attr("src", "");
+                    $("#labelModal").html('Preview Surat');
+                    $("#saveButton").css("display", "block");
+                    $(".btnCancel").css("display", "block");
 
-            var form = document.getElementById('form_surat');
+                    var form = document.getElementById('form_surat');
 
 
-            Swal.fire({
-                title: 'Loading',
-                html: 'Please Wait....',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                willOpen: () => {
-                    swal.showLoading();
-                },
-            });
-            $.ajax({
-              url: '{{ route('surat.buat_surat.pdfview') }}',
-              type: "post",
-              data: new FormData(form),
-              contentType: false, 
-              cache: false,
-              processData: false,
-              success: function(response) {
-                $("#pdfViewer").attr("src", '{{ route('surat.buat_surat.pdfview') }}?' + new URLSearchParams(new FormData(form)).toString());
-                $("#ModalPDf").modal("show");
-                Swal.close();
-                var linkpdf = $(".formFile").val();
-                
-                if (linkpdf.length > 0) {
-                  $.ajax({
-                      url: '{{ route('surat.buat_surat.pdf') }}',
-                      type: "post",
-                      data: new FormData(form),
-                      contentType: false,
-                      cache: false,
-                      processData: false,
-                      success: function (response) {
-                        $("#myTab").append(response.map(function (res, index) {
-                            return `<li class="nav-item" role="presentation">
+                    Swal.fire({
+                        title: 'Loading',
+                        html: 'Please Wait....',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            swal.showLoading();
+                        },
+                    });
+                    $.ajax({
+                        url: '{{ route('surat.buat_surat.pdfview') }}',
+                        type: "post",
+                        data: new FormData(form),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        success: function(response) {
+                            $("#pdfViewer").attr("src",
+                                '{{ route('surat.buat_surat.pdfview') }}?' +
+                                new URLSearchParams(new FormData(form)).toString());
+                            $("#ModalPDf").modal("show");
+                            Swal.close();
+                            var linkpdf = $(".formFile").val();
+
+                            if (linkpdf.length > 0) {
+                                $.ajax({
+                                    url: '{{ route('surat.buat_surat.pdf') }}',
+                                    type: "post",
+                                    data: new FormData(form),
+                                    contentType: false,
+                                    cache: false,
+                                    processData: false,
+                                    success: function(response) {
+                                        $("#myTab").append(response.map(function(
+                                            res, index) {
+                                            return `<li class="nav-item" role="presentation">
                                         <button class="nav-link" id="lampiran-tab-${index}" data-bs-toggle="tab" data-bs-target="#lampiran-tab-pane-${index}" type="button" role="tab" aria-controls="lampiran-tab-pane-${index}" aria-selected="false">Lampiran ${index + 1}</button>
                                     </li>`;
-                        }).join(''));
-                        $("#myTabContent").append(response.map(function (res, index) {
-                            return `<div class="tab-pane fade" id="lampiran-tab-pane-${index}" role="tabpanel" aria-labelledby="lampiran-tab-${index}" tabindex="0">
+                                        }).join(''));
+                                        $("#myTabContent").append(response.map(
+                                                function(res, index) {
+                                                    return `<div class="tab-pane fade" id="lampiran-tab-pane-${index}" role="tabpanel" aria-labelledby="lampiran-tab-${index}" tabindex="0">
                                       <div class="ratio ratio-16x9">
                                         <iframe id="pdfViewer${index + 1}" src="data:application/pdf;base64,${res}" loading="lazy" width="800px" height="1000px"></iframe>
                                       </div>
                                     </div>`;
-                        }).join('')).find('iframe').removeAttr('style');
-                      },
-                      error: function (error) {
-                          Swal.fire({
-                              title: 'Error',
-                              text: 'An error occurred',
-                              icon: 'error',
-                              confirmButtonText: 'OK'
-                          });
-                      }
-                  });
+                                                }).join('')).find('iframe')
+                                            .removeAttr('style');
+                                    },
+                                    error: function(error) {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'An error occurred',
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                });
+                            }
+                        },
+                        error: function(error) {
+                            console.log(error);
+                            Swal.fire({
+                                title: 'Error',
+                                text: "Lengkapi Semua Field Terlebih Dahulu",
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
                 }
-              },
-              error: function(error) {
-                console.log(error);
-                  Swal.fire({
-                      title: 'Error',
-                      text: "Lengkapi Semua Field Terlebih Dahulu",
-                      icon: 'error',
-                      confirmButtonText: 'OK'
-                  });
-              }
             });
-          }
-        });
 
-        $("#saveButton").on('click', function () {
-          var form = document.getElementById('form_surat');
-          Swal.fire({
-                  title: 'Yakin ?',
-                  html: '<p>Apakah anda yakin ingin Menyimpan Surat ?</p>',
-                  showCancelButton: true,
-                  confirmButtonText: 'Yakin',
-                  icon: 'question',
-                  cancelButtonColor: '#d61c0f',
-                  cancelButtonText: 'Batal',
-                  customClass: {
-                      actions: 'my-actions',
-                      cancelButton: 'order-1 right-gap',
-                      confirmButton: 'order-2',
-                      denyButton: 'order-3',
-                  }
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  Swal.fire({
-                    title: 'Loading',
-                    html: 'Please Wait....',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                      swal.showLoading();
+            $("#saveButton").on('click', function() {
+                var form = document.getElementById('form_surat');
+                Swal.fire({
+                    title: 'Yakin ?',
+                    html: '<p>Apakah anda yakin ingin Menyimpan Surat ?</p>',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yakin',
+                    icon: 'question',
+                    cancelButtonColor: '#d61c0f',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        actions: 'my-actions',
+                        cancelButton: 'order-1 right-gap',
+                        confirmButton: 'order-2',
+                        denyButton: 'order-3',
                     }
-                  });
-
-                  $.ajax({
-                    url: '{{ route('surat.buat_surat.create') }}',
-                    type: "post",
-                    data: new FormData(form),
-                    contentType: false, 
-                    cache: false,
-                    processData: false,
-                    success: function(response) {
-                      setInterval(() => {
+                }).then((result) => {
+                    if (result.isConfirmed) {
                         Swal.fire({
-                            title: 'Berhasil!',
-                            text: "Surat berhasil Disimpan",
-                            icon: 'success',
-                            timer: 3000,
+                            title: 'Loading',
+                            html: 'Please Wait....',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                swal.showLoading();
+                            }
                         });
-                      }, 3000);
-                      window.location.href = '/surat/disposisi_surat';
-                    },
-                    error: function(error) {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'An error occurred',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
+
+                        $.ajax({
+                            url: '{{ route('surat.buat_surat.create') }}',
+                            type: "post",
+                            data: new FormData(form),
+                            contentType: false,
+                            cache: false,
+                            processData: false,
+                            success: function(response) {
+                                setInterval(() => {
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: "Surat berhasil Disimpan",
+                                        icon: 'success',
+                                        timer: 3000,
+                                    });
+                                }, 3000);
+                                window.location.href = '/surat/disposisi_surat';
+                            },
+                            error: function(error) {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'An error occurred',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
                         });
                     }
-                  });
-                }
-              })
+                })
 
+            });
         });
-      });
-
     </script>
 @endsection
