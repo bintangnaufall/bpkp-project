@@ -20,9 +20,9 @@
       .animate__fadeInDown {
         --animate-duration: 0.5s;
       }
-      .form-control, .form-select {
+      /* .form-control, .form-select {
         border: var(--bs-border-width) solid #8693a1 !important;
-      }
+      } */
       .content .navbar .sidebar-toggler, .content .navbar .navbar-nav .nav-link i {
         margin-right: 1.5rem;
       }
@@ -182,7 +182,7 @@
                 <div class="form-group baru-data-3">
                   <div class="col-md-12">
                       <label for="tujuan_surat">Tujuan Surat</label>
-                      <textarea id="tujuan_surat" name="tujuan_surat[]" placeholder="Tujuan Surat" class="form-control tujuan_surat" rows="3"></textarea>
+                      <textarea id="tujuan_surat" name="tujuan_surat[]" placeholder="Tujuan Surat" class="form-control tujuan_surat" rows="2"></textarea>
                   </div>
                   <div class="button-group d-flex justify-content-center mt-2 mb-3">
                       <button type="button" class="btn btn-success btn-tambah-3 mx-2">
@@ -210,7 +210,7 @@
 	                <div class="form-group baru-data">
 		                <div class="col-md-12">
                         <label for="dasar_acuan">Dasar Acuan Surat</label>
-		                    <textarea id="dasar_acuan" name="dasar_acuan[]" placeholder="Dasar Acuan Penugasan" class="form-control dasar_acuan" rows="3"></textarea>
+		                    <textarea id="dasar_acuan" name="dasar_acuan[]" placeholder="Dasar Acuan Penugasan" class="form-control dasar_acuan" rows="2"></textarea>
 		                </div>
 		                <div class="button-group d-flex justify-content-center mt-2 mb-3">
 		                    <button type="button" class="btn btn-success btn-tambah mx-2">
@@ -293,9 +293,16 @@
                 <h4 class="mb-3">*Tembusan Surat</h4>
                 <div class="row" id="dynamic_form-2">
 	                <div class="form-group baru-data-2">
-		                <div class="col-md-12">
-		                    <textarea id="tembusan_surat" name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="3"></textarea>
-		                </div>
+                    <div class="col-md-12 d-flex">
+                        <textarea id="tembusan_surat" name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="1"></textarea>
+                        <select id="select_tembusan" class="form-select select_tembusan" style="width: 400px;">
+                          <option value="" selected hidden disabled>Pilih Isi Tembusan</option>
+                          <option value="Yth. Gubernur">Gubernur</option>
+                          <option value="Yth. Kepala BPKP">Kepala BPKP</option>
+                          <option value="Yth. Deputi BPKP">Deputi BPKP</option>
+                          <option value="Yth. Sestama">Sestama</option> 
+                      </select>
+                    </div>
 		                <div class="button-group d-flex justify-content-center mt-2 mb-3">
 		                    <button type="button" class="btn btn-success btn-tambah-2 mx-2">
                           <span class="desktop-text">Tambah Tembusan Surat</span>
@@ -423,16 +430,31 @@
       
     <script>
       $(document).ready(function () {
+
+        $(document).on('change', ".select_tembusan", function () {
+          // Dapatkan nilai select yang dipilih
+          var selectedValue = $(this).val();
+
+          // Temukan textarea terdekat dengan ID tembusan_surat
+          var textarea = $(this).closest('.baru-data-2').find('.tembusan_surat');
+
+          // Masukkan nilai select ke textarea
+          textarea.val(selectedValue);
+        });
+
 //----------------------------------------------------------------
         var dipa = <?php echo json_encode($Dipa); ?>;
 
         $(document).on("change", "#flexRadioDefault1", function() {
             if ($(this).is(":checked")) {
-                $("#beban_anggaran_id_dipa").prop("disabled", false);
-                $("#beban_anggaran_id_mitra").prop("disabled", true);
-                $("#beban_anggaran_id_dipa").val(null);
-                $("#beban_anggaran_id_mitra").empty()
-                loadDropdownOptionsDipa();
+              $("#beban_anggaran_id_dipa").prop("disabled", false);
+              $("#beban_anggaran_id_mitra").prop("disabled", true);
+              $("#beban_anggaran_id_dipa").val(null); 
+              $("#beban_anggaran_id_mitra").empty()
+              $("#beban_anggaran_id_mitra").removeClass("is-invalid");
+              $("#beban_anggaran_id_mitra").removeClass("is-valid");
+              $("#flexRadioDefault2").removeClass("is-valid");                
+              loadDropdownOptionsDipa();
             }
         });
 
@@ -454,7 +476,11 @@
             $("#beban_anggaran_id_dipa").prop("disabled", true);
             $("#beban_anggaran_id_mitra").val(null);
             $("#beban_anggaran_id_dipa").empty()
+            $("#beban_anggaran_id_dipa").removeClass("is-invalid");
+            $("#beban_anggaran_id_dipa").removeClass("is-valid");
+            $("#flexRadioDefault1").removeClass("is-valid");                
             loadDropdownOptionsMitra();
+
           }
         });
 
@@ -544,7 +570,7 @@
         function addForm() {
             var addrow = '<div class="form-group baru-data">\
                 <div class="col-md-12">\
-                    <textarea name="dasar_acuan[]"" placeholder="Dasar Acuan Penugasan" class="form-control dasar_acuan" rows="3"></textarea>\
+                    <textarea name="dasar_acuan[]"" placeholder="Dasar Acuan Penugasan" class="form-control dasar_acuan" rows="2"></textarea>\
                 </div>\
                 <div class="button-group d-flex justify-content-center mt-2 mb-3">\
                     <button type="button" class="btn btn-success btn-tambah mx-2">\
@@ -581,9 +607,16 @@
           //-----dynamicform_tembusan_surat------
         function addForms() {
             var addrow = '<div class="form-group baru-data-2">\
-                <div class="col-md-12">\
-                    <textarea name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control" rows="3"></textarea>\
-                </div>\
+              <div class="col-md-12 d-flex">\
+                        <textarea id="tembusan_surat" name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="1"></textarea>\
+                        <select id="select_tembusan" class="form-select select_tembusan" style="width: 400px;">\
+                          <option value="" selected hidden disabled>Pilih Isi Tembusan</option>\
+                          <option value="Yth. Gubernur">Gubernur</option>\
+                          <option value="Yth. Kepala BPKP">Kepala BPKP</option>\
+                          <option value="Yth. Deputi BPKP">Deputi BPKP</option>\
+                          <option value="Yth. Sestama">Sestama</option> \
+                      </select>\
+                    </div>\
                 <div class="button-group d-flex justify-content-center mt-2 mb-3">\
                     <button type="button" class="btn btn-success btn-tambah-2 mx-2">\
                       <span class="desktop-text">Tambah Tembusan Surat</span>\
@@ -620,7 +653,7 @@
         function addFormss() {
             var addrow = '<div class="form-group baru-data-3">\
                 <div class="col-md-12">\
-                    <textarea name="tujuan_surat[]" placeholder="Tujuan Surat" class="form-control tujuan_surat" rows="3"></textarea>\
+                    <textarea name="tujuan_surat[]" placeholder="Tujuan Surat" class="form-control tujuan_surat" rows="2"></textarea>\
                 </div>\
                 <div class="button-group d-flex justify-content-center mt-3 mb-3">\
                     <button type="button" class="btn btn-success btn-tambah-3 mx-2">\
@@ -761,6 +794,46 @@
                 <iframe id="pdfViewer" src="" loading="lazy"></iframe>
               </div>
           </div>`);
+
+        var editorContentPerihalSurat = $("#editor_perihal_surat").text().trim();
+        if (editorContentPerihalSurat === "" || editorContentPerihalSurat === "<br>") {
+            $("#editor_perihal_surat").addClass("border border-danger");
+        } else {
+            $("#editor_perihal_surat").removeClass("border border-danger");
+            $("#editor_perihal_surat").addClass("border border-success");
+        }
+
+        var editorContentRincianPelaksanaan = $("#editor_rincian_pelaksanaan_penugasan").text().trim();
+        if (editorContentRincianPelaksanaan === "" || editorContentRincianPelaksanaan === "<br>") {
+            $("#editor_rincian_pelaksanaan_penugasan").addClass("border border-danger");
+        } else {
+            $("#editor_rincian_pelaksanaan_penugasan").removeClass("border border-danger");
+            $("#editor_rincian_pelaksanaan_penugasan").addClass("border border-success");
+        }
+
+        $('input[type="text"]:not([disabled]), input[type="date"]:not([disabled]), textarea:not([disabled]):not(#tembusan_surat):not(#select_tembusan), select:not([disabled]):not(#select_tembusan), input[type="radio"]:not([disabled])').each(function() {
+            if (!$(this).is(':disabled')) {
+                if ($(this).is(':radio')) {
+                    var radioName = $(this).attr('name');
+                    if ($('input[name="' + radioName + '"]:checked').length === 0) {
+                        $(this).addClass("is-invalid");
+                        $(this).removeClass("is-valid");
+                    } else {
+                        $(this).removeClass("is-invalid");
+                        $(this).addClass("is-valid");
+                    }
+                } else {
+                    if ($(this).val() === "" || $(this).val() === null) {
+                        $(this).addClass("is-invalid");
+                        $(this).removeClass("is-valid");
+                    } else {
+                        $(this).removeClass("is-invalid");
+                        $(this).addClass("is-valid");
+                    }
+                }
+            }
+          });
+
           if (
               tanggal_surat === "" ||
               lampiran_surat === "" ||

@@ -680,6 +680,16 @@
     <script>
         $(document).ready(function() {
 
+        $(document).on('change', ".select_tembusan", function () {
+          // Dapatkan nilai select yang dipilih
+          var selectedValue = $(this).val();
+
+          // Temukan textarea terdekat dengan ID tembusan_surat
+          var textarea = $(this).closest('.baru-data-2').find('.tembusan_surat');
+
+          // Masukkan nilai select ke textarea
+          textarea.val(selectedValue);
+        });
 //----------------------------------------------------------------
         var dipa = <?php echo json_encode($Dipa); ?>;
 
@@ -910,7 +920,7 @@
                           loadDropdownOptionsMitra();
                           $('#beban_anggaran_id_mitra option[value="' + response.surat.beban_anggaran.id + '"]').prop('selected',true);
                         }
-                        $('#jabatan_id_input option[value="' + response.surat.nama_pejabat.bidang_id + '"]').prop('selected',true);
+                        $('#jabatan_id_input option[value="' + response.surat.nama_pejabat.jabatan_id + '"]').prop('selected',true);
                         $('#nama_pejabat_input').val(response.surat.nama_pejabat.name);
                         $('#nip_input').val(response.surat.nama_pejabat.NIP);
                         $("#dynamic_form-4").empty();
@@ -1020,9 +1030,15 @@
                           $("#dynamic_form-2").html(response.surat.tembusan_surat.map(function (tembusan, index, array) {
                             let isLastItem = index === array.length - 1;
                             return `<div class="form-group baru-data-2 mb-4">\
-                                      <div class="col-md-12">\
-                                        ${index == 0 ? '<label for="tujuan_surat">Tembusan Surat</label>' : ''}\
-                                          <textarea id="tembusan_surat" name="tembusan_surat[]" value="" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="3">${tembusan.tembusan_surat}</textarea>\
+                                      <div class="col-md-12 d-flex">\
+                                          <textarea id="tembusan_surat" name="tembusan_surat[]" value="" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="1">${tembusan.tembusan_surat}</textarea>\
+                                          <select id="select_tembusan" class="form-select select_tembusan" style="width: 400px;">\
+                                            <option value="" selected hidden disabled>Pilih Isi Tembusan</option>\
+                                            <option value="Yth. Gubernur">Gubernur</option>\
+                                            <option value="Yth. Kepala BPKP">Kepala BPKP</option>\
+                                            <option value="Yth. Deputi BPKP">Deputi BPKP</option>\
+                                            <option value="Yth. Sestama">Sestama</option>\
+                                          </select>\
                                       </div>\
                                       <div class="button-group d-flex justify-content-center mt-2 mb-3">\
                                           <button type="button" class="btn btn-success btn-tambah-2 mx-2  ${isLastItem ? 'd-block' : 'd-none'}">
@@ -1193,8 +1209,15 @@
 //---------------------------------------------------- dasar acuan surat
           function addForms() {
               var addrow = '<div class="form-group baru-data-2 mb-4">\
-                  <div class="col-md-12">\
-                      <textarea name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="3"></textarea>\
+                  <div class="col-md-12 d-flex">\
+                      <textarea name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="1"></textarea>\
+                      <select id="select_tembusan" class="form-select select_tembusan" style="width: 400px;">\
+                          <option value="" selected hidden disabled>Pilih Isi Tembusan</option>\
+                          <option value="Yth. Gubernur">Gubernur</option>\
+                          <option value="Yth. Kepala BPKP">Kepala BPKP</option>\
+                          <option value="Yth. Deputi BPKP">Deputi BPKP</option>\
+                          <option value="Yth. Sestama">Sestama</option> \
+                      </select>\
                   </div>\
                   <div class="button-group d-flex justify-content-center mt-2 mb-3">\
                       <button type="button" class="btn btn-success btn-tambah-2 mx-2">\
@@ -1821,6 +1844,29 @@
             var nama_pejabat = $("#nama_pejabat_input").val();
             var nip = $("#nip_input").val();
             var tembusan_surat = $("#tembusan_surat").val();
+
+            $('input[type="text"]:not([disabled]), input[type="date"]:not([disabled]), textarea:not([disabled]):not(#tembusan_surat):not(#select_tembusan), select:not([disabled]):not(#select_tembusan), input[type="radio"]:not([disabled])').each(function() {
+              if (!$(this).is(':disabled')) {
+                  if ($(this).is(':radio')) {
+                      var radioName = $(this).attr('name');
+                      if ($('input[name="' + radioName + '"]:checked').length === 0) {
+                          $(this).addClass("is-invalid");
+                          $(this).removeClass("is-valid");
+                      } else {
+                          $(this).removeClass("is-invalid");
+                          $(this).addClass("is-valid");
+                      }
+                  } else {
+                      if ($(this).val() === "" || $(this).val() === null) {
+                          $(this).addClass("is-invalid");
+                          $(this).removeClass("is-valid");
+                      } else {
+                          $(this).removeClass("is-invalid");
+                          $(this).addClass("is-valid");
+                      }
+                  }
+              }
+          });
 
             if (
                 tanggal_surat === "" ||

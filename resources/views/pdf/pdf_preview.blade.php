@@ -140,7 +140,7 @@
                 <td style="width: 10px">
                     Yth.&nbsp;
                 </td>   
-                <td style="width: 600px">
+                <td style="width: {{ count($data['tujuan_surat']) > 1 ? '20px' : '600px' }};">
                     @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) == 1)
                         @foreach ($data['tujuan_surat'] as $index => $surat)
                             {{$surat}}
@@ -153,12 +153,15 @@
             @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) != 1)
                 @foreach ($data['tujuan_surat'] as $index => $tujuan_surat)
                     <tr>
-                        <td style="width: 10px">
+                        <td  style="width: 10px;">
+
+                        </td>
+                        <td>
                             {{$index + 1}}.
                         </td> 
                         <td style="width: 627px; text-align: justify">
                             {{ $tujuan_surat }}
-                        </td>   
+                        </td>
                     </tr>
                 @endforeach
             @endif
@@ -233,14 +236,15 @@
     </p>
 
     <div>
-        <p style="margin-left: 400px;">
-        <span style="color: #00B0F0; font-size:12px"><i>Ditandatangani secara elektronik oleh</i></span>
-        </p>
-
-        <p style="margin-left: 400px; margin-bottom:1px;">
+        
+        <p style="margin-left: 400px; margin-bottom:10px;">
             {{ $data["Jabatan"]}}
         </p>
 
+        <p style="margin-left: 400px;">
+        <span style="color: #00B0F0; font-size:12px"><i>Ditandatangani secara elektronik oleh</i></span>
+        </p>
+        
         <p style="margin-left: 400px; margin-bottom:1px;">
             {{ $data["nama_pejabat"]}}    
         </p>
@@ -279,6 +283,10 @@
             </tr>
         </tbody>
     </table>
+
+    <div class="my-5 text-center" style="color: #00b04f; font-size: 12px; padding-left: 50px">
+        <p>Harap tidak mencetak dokumen ini, kecuali sangat diperlukan. Dokumen yang tidak dicetak akan menyelamatkan lingkungan. Layanan Pengaduan: Apabila Pegawai BPKP menerima/meminta gratifikasi dan suap, dapat dilaporkan melalui mekanisme penyampaian pengaduan pada wbs.bpkp.go.id atau menghubungi 085210991239.</p>
+    </div>
 
     <div id="footer" style="margin-bottom: 50px;">
         <div style="background-color: black; height:2px; width:650px; margin-left:130px;" class="mb-4"></div>
