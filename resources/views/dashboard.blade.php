@@ -154,7 +154,7 @@
             },
             title: {
                 display: true,
-                text: 'Jumlah Surat Di Setiap Bidang',
+                text: 'Jumlah Surat di Setiap Bidang',
                 font: {
                     size: 20,
                     weight: 'bold'

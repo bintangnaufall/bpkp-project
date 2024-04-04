@@ -13,7 +13,7 @@
       }
       .dataTables_wrapper .dataTables_filter {
           margin-bottom: 20px;
-      } 
+      }
       .text-center {
           text-align: justify !important;
       }
@@ -317,13 +317,6 @@
 	                <div class="form-group baru-data-2">
                     <div class="col-md-12 d-flex">
                         <textarea id="tembusan_surat" name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="1"></textarea>
-                        <select id="select_tembusan" class="form-select select_tembusan" style="width: 400px;">
-                          <option value="" selected hidden disabled>Pilih Isi Tembusan</option>
-                          <option value="Yth. Gubernur">Gubernur</option>
-                          <option value="Yth. Kepala BPKP">Kepala BPKP</option>
-                          <option value="Yth. Deputi BPKP">Deputi BPKP</option>
-                          <option value="Yth. Sestama">Sestama</option> 
-                      </select>
                     </div>
 		                <div class="button-group d-flex justify-content-center mt-2 mb-3">
 		                    <button type="button" class="btn btn-success btn-tambah-2 mx-2">
@@ -476,11 +469,11 @@
             if ($(this).is(":checked")) {
               $("#beban_anggaran_id_dipa").prop("disabled", false);
               $("#beban_anggaran_id_mitra").prop("disabled", true);
-              $("#beban_anggaran_id_dipa").val(null); 
+              $("#beban_anggaran_id_dipa").val(null);
               $("#beban_anggaran_id_mitra").empty()
               $("#beban_anggaran_id_mitra").removeClass("is-invalid");
               $("#beban_anggaran_id_mitra").removeClass("is-valid");
-              $("#flexRadioDefault2").removeClass("is-valid");                
+              $("#flexRadioDefault2").removeClass("is-valid");
               loadDropdownOptionsDipa();
             }
         });
@@ -505,7 +498,7 @@
             $("#beban_anggaran_id_dipa").empty()
             $("#beban_anggaran_id_dipa").removeClass("is-invalid");
             $("#beban_anggaran_id_dipa").removeClass("is-valid");
-            $("#flexRadioDefault1").removeClass("is-valid");                
+            $("#flexRadioDefault1").removeClass("is-valid");
             loadDropdownOptionsMitra();
 
           }
@@ -586,7 +579,7 @@
 
         $("#dynamic_form-4").on("click", ".btn-hapus-4", function () {
           $(this).closest('.baru-data-4').remove();
-            $(".baru-data-4:last .btn-tambah-4").show(); 
+            $(".baru-data-4:last .btn-tambah-4").show();
             var bykrow = $(".baru-data-4").length;
             if (bykrow == 1) {
                 $(".btn-hapus-4").css("display", "none");
@@ -623,7 +616,7 @@
 
         $("#dynamic_form").on("click", ".btn-hapus", function () {
           $(this).closest('.baru-data').remove();
-            $(".baru-data:last .btn-tambah").show(); 
+            $(".baru-data:last .btn-tambah").show();
             var bykrow = $(".baru-data").length;
             if (bykrow == 1) {
                 $(".btn-hapus").css("display", "none");
@@ -637,13 +630,6 @@
             var addrow = '<div class="form-group baru-data-2">\
               <div class="col-md-12 d-flex">\
                         <textarea id="tembusan_surat" name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="1"></textarea>\
-                        <select id="select_tembusan" class="form-select select_tembusan" style="width: 400px;">\
-                          <option value="" selected hidden disabled>Pilih Isi Tembusan</option>\
-                          <option value="Yth. Gubernur">Gubernur</option>\
-                          <option value="Yth. Kepala BPKP">Kepala BPKP</option>\
-                          <option value="Yth. Deputi BPKP">Deputi BPKP</option>\
-                          <option value="Yth. Sestama">Sestama</option> \
-                      </select>\
                     </div>\
                 <div class="button-group d-flex justify-content-center mt-2 mb-3">\
                     <button type="button" class="btn btn-success btn-tambah-2 mx-2">\
@@ -668,7 +654,7 @@
 
         $("#dynamic_form-2").on("click", ".btn-hapus-2", function () {
           $(this).closest('.baru-data-2').remove();
-            $(".baru-data-2:last .btn-tambah-2").show(); 
+            $(".baru-data-2:last .btn-tambah-2").show();
               var bykrow = $(".baru-data-2").length;
               if (bykrow == 1) {
                   $(".btn-hapus-2").css("display", "none");

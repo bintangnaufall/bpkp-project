@@ -2,7 +2,7 @@
     <div class="bg-white shadow-lg rounded-top p-4">
         <div class="row">
             <div class="col-12 col-sm-12 text-center text-sm-start">
-                &copy; <a href="#" class="text-dark">-Perwakilan BPKP Provinsi Kalimantan Barat-2024</a>, All
+                &copy; <class="text-dark">-Perwakilan BPKP Provinsi Kalimantan Barat-2024, All
                 Right Reserved.
             </div>
             {{-- <div class="col-12 col-sm-6 text-center text-sm-end">
