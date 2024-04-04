@@ -148,6 +148,7 @@ class BuatSuratController extends Controller
         $surat->nama_pejabat = $user->id;
 
         $surat->pembuat_surat = auth()->user()->id;
+        $surat->status = "Review Dalnis";
         $surat->bidang_id = auth()->user()->bidang_id;
 
         $jabatan = jabatan::find($request->jabatan_id);

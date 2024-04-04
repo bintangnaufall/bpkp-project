@@ -101,13 +101,13 @@
       <!-- Spinner Akhir -->
 
       <!-- Sidebar Awal -->
-      @if (auth()->user()->hak_akses_id == 1 || auth()->user()->hak_akses_id == 3)
+      {{-- @if (auth()->user()->hak_akses_id == 1 || auth()->user()->hak_akses_id == 3) --}}
       @include('layout.leftsidebar')
-      @endif
+      {{-- @endif --}}
       <!-- Sidebar Akhir -->
 
       <!-- Konten Awal -->
-      <div class='{{ auth()->user()->hak_akses_id != 1 && auth()->user()->hak_akses_id != 3 ? "content open" : "content" }}'>
+      <div class="content">
         
         <!-- Navbar Awal -->
         @include('layout.topbar')

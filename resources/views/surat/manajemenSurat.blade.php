@@ -150,6 +150,14 @@
     <div class="bg-white shadow-lg text-center rounded p-4">
       <div class="d-flex align-items-center justify-content-between mb-4">
         <h6 class="mb-0">Manajemen Surat</h6>
+        <select id="filter_tahun" class="form-select" style="width: 200px;">
+          <option value="" selected hidden disabled>Pilih Tahun</option>
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+        </select>
       </div>
       <div>
         <table id="myTable" class="table table-striped table-hover border responsive nowrap" width="100%">
@@ -158,9 +166,11 @@
               <th>Nomor Surat</th>
               <th>Perihal Penugasan</th>
               <th>Pembuat Surat</th>
+              <th>Status</th>
               <th>E2</th>
               <th>E3</th>
               <th>E4</th>
+              <th>Tahun</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -301,7 +311,7 @@
           <div class="row mb-3">
               <div class="col-md-6">
                 <input type="hidden" name="id" id="id">
-                <span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Nomor Surat Akan Di Isi Sekretaris">
+                <span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content="Nomor Surat Hanya Bisa Di Isi Sekretaris">
                   <label for="nomor_surat">Nomor Surat</label>
                   <input type="text" name="nomor_surat" id="nomor_surat_input" class="form-control" placeholder="Nomor Surat">
                 </span>
@@ -678,6 +688,7 @@
     </script>
 
     <script>
+      var myTable;
         $(document).ready(function() {
 
         $(document).on('change', ".select_tembusan", function () {
@@ -743,23 +754,41 @@
 
 //---------------------------------------------------- Table
 
-           var myTable = $('#myTable').DataTable({
+            myTable = $('#myTable').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route("surat.manajemen_surat.show") }}',
                 columns: [
-                  { data: 'nomor_surat', name: 'nomor_surat', width: '10%', },
-                  { data: 'perihal_surat', name: 'perihal_surat', width: '60%', },
-                  { data: 'pembuat_surat', name: 'pembuat_surat', width: '20%', },
-                  { data: 'e2', name: 'e2', width: '5%'},
-                  { data: 'e3', name: 'e3', width: '5%'},
-                  { data: 'e4', name: 'e4', width: '5%'},
-                  { data: 'action', name: 'action ', width: '5%', searchable: false, orderable: false},
+                    { data: 'nomor_surat', name: 'nomor_surat', width: '10%' },
+                    { data: 'perihal_surat', name: 'perihal_surat', width: '50%' },
+                    { data: 'pembuat_surat', name: 'pembuat_surat', width: '20%' },
+                    { data: 'status', name: 'status', width: '10%' },
+                    { data: 'e2', name: 'e2', width: '5%'},
+                    { data: 'e3', name: 'e3', width: '5%'},
+                    { data: 'e4', name: 'e4', width: '5%'},
+                    { data: 'tahun', name: 'tahun', visible: false},
+                    { data: 'action', name: 'action', width: '5%', searchable: false, orderable: false}
                 ],
                 columnDefs: [
                     { targets: [1, 2], className: 'wrap' } // Apply wrap class to all columns
                 ],
+                initComplete: function () {
+                    // Setelah tabel selesai dimuat, tambahkan popovers ke tombol info
+                    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+
+                    popoverTriggerList.forEach(popoverTriggerEl => {
+                        new bootstrap.Popover(popoverTriggerEl, {
+                            container: 'body', // Optional, popovers akan ditambahkan ke body untuk menghindari masalah z-index
+                        });
+                    });
+                }
+            });
+
+            $('#filter_tahun').on('change', function() {
+                var tahun = $(this).val();
+                // Filter kolom tahun
+                myTable.column(7).search(tahun).draw();
             });
 
 //---------------------------------------------------- Tambah
@@ -892,7 +921,7 @@
                         console.log(response);
                         $('#id').val(id);
                         $('#nomor_surat_input').val(response.surat.nomor_surat);
-                        if (response.surat.e2 == 1 && userHakAksesId == 4) {
+                        if (response.surat.e3 == 1 && response.surat.e2 == 0 && userHakAksesId == 4) {
                             $('#nomor_surat_input').prop('disabled', false);
                         } else {
                             $('#nomor_surat_input').prop('disabled', true);

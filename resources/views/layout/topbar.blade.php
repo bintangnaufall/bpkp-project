@@ -4,11 +4,11 @@
         <img class="me-2" src="{{ asset('img/bpkp_logo.png')}}" alt="bpkp" style="width: 40px; height: 40px">
       </h2>
     </a> --}}
-    @if (auth()->user()->hak_akses_id == 1 || auth()->user()->hak_akses_id == 3)
+    {{-- @if (auth()->user()->hak_akses_id == 1 || auth()->user()->hak_akses_id == 3) --}}
     <a href="#" style="text-decoration:none;" class="sidebar-toggler text-white flex-shrink-0">
       <i style="font-size: 20px;" class="fa fa-bars"></i>
     </a>
-    @endif
+    {{-- @endif --}}
 
     @yield('navtop')   
 

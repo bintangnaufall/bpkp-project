@@ -25,11 +25,22 @@ class ManajemenSuratController extends Controller
     {
         if ($request->ajax()) {
             if (auth()->user()->hak_akses->id == 1) {
-
                 $data = surat::where('is_archive', 0)->orderBy('id', 'desc')->get();
-
+            }else if (auth()->user()->bidang->name == "Bagian Umum") {
+                $data = surat::join('users', 'surats.pembuat_surat', '=', 'users.id')
+                            // ->where('users.bidang_id', auth()->user()->bidang_id)
+                            ->where(function ($query) {
+                                $query->whereHas('bidang', function ($query) {
+                                          $query->where('id', auth()->user()->bidang_id)
+                                                ->orWhere('name', "Sub Bagian PBMN & RTK")
+                                                ->orWhere('name', "Sub Bagian Kepagawaian")
+                                                ->orWhere('name', "Sub Bagian Keuangan");
+                                        });
+                            })
+                            ->where('is_archive', 0)
+                            ->orderBy('surats.id', 'desc')
+                            ->get(['surats.*', 'users.id as user_id']);
             }else {
-
                 $data = surat::join('users', 'surats.pembuat_surat', '=', 'users.id')
                 ->where('users.bidang_id', auth()->user()->bidang_id)
                 ->where('is_archive', 0)
@@ -43,32 +54,44 @@ class ManajemenSuratController extends Controller
             ->addColumn('action', function($data){
                 $eselon = auth()->user()->tingkatan_eselon;
 
-                $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Info" class="btn btn-info btn-sm  mx-2 btnInfo"><i class="bi bi-info-square"></i></a>';
+                $btn = '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Info Surat">
+                <a href="javascript:void(0)" data-bs-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Info" class="btn btn-info btn-sm  mx-2 btnInfo"><i class="bi bi-info-square"></i></a>
+              </span>';
+              
                 
                 if (
                     auth()->user()->hak_akses->name == "Admin" || // Jika user adalah Admin
                     auth()->user()->id == $data->pembuat_surat || // Jika user adalah pembuat surat
                     ($eselon == 4 && $data->e4 == 0) || // Jika user adalah pejabat eselon 4 dan e4 == 0
                     ($eselon == 3 && $data->e4 != 0 && $data->e3 == 0) || // Jika user adalah pejabat eselon 3, e4 == 0, dan e3 == 0
-                    ($eselon == 2 && $data->e4 != 0 && $data->e3 != 0 && $data->e2 == 0) || // Jika user adalah pejabat eselon 2, e4 == 0, e3 == 0, dan e2 == 0
-                    (auth()->user()->hak_akses_id == 4 && $data->e4 != 0 && $data->e3 != 0 && $data->e2 != 0) ||
-                    (auth()->user()->hak_akses_id == 4 && $data->e2 != 0)
+                    ($eselon == 2 && $data->e4 != 0 && $data->e3 != 0 && $data->e2 == 0 && $data->nomor_surat != null) || // Jika user adalah pejabat eselon 2, e4 == 0, e3 == 0, dan e2 == 0
+                    (auth()->user()->hak_akses_id == 4 && $data->e4 != 0 && $data->e3 != 0 && $data->e2 == 0)
                 ) {
-                    // Tombol edit tidak dinonaktifkan
-                    $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.Crypt::encryptString($data->id).'" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit mx-2"><i class="bi bi-pencil-square"></i></a>';
+                    //  edit tidak dinonaktifkan
+                    $btn .= '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Edit Surat">
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-id="'.Crypt::encryptString($data->id).'" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit mx-2"><i class="bi bi-pencil-square"></i></a>
+                    </span>';
                 } else {
-                    // Tombol edit dinonaktifkan
-                    $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit mx-2 disabled"><i class="bi bi-pencil-square"></i></a>';
+                    //  edit dinonaktifkan
+                    $btn .= '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Edit Surat">
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit mx-2 disabled"><i class="bi bi-pencil-square"></i></a>
+                    </span>';
                 }
 
                 if ((auth()->user()->hak_akses->id == 4 || auth()->user()->hak_akses->id == 1) && $data->nomor_surat != null) {
-                    $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Arsip" class="btn btn-secondary btn-sm btnArsip"><i class="bi bi-archive-fill"></i></a>';
+                    $btn .= ' <span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Arsip Surat">
+                    <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Arsip" class="btn btn-secondary btn-sm btnArsip"><i class="bi bi-archive-fill"></i></a>
+                    </span>';
                 } else {
-                    $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Arsip" class="btn btn-secondary btn-sm btnArsip disabled"><i class="bi bi-archive-fill"></i></a>';
+                    $btn .= '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Arsip Surat">
+                     <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Arsip" class="btn btn-secondary btn-sm btnArsip disabled"><i class="bi bi-archive-fill"></i></a>
+                     </span>';
                 }
 
                 if (auth()->user()->hak_akses->name == "Admin") {
-                    $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Delete" class="btn btn-danger btn-sm btnDelete" style="margin-left:8px;"><i class="bi bi-trash-fill"></i></a>';
+                    $btn .= '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Hapus Surat">
+                     <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.Crypt::encryptString($data->id).'" data-original-title="Delete" class="btn btn-danger btn-sm btnDelete" style="margin-left:8px;"><i class="bi bi-trash-fill"></i></a>
+                     </span>';
                 }
 
                 return $btn;
@@ -115,6 +138,9 @@ class ManajemenSuratController extends Controller
                 $e2 = '<input class="form-check-input-1 e2" type="checkbox" data-status="'. $status .'" data-id="'.Crypt::encryptString($data->id).'" '. $disabled.' '. $checked .'>';
                 
                 return $e2;
+            })
+            ->addColumn('tahun', function ($data) {
+                return $data->tanggal_surat;
             })
             
             ->rawColumns(['action', 'e4', 'e3', 'e2', 'pembuat_surat', 'perihal_surat'])
@@ -175,6 +201,7 @@ class ManajemenSuratController extends Controller
                 $riwayat_surat->save();
     
                 $status = $surat->e2 == 1 ? 0 : 1;
+                $surat->status = $surat->e2 == 1 ? "Review Eselon 2" : "Final";
                 $surat->e2 = $status;
                 $surat->save();
     
@@ -213,6 +240,8 @@ class ManajemenSuratController extends Controller
                 $riwayat_surat->save();
     
                 $status = $surat->e3 == 1 ? 0 : 1;
+                $surat->status = $surat->e3 == 1 ? "Review Daltu" : "Penomoran Surat";
+                $surat->nomor_surat = $surat->e3 == 1 ? null : null;
                 $surat->e3 = $status;
                 $surat->save();
     
@@ -251,6 +280,7 @@ class ManajemenSuratController extends Controller
                 $riwayat_surat->save();
     
                 $status = $surat->e4 == 1 ? 0 : 1;
+                $surat->status = $surat->e4 == 1 ? "Review Dalnis" : "Review Daltu";
                 $surat->e4 = $status;
                 $surat->save();
             }    
@@ -333,6 +363,7 @@ class ManajemenSuratController extends Controller
 
         if (auth()->user()->hak_akses_id == 4) {
             $surat->nomor_surat = $request->nomor_surat;
+            $surat->status = "Review Eselon 2";
         }else {
             $surat->nomor_surat = null;
         }
@@ -394,7 +425,7 @@ class ManajemenSuratController extends Controller
         }
 
         $pdf = PDF::loadView('pdf.pdf_preview', compact('data'));
-        $uniq = uniqid();
+        $uniq = auth()->user()->hak_akses_id == 4 ? $request->nomor_surat : uniqid();
         $pdfPath = 'public/pdf/' . $uniq . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
