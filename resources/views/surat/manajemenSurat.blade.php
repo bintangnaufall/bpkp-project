@@ -15,7 +15,7 @@
       }
       .dataTables_wrapper .dataTables_filter {
           margin-bottom: 20px;
-      } 
+      }
       .text-center {
           text-align: justify !important;
       }
@@ -130,7 +130,7 @@
     </style>
 @endsection
 
-@section('navtop') 
+@section('navtop')
 <a href="{{ route("surat.manajemen_surat.show") }}" class="button raise {{ Request::is('*disposisi_surat') ? 'active' : '' }}">
   <span class="desktop-text">{{ auth()->user()->hak_akses_id == 1 ? "Manajemen Surat" : "Disposisi Surat"}}</span>
   <span class="mobile-logo"><i class="bi bi-kanban-fill"></i></span>
@@ -175,7 +175,7 @@
             </tr>
           </thead>
           <tbody>
-           
+
           </tbody>
         </table>
       </div>
@@ -208,13 +208,13 @@
             <div class="d-flex">
               <p style="margin-right:51px"><b>Nomor Surat</b></p>
               <p id="nomor_surat">
-                
+
               </p>
             </div>
             <div class="d-flex">
               <p style="margin-right:43px"><b>Tanggal Surat</b></p>
               <p id="tanggal_surat">
-                
+
               </p>
             </div>
             <div>
@@ -232,7 +232,7 @@
             <div>
               <p style="margin-right:43px; margin-bottom: -1px"><b>Alamat Tujuan</b></p>
               <p id="alamat_tujuan">
-                
+
               </p>
             </div>
           </div>
@@ -246,7 +246,7 @@
             <div>
               <p style="margin-right:43px;margin-bottom: -1px"><b>Pelaksanaan</b></p>
               <p id="pelaksanaan">
-                
+
               </p>
             </div>
           </div>
@@ -258,7 +258,7 @@
                   <b>Nama</b>
                 </p>
                 <p id="nama">
-                  
+
                 </p>
               </div>
 
@@ -267,7 +267,7 @@
                   <b>Jabatan</b>
                 </p>
                 <p id="jabatan">
-                  
+
                 </p>
               </div>
               <div class="d-flex">
@@ -276,7 +276,7 @@
 
                 </p>
               </div>
-                
+
             </div>
           </div>
           <div class="p-2 border-2 border-bottom">
@@ -452,23 +452,23 @@
 {{-- -------------------------------------------------------------------------------Lampiran Surat--------------------------------------------------}}
           <div class="border-3 border p-3 rounded mb-3">
             <h4 class="mb-3">*Lampiran Surat</h4>
-            
+
             <div class="mb-5" id="editPDF">
               {{-- <div class="d-flex mb-3">
                 <div class="d-flex align-items-center" style="padding-left:20px; margin-left:auto;" id="deletePDF">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#B30B00" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z"/>
                   </svg>
-                </div>       
+                </div>
                 <div class="bg-red rounded-pill w-100 d-flex align-items-center" style="padding-left:20px; margin-left:10px;" id="namePDF">
                   <small class="text-white"></small>
-                </div>                  
+                </div>
                 <div class="d-flex align-items-center" style="padding-left:20px; margin-left:auto;" id="deletePDF">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#B30B00" class="bi bi-trash" viewBox="0 0 16 16">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                  </svg>  
-                </div> 
+                  </svg>
+                </div>
               </div>                                 --}}
             </div>
 
@@ -649,7 +649,7 @@
           {{-- <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             <iframe id="pdfViewerlampiran1" src="" loading="lazy" width="770px" height="1000px"></iframe>
           </div> --}}
-        </div>  
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-md waves-effect rounded waves-light btnCancel" title="Batal" data-bs-dismiss="modal">Batal</button>
@@ -658,7 +658,7 @@
     </div>
   </div>
 </div>
-  
+
 @endsection
 
 @section('js')
@@ -814,7 +814,7 @@
               $('#ModalRiwayat').modal('show');
               $('#title-riwayat').text('Riwayat Surat');
             });
-            
+
             var deletePDF = [];
             $(document).on('click', '.deletePDF', function() {
               var index = $(this).data('index');
@@ -863,7 +863,7 @@
                         url: '{{ route('surat.manajemen_surat.update') }}',
                         type: "post",
                         data: formData,
-                        contentType: false, 
+                        contentType: false,
                         cache: false,
                         processData: false,
                         success: function(response) {
@@ -917,7 +917,7 @@
                       url: url,
                       type: "GET",
                       success: function(response) {
-                        Swal.close(); 
+                        Swal.close();
                         console.log(response);
                         $('#id').val(id);
                         $('#nomor_surat_input').val(response.surat.nomor_surat);
@@ -1040,18 +1040,18 @@
                                       <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#B30B00" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z"/>
                                       </svg>
-                                    </div>       
+                                    </div>
                                     <div class="bg-red rounded-pill w-100 d-flex align-items-center" style="padding-left:20px; margin-left:10px;" id="namePDF">
                                       <small class="text-white"><b>${cleanFileName}</b></small>
-                                    </div>                  
+                                    </div>
                                     <div class="d-flex align-items-center" style="margin-left:auto;">
                                       <a href="javascript:void(0)" data-index="${index}" data-link="${lampiran.encrypted_id}" class="deletePDF">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#B30B00" class="bi bi-trash" viewBox="0 0 16 16">
                                           <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                                           <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                                        </svg>  
+                                        </svg>
                                       </a>
-                                    </div> 
+                                    </div>
                                   </div>`;
                         }).join(''));
 
@@ -1061,13 +1061,6 @@
                             return `<div class="form-group baru-data-2 mb-4">\
                                       <div class="col-md-12 d-flex">\
                                           <textarea id="tembusan_surat" name="tembusan_surat[]" value="" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="1">${tembusan.tembusan_surat}</textarea>\
-                                          <select id="select_tembusan" class="form-select select_tembusan" style="width: 400px;">\
-                                            <option value="" selected hidden disabled>Pilih Isi Tembusan</option>\
-                                            <option value="Yth. Gubernur">Gubernur</option>\
-                                            <option value="Yth. Kepala BPKP">Kepala BPKP</option>\
-                                            <option value="Yth. Deputi BPKP">Deputi BPKP</option>\
-                                            <option value="Yth. Sestama">Sestama</option>\
-                                          </select>\
                                       </div>\
                                       <div class="button-group d-flex justify-content-center mt-2 mb-3">\
                                           <button type="button" class="btn btn-success btn-tambah-2 mx-2  ${isLastItem ? 'd-block' : 'd-none'}">
@@ -1081,7 +1074,7 @@
                                       </div>\
                                     </div>`;
                           }).join(''));
-                        } 
+                        }
                         else {
                           $("#dynamic_form-2").html(`<div class="form-group baru-data-2 mb-4">\
                             <div class="col-md-12">\
@@ -1150,7 +1143,7 @@
 
         $("#dynamic_form-4").on("click", ".btn-hapus-4", function () {
           $(this).closest('.baru-data-4').remove();
-            $(".baru-data-4:last .btn-tambah-4").show(); 
+            $(".baru-data-4:last .btn-tambah-4").show();
             var bykrow = $(".baru-data-4").length;
             if (bykrow == 1) {
                 $(".btn-hapus-4").css("display", "none");
@@ -1160,7 +1153,7 @@
         });
 
 //---------------------------------------------------- tujuan surat
-            
+
             function addFormss() {
                 var addrow = '<div class="form-group baru-data-3 mb-4">\
                     <div class="col-md-12">\
@@ -1187,13 +1180,13 @@
                 $(this).parent().addClass('d-none');
             });
 
-            $("#dynamic_form-3").on("click", ".btn-hapus-3", function () {  
+            $("#dynamic_form-3").on("click", ".btn-hapus-3", function () {
               $(this).closest('.baru-data-3').remove();
-              $(".baru-data-3:last .btn-tambah-3").parent().removeClass('d-none'); 
-              $(".baru-data-3:last .btn-tambah-3").css('display', '') 
-              $(".baru-data-3:last .btn-tambah-3").removeClass('d-none') 
+              $(".baru-data-3:last .btn-tambah-3").parent().removeClass('d-none');
+              $(".baru-data-3:last .btn-tambah-3").css('display', '')
+              $(".baru-data-3:last .btn-tambah-3").removeClass('d-none')
               if ($('.baru-data-3').length != 1) {
-                $(".baru-data-3:last .btn-hapus-3").removeClass('d-none') 
+                $(".baru-data-3:last .btn-hapus-3").removeClass('d-none')
               }
             });
 
@@ -1225,13 +1218,13 @@
                 $(this).parent().addClass('d-none');
             });
 
-            $("#dynamic_form").on("click", ".btn-hapus", function () {  
+            $("#dynamic_form").on("click", ".btn-hapus", function () {
               $(this).closest('.baru-data').remove();
-              $(".baru-data:last .btn-tambah").parent().removeClass('d-none'); 
-              $(".baru-data:last .btn-tambah").css('display', '') 
-              $(".baru-data:last .btn-tambah").removeClass('d-none') 
+              $(".baru-data:last .btn-tambah").parent().removeClass('d-none');
+              $(".baru-data:last .btn-tambah").css('display', '')
+              $(".baru-data:last .btn-tambah").removeClass('d-none')
               if ($('.baru-data').length != 1) {
-                $(".baru-data:last .btn-hapus").removeClass('d-none') 
+                $(".baru-data:last .btn-hapus").removeClass('d-none')
               }
             });
 
@@ -1240,13 +1233,6 @@
               var addrow = '<div class="form-group baru-data-2 mb-4">\
                   <div class="col-md-12 d-flex">\
                       <textarea name="tembusan_surat[]" placeholder="Tembusan Surat" class="form-control tembusan_surat" rows="1"></textarea>\
-                      <select id="select_tembusan" class="form-select select_tembusan" style="width: 400px;">\
-                          <option value="" selected hidden disabled>Pilih Isi Tembusan</option>\
-                          <option value="Yth. Gubernur">Gubernur</option>\
-                          <option value="Yth. Kepala BPKP">Kepala BPKP</option>\
-                          <option value="Yth. Deputi BPKP">Deputi BPKP</option>\
-                          <option value="Yth. Sestama">Sestama</option> \
-                      </select>\
                   </div>\
                   <div class="button-group d-flex justify-content-center mt-2 mb-3">\
                       <button type="button" class="btn btn-success btn-tambah-2 mx-2">\
@@ -1269,13 +1255,13 @@
                 $(this).parent().addClass('d-none');
             });
 
-            $("#dynamic_form-2").on("click", ".btn-hapus-2", function () {  
+            $("#dynamic_form-2").on("click", ".btn-hapus-2", function () {
               $(this).closest('.baru-data-2').remove();
-              $(".baru-data-2:last .btn-tambah-2").parent().removeClass('d-none'); 
-              $(".baru-data-2:last .btn-tambah-2").css('display', '') 
-              $(".baru-data-2:last .btn-tambah-2").removeClass('d-none') 
+              $(".baru-data-2:last .btn-tambah-2").parent().removeClass('d-none');
+              $(".baru-data-2:last .btn-tambah-2").css('display', '')
+              $(".baru-data-2:last .btn-tambah-2").removeClass('d-none')
               if ($('.baru-data-2').length != 1) {
-                $(".baru-data-2:last .btn-hapus-2").removeClass('d-none') 
+                $(".baru-data-2:last .btn-hapus-2").removeClass('d-none')
               }
             });
 
@@ -1329,7 +1315,7 @@
                   },
                   dataType: 'json',
                   success: function (response) {
-                    Swal.close(); 
+                    Swal.close();
                     if (response.status == true) {
                       $("#nama_pejabat_input").val(response.data.name);
                       $('#jabatan_id_input option[value="' + response.data.jabatan_id + '"]').prop('selected',true);
@@ -1412,11 +1398,11 @@
             $(document).on('click', '.btnCancel', function (e) {
                 $('#Modal').modal("hide");
             })
-            
+
             $(document).on('change', '.e4', function (e) {
               var id = $(this).data('id');
               var status = $(this).data('status');
-              $(this).prop('checked', status);  
+              $(this).prop('checked', status);
               var confirmMessage = status == 1 ? "Membatalkan Persetujuan" : "Menyetujui";
               Swal.fire({
                   title: 'Yakin ?',
@@ -1454,7 +1440,7 @@
                         success: function (res) {
                         swal.close();
                           if (res.status == true) {
-                            $(this).prop('checked', true);  
+                            $(this).prop('checked', true);
                             Swal.fire({
                               title: 'Berhasil!',
                               text: res.pesan,
@@ -1480,10 +1466,10 @@
               });
             });
 
-            $(document).on('change', '.e3', function (e) { 
+            $(document).on('change', '.e3', function (e) {
               var id = $(this).data('id');
               var status = $(this).data('status');
-              $(this).prop('checked', status);  
+              $(this).prop('checked', status);
               var confirmMessage = status == 1 ? "Membatalkan Persetujuan" : "Menyetujui";
               Swal.fire({
                   title: 'Yakin ?',
@@ -1521,7 +1507,7 @@
                         success: function (res) {
                         swal.close();
                           if (res.status == true) {
-                            $(this).prop('checked', true);  
+                            $(this).prop('checked', true);
                             Swal.fire({
                               title: 'Berhasil!',
                               text: res.pesan,
@@ -1550,7 +1536,7 @@
             $(document).on('click', '.e2', function (e) {
               var id = $(this).data('id');
               var status = $(this).data('status');
-              $(this).prop('checked', status);  
+              $(this).prop('checked', status);
               var confirmMessage = status == 1 ? "Membatalkan Persetujuan" : "Menyetujui";
               Swal.fire({
                   title: 'Yakin ?',
@@ -1614,7 +1600,7 @@
             });
 
 
-            $(document).on('click', '.btnArsip', function (e) { 
+            $(document).on('click', '.btnArsip', function (e) {
               var id = $(this).data('id');
               Swal.fire({
                   title: 'Yakin ?',
@@ -1699,7 +1685,7 @@
                       url: url,
                       type: "GET",
                       success: function(response) {
-                          Swal.close(); 
+                          Swal.close();
                           var nomor_surat = response.surat.nomor_surat ? response.surat.nomor_surat : "-";
                           $("#nomor_surat").text(nomor_surat);
                           $("#tanggal_surat").text(response.surat.tanggal_surat);
@@ -1709,7 +1695,7 @@
                             return `<p style="${marginBottomStyle}">${index + 1}.${tujuan.tujuan_surat}</p>`;
                           }).join(''));
                           $("#alamat_tujuan").text(response.surat['alamat_instansi/pejabat']);
-                          
+
                           $("#dasar_acuan_penugasan").html(response.surat.dasar_acuan_surat.map(function (acuan, index, array){
                             var marginBottomStyle = index === array.length - 1 ? '' : 'margin-bottom: -10px;';
                             return `<div class="d-flex" style="${marginBottomStyle} text-align: justify;">
@@ -1722,7 +1708,7 @@
                             </div>`;
                           }).join(''));
                           $("#pelaksanaan").html(response.surat.rincian_pelaksanaan_penugasan);
-                          
+
                           $("#nama").text(response.surat.nama_pejabat.name);
                           $("#jabatan").text(response.jabatan.jabatan.name);
                           $("#nip").text(response.surat.nama_pejabat.NIP);
@@ -1858,7 +1844,7 @@
             $("#rincian_pelaksanaan_penugasan_input").val(editorContentPenugasan);
 
             var editorContentAnggaran = $('.beban_anggaran p').html();
-            $("#beban_anggaran_input").val(editorContentAnggaran);            
+            $("#beban_anggaran_input").val(editorContentAnggaran);
 
 
             var tanggal_surat = $("#tanggal_surat_input").val();
@@ -1940,7 +1926,7 @@
                 url: '{{ route('surat.buat_surat.pdfview') }}',
                 type: "post",
                 data: new FormData(form),
-                contentType: false, 
+                contentType: false,
                 cache: false,
                 processData: false,
                 success: function(response) {
