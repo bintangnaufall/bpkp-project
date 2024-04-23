@@ -65,7 +65,8 @@ class ManajemenSuratController extends Controller
                     ($eselon == 4 && $data->e4 == 0) || // Jika user adalah pejabat eselon 4 dan e4 == 0
                     ($eselon == 3 && $data->e4 != 0 && $data->e3 == 0) || // Jika user adalah pejabat eselon 3, e4 == 0, dan e3 == 0
                     ($eselon == 2 && $data->e4 != 0 && $data->e3 != 0 && $data->e2 == 0 && $data->nomor_surat != null) || // Jika user adalah pejabat eselon 2, e4 == 0, e3 == 0, dan e2 == 0
-                    (auth()->user()->hak_akses_id == 4 && $data->e4 != 0 && $data->e3 != 0 && $data->e2 == 0)
+                    (auth()->user()->hak_akses_id == 4 && $data->e4 != 0 && $data->e3 != 0 && $data->e2 == 0) ||
+                    ($data->status != "Final")
                 ) {
                     //  edit tidak dinonaktifkan
                     $btn .= '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Edit Surat">
@@ -73,9 +74,9 @@ class ManajemenSuratController extends Controller
                     </span>';
                 } else {
                     //  edit dinonaktifkan
-                    $btn .= '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Edit Surat">
-                    <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit mx-2 disabled"><i class="bi bi-pencil-square"></i></a>
-                    </span>';
+                    // $btn .= '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Edit Surat">
+                    // <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit mx-2 disabled"><i class="bi bi-pencil-square"></i></a>
+                    // </span>';
                 }
 
                 if ((auth()->user()->hak_akses->id == 4 || auth()->user()->hak_akses->id == 1) && $data->nomor_surat != null) {
@@ -486,22 +487,22 @@ class ManajemenSuratController extends Controller
             }
         }
 
-        if (auth()->user()->hak_akses->name == "Admin") {
-            $statusUSer = "Admin";
-        }else if (auth()->user()->id == $surat->pembuat_surat) {
-            $statusUSer = "Pembuat Surat";
-        }else if (auth()->user()->tingkatan_eselon == 4) {
-            $statusUSer = "Eselon 4";
-        }else if (auth()->user()->tingkatan_eselon == 3) {
-            $statusUSer = "Eselon 3";
-        }else if (auth()->user()->tingkatan_eselon == 2) {
-            $statusUSer = "Eselon 2";
-        }else if (auth()->user()->hak_akses_id == 4) {
-            $statusUSer = "Sekretaris";
-        }
+        // if (auth()->user()->hak_akses->name == "Admin") {
+        //     $statusUSer = "Admin";
+        // }else if (auth()->user()->id == $surat->pembuat_surat) {
+        //     $statusUSer = "Pembuat Surat";
+        // }else if (auth()->user()->tingkatan_eselon == 4) {
+        //     $statusUSer = "Eselon 4";
+        // }else if (auth()->user()->tingkatan_eselon == 3) {
+        //     $statusUSer = "Eselon 3";
+        // }else if (auth()->user()->tingkatan_eselon == 2) {
+        //     $statusUSer = "Eselon 2";
+        // }else if (auth()->user()->hak_akses_id == 4) {
+        //     $statusUSer = "Sekretaris";
+        // }
 
         $riwayat_surat = new RiwayatSurat();
-        $riwayat_surat->riwayat = "Surat Telah Diperbarui Oleh " . $statusUSer;
+        $riwayat_surat->riwayat = "Surat Telah Diperbarui Oleh ";
         $riwayat_surat->surat_id = $surat->id;
         $riwayat_surat->save();
     }
