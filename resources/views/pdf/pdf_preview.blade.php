@@ -122,7 +122,7 @@
         </tr>
     </table>
 
-    <table style="margin-left: 50px; margin-left: 40px; margin-bottom:10px">
+    <table style="margin-left: 50px; margin-left: 40px;">
         <tr>
             <td style="width: 100px">
                 Lampiran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:

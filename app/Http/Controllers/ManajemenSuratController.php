@@ -17,6 +17,7 @@ use App\Models\dasaracuansurat;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 
 class ManajemenSuratController extends Controller
@@ -46,7 +47,6 @@ class ManajemenSuratController extends Controller
                 ->where('is_archive', 0)
                 ->orderBy('surats.id', 'desc')
                 ->get(['surats.*', 'users.id as user_id']);
-
             }
 
             return Datatables::of($data)
@@ -73,10 +73,10 @@ class ManajemenSuratController extends Controller
                     <a href="javascript:void(0)" data-toggle="tooltip" data-id="'.Crypt::encryptString($data->id).'" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit mx-2"><i class="bi bi-pencil-square"></i></a>
                     </span>';
                 } else {
-                    //  edit dinonaktifkan
-                    // $btn .= '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Edit Surat">
-                    // <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Edit" class="edit btn btn-warning btn-sm btnEdit mx-2 disabled"><i class="bi bi-pencil-square"></i></a>
-                    // </span>';
+                    //  edit di ganti tombol download
+                    $btn .= '<span tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" data-bs-content=" Unduh Surat">
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-id="'.Crypt::encryptString($data->id).'" data-original-title="Unduh" class="download btn btn-danger btn-sm btnDownload mx-2"><i class="bi bi-download"></i></a>
+                    </span>';
                 }
 
                 if ((auth()->user()->hak_akses->id == 4 || auth()->user()->hak_akses->id == 1) && $data->nomor_surat != null) {
@@ -556,6 +556,21 @@ class ManajemenSuratController extends Controller
                 return ['status' => true, 'pesan' => 'Anda berhasil menghapus Surat'];
             }
         } catch(\Exception $e) {
+            return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];
+        }
+    }
+
+    public function download($id)
+    {
+        try {
+            $id = Crypt::decryptString($id);
+            $surat = Surat::find($id);
+
+            $file = public_path() . '/' . $surat->pdf;
+            return response()->download($file, basename($file));
+            
+        } catch(\Exception $e) {
+            // return dd($e);
             return ['status' => false, 'Terjadi Kesalahan Pada Sistem Dengan Kode : 500'];
         }
     }

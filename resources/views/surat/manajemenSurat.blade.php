@@ -1804,6 +1804,45 @@
               }, 800);
             });
 
+            $(document).on('click', '.btnDownload', function(e) {
+              e.preventDefault();
+
+              let id = $(this).data('id');
+              let url = '{{ route('surat.manajemen_surat.download', ':id') }}';
+              url = url.replace(':id', id);
+
+              Swal.fire({
+                  title: 'Loading',
+                  html: 'Please Wait....',
+                  allowOutsideClick: false,
+                  showConfirmButton: false,
+                  willOpen: () => {
+                      swal.showLoading();
+                  }
+              });
+
+              setTimeout(function() {
+                  $.ajax({
+                      url: url,
+                      type: "GET",
+                      success: function(response) {
+                        window.open(url, '_blank');
+                        
+                        Swal.close();
+                      },
+                      error: function(error) {
+                        console.log(error);
+                          Swal.fire({
+                              title: 'Error',
+                              text: 'An error occurred',
+                              icon: 'error',
+                              confirmButtonText: 'OK'
+                          });
+                      }
+                  });
+              }, 800);
+            });
+
             $(document).on('click', '#openPDF', function () {
               var linkpdf = $(this).data('link');
 

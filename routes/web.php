@@ -69,6 +69,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/change-e2/{id}', [ManajemenSuratController::class, 'e2'])->name('change_e2');
             Route::post('/arsip/{id}', [ManajemenSuratController::class, 'arsip'])->name('arsip');
             Route::get('/delete/{id}', [ManajemenSuratController::class, 'destroy'])->name('delete'); 
+            Route::get('/download/{id}',  [ManajemenSuratController::class, 'download'])->name('download'); 
         });
         Route::prefix('arsip_surat')->name('arsip_surat.')->group(function() {
             Route::get('/', [ArsipSuratController::class, 'index'])->name('show'); 
