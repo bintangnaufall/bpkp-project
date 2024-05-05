@@ -61,7 +61,7 @@ class ManajemenSuratController extends Controller
                 
                 if (
                     auth()->user()->hak_akses->name == "Admin" || // Jika user adalah Admin
-                    auth()->user()->id == $data->pembuat_surat || // Jika user adalah pembuat surat
+                    (auth()->user()->id == $data->pembuat_surat && $data->e4 != 0 && $data->e3 != 0 && $data->e2 == 0) || // Jika user adalah pembuat surat
                     ($eselon == 4 && $data->e4 == 0) || // Jika user adalah pejabat eselon 4 dan e4 == 0
                     ($eselon == 3 && $data->e4 != 0 && $data->e3 == 0) || // Jika user adalah pejabat eselon 3, e4 == 0, dan e3 == 0
                     ($eselon == 2 && $data->e4 != 0 && $data->e3 != 0 && $data->e2 == 0 && $data->nomor_surat != null) || // Jika user adalah pejabat eselon 2, e4 == 0, e3 == 0, dan e2 == 0
