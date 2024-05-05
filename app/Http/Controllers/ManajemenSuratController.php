@@ -567,7 +567,7 @@ class ManajemenSuratController extends Controller
             $surat = Surat::find($id);
 
             $file = public_path() . '/' . $surat->pdf;
-            return response()->download($file, basename($file));
+            return response()->download($file, $surat->nomor_surat);
             
         } catch(\Exception $e) {
             // return dd($e);
