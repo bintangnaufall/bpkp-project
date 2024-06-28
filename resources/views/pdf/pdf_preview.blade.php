@@ -112,8 +112,11 @@
 
     <table style="margin-left: 50px; margin-left: 40px; margin-top: -10px">
         <tr>
-            <td style="width: 100px">
-                Nomor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+            <td style="width: 80px">
+                Nomor
+            </td>
+            <td>
+                :
             </td>
             <td style="width: 390px; text-align: justify;">
                 {{ $data['nomor_surat'] }}
@@ -124,8 +127,11 @@
 
     <table style="margin-left: 50px; margin-left: 40px;">
         <tr>
-            <td style="width: 100px">
-                Lampiran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+            <td style="width: 80px">
+                Lampiran
+            </td>
+            <td>
+                :
             </td>
             <td style="width: 550px; text-align: justify;">
                 {{ $data['lampiran_surat'] }}
@@ -135,8 +141,11 @@
 
     <table style="margin-left: 50px; margin-left: 40px; margin-bottom:30px">
         <tr>
-            <td style="width: 100px">
-                Hal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+            <td style="width: 80px">
+                Hal
+            </td>
+            <td>
+                :
             </td>
             <td style="width: 300px; text-align: justify;">
                 {!! $data['perihal_surat'] !!}
