@@ -850,27 +850,27 @@
             }
           });
 
-          if (
-              tanggal_surat === "" ||
-              lampiran_surat === "" ||
-              perihal_surat === "" ||
-              tujuan_surat === "" ||
-              alamat_tujuan === "" ||
-              dasar_acuan === "" ||
-              rincian_pelaksanaan_penugasan === "" ||
-              beban_anggaran === "" ||
-              jabatan_id === "" ||
-              nama_pejabat === "" ||
-              nip === ""
-          ) {
-            Swal.fire({
-                title: 'error',
-                icon: 'error',
-                html: 'Lengkapi Semua Field Terlebih Dahulu',
-                allowOutsideClick: false,
-                showConfirmButton: true,
-            });
-          } else {
+        //   if (
+        //       tanggal_surat === "" ||
+        //       lampiran_surat === "" ||
+        //       perihal_surat === "" ||
+        //       tujuan_surat === "" ||
+        //       alamat_tujuan === "" ||
+        //       dasar_acuan === "" ||
+        //       rincian_pelaksanaan_penugasan === "" ||
+        //       beban_anggaran === "" ||
+        //       jabatan_id === "" ||
+        //       nama_pejabat === "" ||
+        //       nip === ""
+        //   ) {
+        //     Swal.fire({
+        //         title: 'error',
+        //         icon: 'error',
+        //         html: 'Lengkapi Semua Field Terlebih Dahulu',
+        //         allowOutsideClick: false,
+        //         showConfirmButton: true,
+        //     });
+        //   } else {
 
                     $("#pdfViewer").attr("src", "");
                     $("#labelModal").html('Preview Surat');
@@ -941,7 +941,7 @@
                             }
                         },
                         error: function(error) {
-                            console.log(error);
+                            // console.log(error);
                             Swal.fire({
                                 title: 'Error',
                                 text: "Lengkapi Semua Field Terlebih Dahulu",
@@ -950,7 +950,7 @@
                             });
                         }
                     });
-                }
+                // }
             });
 
             $("#saveButton").on('click', function() {
