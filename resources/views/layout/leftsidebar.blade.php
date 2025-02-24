@@ -24,15 +24,33 @@
           <i class="fa fa-tachometer-alt me-2"></i>
           Dashboard
         </a>
-        <a href="{{ route('surat.manajemen_surat.show') }}" class=" nav-item nav-link {{ Request::is('surat*') ? 'active' : '' }}">
-          <i class="fa fa-envelope" aria-hidden="true"></i>
-          Surat
-        </a>
         @can('admin')
-        <a href="{{ route('user.show') }}" class="nav-item nav-link {{ Request::is('user') ? 'active' : '' }}">
+                <a href="{{ route('user.show') }}" class="nav-item nav-link {{ Request::is('user') ? 'active' : '' }}">
           <i class="fa fa-user" aria-hidden="true"></i>
           User
         </a>
+        @endcan
+        <a href="{{ route('surat.manajemen_surat_pengantar.show') }}" class=" nav-item nav-link {{ Request::is('surat*') ? 'active' : '' }}">
+          <i class="fa fa-envelope" aria-hidden="true"></i>
+          Surat Pengantar
+        </a>
+        <div class="nav-item dropdown">
+          <a href="#" class="nav-item dropdown-toggle nav-link {{ Request::is('master-data*') ? 'active show' : '' }}" data-bs-toggle="dropdown">
+            <i class="bi-envelope-open-fill"></i>
+            Surat Diklat
+          </a>
+          <div class="dropdown-menu bg-transparent border-0 {{ Request::is('master-data*') ? 'show' : '' }}">
+            <a href="{{route('master_data.bidang.show')}}" class="dropdown-item {{ Request::is('*bidang') ? 'active' : '' }}">
+              <i class="bi bi-person"></i>
+              Surat Perorangan
+            </a>
+            <a href="{{route('master_data.jabatan.show')}}" class="dropdown-item {{ Request::is('*jabatan') ? 'active' : '' }}">
+              <i class="bi bi-people"></i>
+              Surat Beberapa Pegawai
+            </a>
+          </div>
+        </div>
+        @can('admin')
         <div class="nav-item dropdown">
           <a href="#" class="nav-item dropdown-toggle nav-link {{ Request::is('master-data*') ? 'active show' : '' }}" data-bs-toggle="dropdown">
             <svg xmlns="http://www.w3.org/2000/svg" class="svg" width="16" height="16" fill="currentColor" class="bi bi-database-gear" viewBox="0 0 16 16">
@@ -40,7 +58,7 @@
               <path d="M11.886 9.46c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
             </svg>
             Master Data
-        </a>
+          </a>
           <div class="dropdown-menu bg-transparent border-0 {{ Request::is('master-data*') ? 'show' : '' }}">
             <a href="{{route('master_data.bidang.show')}}" class="dropdown-item {{ Request::is('*bidang') ? 'active' : '' }}">
               <svg xmlns="http://www.w3.org/2000/svg" fill="#6C7293" height="20" width="20" viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z"/></svg>

@@ -131,7 +131,7 @@
 @endsection
 
 @section('navtop')
-<a href="{{ route("surat.manajemen_surat.show") }}" class="button raise {{ Request::is('*disposisi_surat') ? 'active' : '' }}">
+<a href="{{ route("surat.manajemen_surat_pengantar.show") }}" class="button raise {{ Request::is('*disposisi_surat') ? 'active' : '' }}">
   <span class="desktop-text">{{ auth()->user()->hak_akses_id == 1 ? "Manajemen Surat" : "Disposisi Surat"}}</span>
   <span class="mobile-logo"><i class="bi bi-kanban-fill"></i></span>
 </a>
@@ -758,7 +758,7 @@
                 responsive: true,
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route("surat.manajemen_surat.show") }}',
+                ajax: '{{ route("surat.manajemen_surat_pengantar.show") }}',
                 columns: [
                     { data: 'nomor_surat', name: 'nomor_surat', width: '10%' },
                     { data: 'perihal_surat', name: 'perihal_surat', width: '50%' },
@@ -860,7 +860,7 @@
                       });
 
                       $.ajax({
-                        url: '{{ route('surat.manajemen_surat.update') }}',
+                        url: '{{ route('surat.manajemen_surat_pengantar.update') }}',
                         type: "post",
                         data: formData,
                         contentType: false,
@@ -898,7 +898,7 @@
               e.preventDefault();
 
               let id = $(this).data('id');
-              let url = '{{ route('surat.manajemen_surat.detail', ':id') }}';
+              let url = '{{ route('surat.manajemen_surat_pengantar.detail', ':id') }}';
               url = url.replace(':id', id);
               $('#nomor_surat_input').val('');
 
@@ -1347,7 +1347,7 @@
                   }
               }).then((result) => {
                   if (result.isConfirmed) {
-                      let url = '{{ route('surat.manajemen_surat.delete', ':id') }}';
+                      let url = '{{ route('surat.manajemen_surat_pengantar.delete', ':id') }}';
                       url = url.replace(':id', id);
 
                       Swal.fire({
@@ -1431,7 +1431,7 @@
                       }
                     })
 
-                    let url = '{{ route('surat.manajemen_surat.change_e4', ':id') }}';
+                    let url = '{{ route('surat.manajemen_surat_pengantar.change_e4', ':id') }}';
                     url = url.replace(':id', id);
                     setTimeout(function() {
                     $.ajax({
@@ -1498,7 +1498,7 @@
                       }
                     })
 
-                    let url = '{{ route('surat.manajemen_surat.change_e3', ':id') }}';
+                    let url = '{{ route('surat.manajemen_surat_pengantar.change_e3', ':id') }}';
                     url = url.replace(':id', id);
                     setTimeout(function() {
                     $.ajax({
@@ -1565,7 +1565,7 @@
                       }
                     })
 
-                    let url = '{{ route('surat.manajemen_surat.change_e2', ':id') }}';
+                    let url = '{{ route('surat.manajemen_surat_pengantar.change_e2', ':id') }}';
                     url = url.replace(':id', id);
                     setTimeout(function() {
                     $.ajax({
@@ -1629,7 +1629,7 @@
                       }
                     })
 
-                    let url = '{{ route('surat.manajemen_surat.arsip', ':id') }}';
+                    let url = '{{ route('surat.manajemen_surat_pengantar.arsip', ':id') }}';
                     url = url.replace(':id', id);
                     setTimeout(function() {
                     $.ajax({
@@ -1667,7 +1667,7 @@
               e.preventDefault();
 
               let id = $(this).data('id');
-              let url = '{{ route('surat.manajemen_surat.detail', ':id') }}';
+              let url = '{{ route('surat.manajemen_surat_pengantar.detail', ':id') }}';
               url = url.replace(':id', id);
 
               Swal.fire({
@@ -1808,7 +1808,7 @@
               e.preventDefault();
 
               let id = $(this).data('id');
-              let url = '{{ route('surat.manajemen_surat.download', ':id') }}';
+              let url = '{{ route('surat.manajemen_surat_pengantar.download', ':id') }}';
               url = url.replace(':id', id);
 
               Swal.fire({

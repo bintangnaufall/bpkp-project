@@ -60,7 +60,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/pdf', [BuatSuratController::class, 'pdflink'])->name('pdf'); 
             Route::match(['get', 'post'], 'pdfview', [BuatSuratController::class, 'pdfview'])->name('pdfview');
         });
-        Route::prefix('disposisi_surat')->name('manajemen_surat.')->group(function() {
+        Route::prefix('disposisi_surat')->name('manajemen_surat_pengantar.')->group(function() {
             Route::get('/', [ManajemenSuratController::class, 'index'])->name('show'); 
             Route::post('/update', [ManajemenSuratController::class, 'update'])->name('update'); 
             Route::get('/detail/{id}', [ManajemenSuratController::class, 'detail'])->name('detail'); 
