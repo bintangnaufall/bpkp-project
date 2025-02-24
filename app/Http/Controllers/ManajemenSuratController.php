@@ -41,6 +41,8 @@ class ManajemenSuratController extends Controller
                             ->where('is_archive', 0)
                             ->orderBy('surats.id', 'desc')
                             ->get(['surats.*', 'users.id as user_id']);
+            }else if (auth()->user()->hak_akses_id == 3) {
+                $data = surat::all();
             }else {
                 $data = surat::join('users', 'surats.pembuat_surat', '=', 'users.id')
                 ->where('users.bidang_id', auth()->user()->bidang_id)
