@@ -189,10 +189,10 @@ class ManajemenSuratController extends Controller
                     if (auth()->user()->hak_akses->name == "Admin") {
                         $statusUSer = "Admin";
                     }else {
-                        $statusUSer = "Pejabat eselon 2";
+                        $statusUSer = auth()->user()->name;;
                     }
                 }else {
-                    $statusSurat = "Dibatalkan Pesetujuan Eselon 2";
+                    $statusSurat = "Dibatalkan";
                     $statusUSer = "Admin";
                 }
 
@@ -202,7 +202,7 @@ class ManajemenSuratController extends Controller
                 $riwayat_surat->save();
 
                 $status = $surat->e2 == 1 ? 0 : 1;
-                $surat->status = $surat->e2 == 1 ? "Review Eselon 2" : "Final";
+                $surat->status = $surat->e2 == 1 ? "Review Eselon 2" : "Penomoran Surat";
                 $surat->e2 = $status;
                 $surat->save();
 
@@ -228,10 +228,10 @@ class ManajemenSuratController extends Controller
                     if (auth()->user()->hak_akses->name == "Admin") {
                         $statusUSer = "Admin";
                     }else {
-                        $statusUSer = "Pejabat eselon 3";
+                        $statusUSer = auth()->user()->name;;
                     }
                 }else {
-                    $statusSurat = "Dibatalkan Pesetujuan Eselon 3";
+                    $statusSurat = "Dibatalkan";
                     $statusUSer = "Admin";
                 }
 
@@ -241,7 +241,7 @@ class ManajemenSuratController extends Controller
                 $riwayat_surat->save();
 
                 $status = $surat->e3 == 1 ? 0 : 1;
-                $surat->status = $surat->e3 == 1 ? "Review Daltu" : "Penomoran Surat";
+                $surat->status = $surat->e3 == 1 ? "Review Daltu" : "Review Eselon 2";
                 $surat->nomor_surat = $surat->e3 == 1 ? null : null;
                 $surat->e3 = $status;
                 $surat->save();
@@ -268,10 +268,10 @@ class ManajemenSuratController extends Controller
                     if (auth()->user()->hak_akses->name == "Admin") {
                         $statusUSer = "Admin";
                     }else {
-                        $statusUSer = "Pejabat eselon 4";
+                        $statusUSer = auth()->user()->name;
                     }
                 }else {
-                    $statusSurat = "Dibatalkan Pesetujuan Eselon 4";
+                    $statusSurat = "Dibatalkan";
                     $statusUSer = "Admin";
                 }
 
@@ -344,7 +344,6 @@ class ManajemenSuratController extends Controller
 
     public function update( Request $request)
     {
-        // dd($request->all());
         $deletePDFArray = json_decode($request->deletePDF, true);
 
         $id = Crypt::decryptString($request->id);
@@ -364,7 +363,7 @@ class ManajemenSuratController extends Controller
 
         if (auth()->user()->hak_akses_id == 4) {
             $surat->nomor_surat = $request->nomor_surat;
-            $surat->status = "Review Eselon 2";
+            $surat->status = "Final";
         }else {
             $surat->nomor_surat = null;
         }
@@ -426,7 +425,7 @@ class ManajemenSuratController extends Controller
         }
 
         $pdf = PDF::loadView('pdf.pdf_preview', compact('data'));
-        $uniq = auth()->user()->hak_akses_id == 4 ? $request->nomor_surat : uniqid();
+        $uniq = auth()->user()->hak_akses_id == 4 ? $request->nomor_surat : $id;
         $pdfPath = 'public/pdf/' . $uniq . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
@@ -477,7 +476,7 @@ class ManajemenSuratController extends Controller
         if ($pdfFiles) {
             foreach ($pdfFiles as $pdfFile) {
                 $lampiran = new lampiran();
-                $path = $pdfFile->storeAs('public/pdf', uniqid() . '_' . $pdfFile->getClientOriginalName());
+                $path = $pdfFile->storeAs('public/pdf', $id . '_' . $pdfFile->getClientOriginalName());
 
                 $storagePath = str_replace('public/', 'storage/', $path);
 
@@ -502,7 +501,7 @@ class ManajemenSuratController extends Controller
         // }
 
         $riwayat_surat = new RiwayatSurat();
-        $riwayat_surat->riwayat = "Surat Telah Diperbarui Oleh ";
+        $riwayat_surat->riwayat = "Surat Telah Diperbarui Oleh " . auth()->user()->name;
         $riwayat_surat->surat_id = $surat->id;
         $riwayat_surat->save();
     }

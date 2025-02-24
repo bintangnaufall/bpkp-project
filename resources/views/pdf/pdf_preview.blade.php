@@ -10,11 +10,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
+    <link href="https://fonts.cdnfonts.com/css/franklin-gothic" rel="stylesheet">
     <style type="text/css">
         * {
             margin: 0;
             padding: 0;
             text-indent: 0;
+            font-family: "Franklin Gothic Medium", "Franklin Gothic"; 
         }
 
         body {
@@ -118,10 +120,12 @@
             <td>
                 :
             </td>
-            <td style="width: 390px; text-align: justify;">
+            <td style="width: 350px; text-align: justify;">
                 {{ $data['nomor_surat'] }}
             </td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data['tanggal_surat']}}</td>
+            <td style="text-align: right; width: 195px;">
+                {{ $data['tanggal_surat']}}
+            </td>
         </tr>
     </table>
 
@@ -153,20 +157,14 @@
         </tr>
     </table>
 
-    {{-- <p style="margin-left: 40px; margin-bottom: -5px">Yth. </p> --}}
-    <table style="margin-left: 50px; margin-left: 40px; margin-bottom: -5px">
+        <table style="margin-left: 50px; margin-left: 40px; margin-bottom: -5px">
         <thead>
             <tr>
-                <td style="width: 10px">
-                    Yth.&nbsp;
-                </td>   
-                <td style="width: {{ count($data['tujuan_surat']) > 1 ? '20px' : '600px' }};">
-                    @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) == 1)
-                        @foreach ($data['tujuan_surat'] as $index => $surat)
-                            {{ $surat }}
-                        @endforeach
-                    @endif
-                </td>
+                @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) != 1)
+                    <td style="width: 10px">
+                        Yth.&nbsp;
+                    </td>   
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -184,11 +182,20 @@
                         </td>
                     </tr>
                 @endforeach
+            @else 
+                <tr>
+                    <td style="width: 650px;">
+                        @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) == 1)
+                            @foreach ($data['tujuan_surat'] as $index => $surat)
+                               Yth. {{ $surat }}
+                            @endforeach
+                        @endif
+                    </td>
+                </tr>
             @endif
         </tbody>
     </table>
 
-    {{-- <p style="margin-left: 40px; margin-bottom: -5px; margin-top: 10px;"></p> --}}
     <table style="margin-left: 50px; margin-left: 40px; margin-bottom: -5px; margin-top: 10px;">
         <thead>
             <tr>
@@ -200,13 +207,6 @@
                 </td>
             </tr>
         </thead>
-        {{-- <tbody>
-            <tr>
-                <td style="width: 500px">
-
-                </td>
-            </tr>
-        </tbody> --}}
     </table>
 
     <p style="margin-left: 80px; margin-top: 20px; margin-bottom:-2px;">Berdasarkan:</p>
@@ -248,8 +248,19 @@
         sebagaimana surat tugas terlampir.
     </p>
 
+    @if (count($data['dasar_acuan']) >= 3)
+        <div style="height: 600px;">
+        </div>
+    @endif
+
     <p style="margin-left: 40px; text-align: justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        Biaya perjalanan dinas sehubungan dengan penugasan ini menjadi beban {!! $data['beban_anggaran'] !!}
+        Seluruh biaya yang berkaitan dengan penugasan ini menjadi beban
+        {!! $data['beban_anggaran'] !!} Tahun Anggaran
+        2024.
+    </p>
+
+    <p style="margin-left: 40px; text-align: justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Demikian kami sampaikan.
     </p>
 
     <p style="margin-left: 40px;  margin-bottom:30px; text-align: justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -275,7 +286,12 @@
         </p>
     </div>
 
-    <p style="margin-left: 40px; margin-bottom: -5px">Tembusan Yth.:</p>
+    <p style="margin-left: 40px; margin-bottom: -5px">Tembusan 
+        @if (isset($data['tembusan_surat']) && count($data['tembusan_surat']) != 1)
+        Yth.
+        @endif
+        :
+    </p>
     <table style="margin-left: 50px;">
         <thead>
             <tr>
@@ -289,18 +305,26 @@
         </thead>
         <tbody>
             <tr>
-                @if (isset($data['tembusan_surat']) && $data['tembusan_surat'][0] != "")
-                @foreach ($data['tembusan_surat'] as $index => $tembusan_surat)
-                    <tr>
-                        <td style="width: 10px">
-                            {{$index + 1}}.
-                        </td>
-                        <td style="width: 627px; text-align: justify">
-                            {{ $tembusan_surat }}
-                        </td>
-                    </tr>
-                @endforeach
-            @endif
+                @if (isset($data['tembusan_surat']) && count($data['tembusan_surat']) != 1)
+                    @foreach ($data['tembusan_surat'] as $index => $tembusan_surat)
+                        <tr>
+                            <td style="width: 10px">
+                                {{$index + 1}}.
+                            </td>
+                            <td style="width: 627px; text-align: justify">
+                                {{ $tembusan_surat }}
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    @foreach ($data['tembusan_surat'] as $index => $tembusan_surat)
+                        <tr>
+                            <td style="width: 627px; text-align: justify">
+                                Yth. {{ $tembusan_surat }}
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tr>
         </tbody>
     </table>

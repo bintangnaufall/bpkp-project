@@ -921,7 +921,7 @@
                         console.log(response);
                         $('#id').val(id);
                         $('#nomor_surat_input').val(response.surat.nomor_surat);
-                        if (response.surat.e3 == 1 && response.surat.e2 == 0 && userHakAksesId == 4) {
+                        if (response.surat.e3 == 1 && response.surat.e2 == 1 && userHakAksesId == 4) {
                             $('#nomor_surat_input').prop('disabled', false);
                         } else {
                             $('#nomor_surat_input').prop('disabled', true);
