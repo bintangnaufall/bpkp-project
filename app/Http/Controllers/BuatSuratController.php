@@ -24,15 +24,15 @@ class BuatSuratController extends Controller
     public function index()
     {
         $usersWithEselonAccess = User::where('hak_akses_id', 3)->get();
-    
+
         // Inisialisasi array untuk menyimpan jabatan dari pengguna
         $jabatanUsers = [];
-    
+
         // Iterasi setiap pengguna dan ambil jabatan mereka
         foreach ($usersWithEselonAccess as $user) {
             // Ambil jabatan pengguna
             $jabatanUser = $user->jabatan;
-            
+
             // Pastikan jabatan pengguna tidak null
             if ($jabatanUser) {
                 // Tambahkan jabatan pengguna ke dalam array
@@ -42,16 +42,16 @@ class BuatSuratController extends Controller
                 ];
             }
         }
-    
+
         // Tampilkan data jabatan pengguna
         // return dd($jabatanUsers);
-        return view('surat.buatSurat',[
+        return view('surat.buatSurat', [
             "jabatans" => $jabatanUsers,
-            "Dipa" => BebanAnggaran::where('jenis_lembaga', 1 )->get(),
-            "Mitra"=>BebanAnggaran::where('jenis_lembaga', 2 )->get()
+            "Dipa" => BebanAnggaran::where('jenis_lembaga', 1)->get(),
+            "Mitra" => BebanAnggaran::where('jenis_lembaga', 2)->get()
         ]);
     }
-    
+
 
     public function fetchjabatan(Request $request)
     {
@@ -60,7 +60,7 @@ class BuatSuratController extends Controller
         if ($data['jabatan']->isEmpty()) {
             return response()->json(['status' => false, 'message' => 'No data found']);
         }
-    
+
         return response()->json(['status' => true, 'data' => $data['jabatan']]);
     }
 
@@ -68,12 +68,12 @@ class BuatSuratController extends Controller
     {
         $nip = str_replace(' ', '', $request->nip);
 
-        $data['user'] = User::where('NIP', $nip)->where('hak_akses_id', 3)->with('jabatan')->first(['name', 'jabatan_id']);    
-        
+        $data['user'] = User::where('NIP', $nip)->where('hak_akses_id', 3)->with('jabatan')->first(['name', 'jabatan_id']);
+
         if (!$data['user']) {
             return response()->json(['status' => false, 'message' => 'No data found']);
         }
-    
+
         if ($data['user']->jabatan && $data['user']->jabatan->count() > 0) {
             return response()->json(['status' => true, 'data' => $data['user']]);
         } else {
@@ -82,7 +82,7 @@ class BuatSuratController extends Controller
     }
 
     public function pdfview(Request $request)
-    {        
+    {
         // return $request->all();
         $jabatan = jabatan::find($request->jabatan_id);
 
@@ -91,18 +91,18 @@ class BuatSuratController extends Controller
         } else {
             $nama_jabatan = "<Jabatan>";
         }
-        
+
         $bebanAnggaran = BebanAnggaran::find($request->beban_anggaran_id);
 
         if (
             (strpos($request->perihal_surat, '&lt;script&gt;') !== false || strpos($request->perihal_surat, '&lt;link&gt;') !== false) ||
             (strpos($request->rincian_pelaksanaan_penugasan, '&lt;script&gt;') !== false || strpos($request->rincian_pelaksanaan_penugasan, '&lt;link&gt;') !== false) ||
             (strpos($request->beban_anggaran, '&lt;script&gt;') !== false || strpos($request->beban_anggaran, '&lt;link&gt;') !== false)
-            ) {
+        ) {
             return response()->json(['error' => 'Input tidak valid. Tolong hapus tag <script> atau <link>'], 400);
         }
-        
-        
+
+
         $data = [
             "nomor_surat" => $request->nomor_surat ? $request->nomor_surat : "<Nomor_Surat>",
             "lampiran_surat" => $request->lampiran_surat ? $request->lampiran_surat : "<Lampiran_Surat>",
@@ -131,20 +131,20 @@ class BuatSuratController extends Controller
     }
 
 
-    public function store( Request $request)
+    public function store(Request $request)
     {
         // dd($request->all());
         $surat = new surat();
         $surat->tanggal_surat = $request->tanggal_surat;
-        $surat->keterangan_lampiran	 = $request->lampiran_surat;
+        $surat->keterangan_lampiran     = $request->lampiran_surat;
         $surat->perihal_surat = $request->perihal_surat;
-        
+
         $surat->{'alamat_instansi/pejabat'} = $request->alamat_tujuan;
         $surat->rincian_pelaksanaan_penugasan = $request->rincian_pelaksanaan_penugasan;
         $surat->beban_anggaran_id = $request->beban_anggaran_id;
 
         $nip_pejabat = str_replace(' ', '', $request->nip_pejabat);
-        $user = User::where("NIP" , $nip_pejabat)->first();
+        $user = User::where("NIP", $nip_pejabat)->first();
         $surat->nama_pejabat = $user->id;
 
         $surat->pembuat_surat = auth()->user()->id;
@@ -158,17 +158,17 @@ class BuatSuratController extends Controller
         } else {
             $nama_jabatan = "<Jabatan>";
         }
-        
+
         if (
             (strpos($request->perihal_surat, '&lt;script&gt;') !== false || strpos($request->perihal_surat, '&lt;link&gt;') !== false) ||
             (strpos($request->rincian_pelaksanaan_penugasan, '&lt;script&gt;') !== false || strpos($request->rincian_pelaksanaan_penugasan, '&lt;link&gt;') !== false) ||
             (strpos($request->beban_anggaran, '&lt;script&gt;') !== false || strpos($request->beban_anggaran, '&lt;link&gt;') !== false)
-            ) {
+        ) {
             return response()->json(['error' => 'Input tidak valid. Tolong hapus tag <script> atau <link>'], 400);
         }
 
         $bebanAnggaran = BebanAnggaran::find($request->beban_anggaran_id);
-        
+
         $data = [
             "nomor_surat" => $request->nomor_surat ? $request->nomor_surat : "<Nomor_Surat>",
             "lampiran_surat" => $request->lampiran_surat ? $request->lampiran_surat : "<Lampiran_Surat>",
@@ -190,19 +190,19 @@ class BuatSuratController extends Controller
 
             "tembusan_surat" => $request->tembusan_surat,
         ];
-        
+
         $pdf = PDF::loadView('pdf.pdf_preview', compact('data'));
         $uniq = uniqid();
         $pdfPath = 'public/pdf/' . $uniq . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
-        $surat->pdf = 'storage/pdf/'. $uniq .'.pdf';
+        $surat->pdf = 'storage/pdf/' . $uniq . '.pdf';
         $surat->save();
 
         foreach ($request->tujuan_surat as $tujuan) {
             $tujuan_surat = new tujuansurat();
             $tujuan_surat->surat_id = $surat->id;
-            $tujuan_surat->tujuan_surat	= $tujuan;
+            $tujuan_surat->tujuan_surat    = $tujuan;
             $tujuan_surat->save();
         }
         foreach ($request->dasar_acuan as $acuan) {
@@ -220,16 +220,16 @@ class BuatSuratController extends Controller
                     $tembusan_surat->save();
                 }
             }
-        }        
+        }
 
         $pdfFiles = $request->file('lampiran');
         if (isset($pdfFiles) && count($pdfFiles) > 0) {
             foreach ($pdfFiles as $pdfFile) {
                 $lampiran = new lampiran();
                 $path = $pdfFile->storeAs('public/pdf', uniqid() . '_' . $pdfFile->getClientOriginalName());
-            
+
                 $storagePath = str_replace('public/', 'storage/', $path);
-            
+
                 $lampiran->lampiran = $storagePath;
                 $lampiran->surat_id = $surat->id;
                 $lampiran->save();
@@ -242,26 +242,26 @@ class BuatSuratController extends Controller
         $riwayat_surat->save();
     }
 
-    
+
     public function pdflink(Request $req)
     {
         $pdfFiles = $req->file('lampiran');
 
         $lampiranBase64 = [];
-        
+
         foreach ($pdfFiles as $pdfFile) {
             // Baca konten file
             $content = File::get($pdfFile->getRealPath());
-        
+
             // Encode konten file menjadi base64
             $base64Content = base64_encode($content);
-        
+
             // Tambahkan base64 encoded content ke dalam array
             $lampiranBase64[] = $base64Content;
         }
-        
+
         return $lampiranBase64;
-        }
+    }
     /**
      * Remove the specified resource from storage.
      */

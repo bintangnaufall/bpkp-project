@@ -78,7 +78,9 @@
         }
     </style>
 </head>
-<body style="padding-left: 50px; padding-right:72px; padding-top: 50px; padding-bottom: 50px; font-family: Arial, sans-serif;">
+
+<body
+    style="padding-left: 50px; padding-right:72px; padding-top: 50px; padding-bottom: 50px; font-family: Arial, sans-serif;">
 
     <table class="border" style="border-collapse: collapse; margin-left: 0pt; margin-top: 0px" cellspacing="0">
         <tr style="height: 57pt">
@@ -123,9 +125,7 @@
             <td style="width: 350px; text-align: justify;">
                 {{ $data['nomor_surat'] }}
             </td>
-            <td style="text-align: right; width: 195px;">
-                {{ $data['tanggal_surat']}}
-            </td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data['tanggal_surat'] }}</td>
         </tr>
     </table>
 
@@ -160,23 +160,28 @@
         <table style="margin-left: 50px; margin-left: 40px; margin-bottom: -5px">
         <thead>
             <tr>
-                @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) != 1)
-                    <td style="width: 10px">
-                        Yth.&nbsp;
-                    </td>   
-                @endif
+                <td style="width: 10px">
+                    Yth.&nbsp;
+                </td>
+                <td style="width: {{ count($data['tujuan_surat']) > 1 ? '20px' : '600px' }};">
+                    @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) == 1)
+                        @foreach ($data['tujuan_surat'] as $index => $surat)
+                            {{ $surat }}
+                        @endforeach
+                    @endif
+                </td>
             </tr>
         </thead>
         <tbody>
             @if (isset($data['tujuan_surat']) && count($data['tujuan_surat']) != 1)
                 @foreach ($data['tujuan_surat'] as $index => $tujuan_surat)
                     <tr>
-                        <td  style="width: 10px;">
+                        <td style="width: 10px;">
 
                         </td>
                         <td>
-                            {{$index + 1}}.
-                        </td> 
+                            {{ $index + 1 }}.
+                        </td>
                         <td style="width: 627px; text-align: justify">
                             {{ $tujuan_surat }}
                         </td>
@@ -219,7 +224,7 @@
                 <td style="width: 100px">
                     @if (isset($data['dasar_acuan']) && count($data['dasar_acuan']) == 1)
                         @foreach ($data['dasar_acuan'] as $index => $acuan)
-                            {{$acuan}}
+                            {{ $acuan }}
                         @endforeach
                     @endif
                 </td>
@@ -228,16 +233,16 @@
         <tbody>
             <tr>
                 @if (isset($data['dasar_acuan']) && count($data['dasar_acuan']) != 1)
-                @foreach ($data['dasar_acuan'] as $index => $dasar_acuan)
-                    <tr>
-                        <td style="width: 10px">
-                            {{$index + 1}}.
-                        </td>
-                        <td style="width: 627px; text-align: justify">
-                            {{ $dasar_acuan }}
-                        </td>
-                    </tr>
-                @endforeach
+                    @foreach ($data['dasar_acuan'] as $index => $dasar_acuan)
+            <tr>
+                <td style="width: 10px">
+                    {{ $index + 1 }}.
+                </td>
+                <td style="width: 627px; text-align: justify">
+                    {{ $dasar_acuan }}
+                </td>
+            </tr>
+            @endforeach
             @endif
             </tr>
         </tbody>
@@ -268,15 +273,15 @@
     </p>
 
     <div>
-        
+
         <p style="margin-left: 400px; margin-bottom:10px;">
-            {{ $data["Jabatan"]}}
+            {{ $data['Jabatan'] }}
         </p>
 
         <p style="margin-left: 400px;">
             <span style="color: #00B0F0; font-size:12px"><i>Ditandatangani secara elektronik oleh</i></span>
         </p>
-        
+
         <p style="margin-left: 400px; margin-bottom:1px;">
             {{ $data['nama_pejabat'] }}
         </p>
@@ -305,32 +310,26 @@
         </thead>
         <tbody>
             <tr>
-                @if (isset($data['tembusan_surat']) && count($data['tembusan_surat']) != 1)
+                @if (isset($data['tembusan_surat']) && $data['tembusan_surat'][0] != '')
                     @foreach ($data['tembusan_surat'] as $index => $tembusan_surat)
-                        <tr>
-                            <td style="width: 10px">
-                                {{$index + 1}}.
-                            </td>
-                            <td style="width: 627px; text-align: justify">
-                                {{ $tembusan_surat }}
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    @foreach ($data['tembusan_surat'] as $index => $tembusan_surat)
-                        <tr>
-                            <td style="width: 627px; text-align: justify">
-                                Yth. {{ $tembusan_surat }}
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
+            <tr>
+                <td style="width: 10px">
+                    {{ $index + 1 }}.
+                </td>
+                <td style="width: 627px; text-align: justify">
+                    {{ $tembusan_surat }}
+                </td>
+            </tr>
+            @endforeach
+            @endif
             </tr>
         </tbody>
     </table>
 
     <div class="my-5 text-center" style="color: #00b04f; font-size: 12px; padding-left: 50px">
-        <p>Harap tidak mencetak dokumen ini, kecuali sangat diperlukan. Dokumen yang tidak dicetak akan menyelamatkan lingkungan. Layanan Pengaduan: Apabila Pegawai BPKP menerima/meminta gratifikasi dan suap, dapat dilaporkan melalui mekanisme penyampaian pengaduan pada wbs.bpkp.go.id atau menghubungi 085210991239.</p>
+        <p>Harap tidak mencetak dokumen ini, kecuali sangat diperlukan. Dokumen yang tidak dicetak akan menyelamatkan
+            lingkungan. Layanan Pengaduan: Apabila Pegawai BPKP menerima/meminta gratifikasi dan suap, dapat dilaporkan
+            melalui mekanisme penyampaian pengaduan pada wbs.bpkp.go.id atau menghubungi 085210991239.</p>
     </div>
 
     <div id="footer" style="margin-bottom: 50px;">
