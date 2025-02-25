@@ -83,6 +83,7 @@
               <th scope="col"  class="col-md-6">NIP</th>
               <th scope="col"  class="col-md-6">Nama User</th>
               <th scope="col"  class="col-md-6">Bidang</th>
+              <th scope="col"  class="col-md-6">Pangkat</th>
               <th scope="col"  class="col-md-6">Jabatan</th>
               <th scope="col"  class="col-md-6">Hak Akses</th>
               <th scope="col"  class="col-md-6">Default Password</th>
@@ -138,6 +139,16 @@
                 <option value="" disabled selected hidden>Pilih Bidang</option>
                 @foreach($bidangs as $bidang)
                   <option value="{{ $bidang->id }}"> {{ $bidang->name }}</option>
+                @endforeach
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label for="name" class="col-form-label" style="color: black">Pangkat</label>
+              <select class="form-select" aria-label="Default select example" name="pangkat_id" id="pangkat">
+                <option value="" disabled selected hidden>Pilih Pangkat</option>
+                @foreach($pangkats as $pangkat)
+                  <option value="{{ $pangkat->id }}"> {{ $pangkat->name }}</option>
                 @endforeach
               </select>
             </div>
@@ -233,6 +244,7 @@
                     { data: 'NIP', name: 'NIP' },
                     { data: 'name', name: 'name', responsivePriority: 1},
                     { data: 'bidang', name: 'bidang'},
+                    { data: 'pangkat', name: 'pangkat'},
                     { data: 'jabatan', name: 'jabatan'},
                     { data: 'hak_akses', name: 'hak_akses' },
                     { data: 'default_password', name: 'default_password' },
@@ -272,6 +284,7 @@
               $('#password-input').css('display', 'block');
               $('#password').val('');
               $('#bidang').val('');
+              $('#pangkat').val('');
               $('#jabatan').val('');
               $('#hak_akses').val('');
               $('#tingkatEselon').val('');
@@ -365,6 +378,7 @@
               $('#nip').val('');
               $('#name').val('');
               $('#bidang').val('');
+              $('#pangkat').val('');
               $('#jabatan').val('');
               $('#hak_akses').val('');
               $('#tingkatEselon').val('');
@@ -394,6 +408,7 @@
                           // $('#nip').val(response.data.NIP);
                           $('#name').val(response.data.name);
                           $('#bidang option[value="' + response.data.bidang_id + '"]').prop('selected',true);
+                          $('#pangkat option[value="' + response.data.pangkat_id + '"]').prop('selected',true);
                           $('#jabatan option[value="' + response.data.jabatan_id + '"]').prop('selected',true);
                           $('#hak_akses option[value="' + response.data.hak_akses_id + '"]').prop('selected',true);
                           if (response.data.hak_akses_id == 3) {

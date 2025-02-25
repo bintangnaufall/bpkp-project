@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\surat;
 use App\Models\bidang;
 use App\Models\jabatan;
+use App\Models\pangkat;
 use App\Models\hakakses;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -42,6 +43,10 @@ class UserController extends Controller
                 $jabatan =  $data->jabatan->name;
                 return $jabatan;
             })
+            ->addColumn('pangkat', function ($data) {
+                $pangkat =  $data->pangkat->name;
+                return $pangkat;
+            })
             ->addColumn('hak_akses', function ($data) {
                 $hak_akses =  $data->hak_akses->name;
                 return $hak_akses;
@@ -57,7 +62,8 @@ class UserController extends Controller
         return view('user',[
             'bidangs' => bidang::all(),
             'jabatans' => jabatan::all(),
-            'hakakseses' => hakakses::all()
+            'hakakseses' => hakakses::all(),
+            'pangkats' => pangkat::all()
         ]);
     }
 
@@ -68,6 +74,7 @@ class UserController extends Controller
             'nip' => 'required|size:21',
             'name' => 'required',
             'bidang_id' => 'required',
+            'pangkat_id' => 'required',
             'jabatan_id' => 'required',
             'hak_akses_id' => 'required',
             'password' => ($data['action'] == 'tambah') ? 'required' : '',
@@ -80,6 +87,7 @@ class UserController extends Controller
             'nip.size' => 'NIP minimum harus memiliki 18 digit',
             'bidang_id.required' => 'Bidang tidak boleh kosong',
             'jabatan_id.required' => 'Jabatan tidak boleh kosong',
+            'pangkat_id.required' => 'Pangkat tidak boleh kosong',
             'hak_akses_id.required' => 'Hak Akses tidak boleh kosong',
             'password.required' => 'Password tidak boleh kosong',
         ];
@@ -129,6 +137,7 @@ class UserController extends Controller
                 $storeOrUpdate->NIP = $nip;
                 $storeOrUpdate->name = $request->name;
                 $storeOrUpdate->bidang_id = $request->bidang_id;
+                $storeOrUpdate->pangkat_id = $request->pangkat_id;
                 $storeOrUpdate->jabatan_id = $request->jabatan_id;
                 $storeOrUpdate->hak_akses_id = $request->hak_akses_id;
                 if ($request->hak_akses_id == 3 ) {
