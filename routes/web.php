@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\BebanAnggaran;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\BidangController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\PangkatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HakaksesController;
 use App\Http\Controllers\BuatSuratController;
@@ -12,7 +14,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ArsipSuratController;
 use App\Http\Controllers\BebanAnggaranController;
 use App\Http\Controllers\ManajemenSuratController;
-use App\Models\BebanAnggaran;
 
 // use App\Http\Controllers\DisposisiController;
 
@@ -90,6 +91,13 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/create-update', [JabatanController::class, 'storeOrUpdate'])->name('create_update'); 
             Route::get('/edit/{id}', [JabatanController::class, 'edit'])->name('edit'); 
             Route::get('/delete/{id}', [JabatanController::class, 'destroy'])->name('delete'); 
+        });
+
+        Route::prefix('pangkat')->name('pangkat.')->group(function() {
+            Route::get('/', [PangkatController::class, 'index'])->name('show'); 
+            Route::post('/create-update', [PangkatController::class, 'storeOrUpdate'])->name('create_update'); 
+            Route::get('/edit/{id}', [PangkatController::class, 'edit'])->name('edit'); 
+            Route::get('/delete/{id}', [PangkatController::class, 'destroy'])->name('delete'); 
         });
 
         Route::prefix('hak_akses')->name('hak_akses.')->group(function() {

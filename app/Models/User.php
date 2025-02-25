@@ -47,6 +47,9 @@ class User extends Authenticatable
     public function bidang(){
         return $this->belongsTo('App\Models\bidang', 'bidang_id');
     }
+    public function pangkat(){
+        return $this->belongsTo('App\Models\bidang', 'pangkat_id');
+    }
 
     public function jabatan(){
         return $this->belongsTo('App\Models\jabatan', 'jabatan_id');
