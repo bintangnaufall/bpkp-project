@@ -129,7 +129,7 @@
 @endsection
 
 @section('navtop') 
-<a href="{{ route("surat.manajemen_surat.show") }}" class="button raise">
+<a href="{{ route("surat.manajemen_surat_pengantar.show") }}" class="button raise">
   <span class="desktop-text">{{ auth()->user()->hak_akses_id == 1 ? "Manajemen Surat" : "Disposisi Surat"}}</span>
   <span class="mobile-logo"><i class="bi bi-kanban-fill"></i></span>
 </a>
@@ -485,7 +485,7 @@
                       }
                     })
 
-                    let url = '{{ route('surat.manajemen_surat.arsip', ':id') }}';
+                    let url = '{{ route('surat.manajemen_surat_pengantar.arsip', ':id') }}';
                     url = url.replace(':id', id);
                     setTimeout(function() {
                     $.ajax({
@@ -523,7 +523,7 @@
               e.preventDefault();
 
               let id = $(this).data('id');
-              let url = '{{ route('surat.manajemen_surat.detail', ':id') }}';
+              let url = '{{ route('surat.manajemen_surat_pengantar.detail', ':id') }}';
               url = url.replace(':id', id);
 
               Swal.fire({

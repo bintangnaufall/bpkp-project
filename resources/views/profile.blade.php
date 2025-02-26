@@ -165,7 +165,7 @@
           </div>
           <div class="d-flex">
             <div style="width: 30%">
-              <h6>Jabatan &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</h6>
+              <h6>Pangkat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</h6>
             </div>
             <div style="width: 70%">
               <p class="text-left">{{ $user->pangkat->name }}</p>

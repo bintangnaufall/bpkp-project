@@ -144,7 +144,7 @@
 @endsection
 
 @section('navtop')
-    <a href="{{ route('surat.manajemen_surat.show') }}" class="button raise">
+    <a href="{{ route('surat.manajemen_surat_pengantar.show') }}" class="button raise">
         <span class="desktop-text">{{ auth()->user()->hak_akses_id == 1 ? 'Manajemen Surat' : 'Disposisi Surat' }}</span>
         <span class="mobile-logo"><i class="bi bi-kanban-fill"></i></span>
     </a>
