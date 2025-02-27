@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class LoginController extends Controller
@@ -16,13 +17,27 @@ class LoginController extends Controller
         return view("login");
     }
 
+    protected function validator($data)
+    {
+        $rules = [
+            'nip' => 'required',
+            'password' => 'required'
+        ];
+
+        $message = [
+            'nip.required' => 'NIP tidak boleh kosong',
+            'password.required' => 'Password tidak boleh kosong'
+        ];
+
+        return Validator::make($data, $rules, $message);
+    }
     public function authenticate(Request $request) 
     {
 
-        $request->validate([
-            'nip' => 'required',
-            'password' => 'required',
-        ]);
+        $validator = $this->validator($request->all());
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
 
         $nip = str_replace(' ', '',$request->nip);
         
@@ -54,53 +69,5 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');   
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
