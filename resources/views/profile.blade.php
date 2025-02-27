@@ -187,7 +187,10 @@
           </div>
         </div>  
 
-        <div class="col-md-7 p-4 " style="border: 2px solid rgb( 108, 117, 125, 1); border-top-width: 10px; border-radius: 15px; width: 65%">
+        <div class="col-xl-7 col-sm-12 p-4 mt-3 mt-xl-0" 
+              style="border: 2px solid rgb(108, 117, 125, 1); border-top-width: 10px; border-radius: 15px;" 
+              class="w-65 w-sm-100">
+
           @php
             $id = Crypt::encryptString(auth()->user()->id);
           @endphp
