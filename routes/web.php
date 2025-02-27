@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use App\Models\BebanAnggaran;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -36,6 +37,15 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/grafik', function(Request $request) {
+        $tahun = $request->tahun;
+        $data = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $data[] = \App\Helpers\Helper::jumlahSurat($i, $tahun);
+        }
+        return response()->json($data);
+    });
 
     Route::get('/dashboard',[DashboardController::class, 'index'])->name('dashboard');
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\surat;
 use App\Models\bidang;
 use Illuminate\Http\Request;
 
@@ -13,55 +14,21 @@ class DashboardController extends Controller
     public function index()
     {
         $bidang = bidang::with('surat')->get();
+        // $jan = Surat::whereMonth('created_at', 1)
+        // ->whereYear('created_at', 2024)
+        // ->count();
+
+
+        // return dd($jan);
 
         return view('dashboard', compact('bidang'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    public function jumlahSurat($month, $year) {
+        $data = Surat::whereMonth('created_at', $month)
+        ->whereYear('created_at', $year)
+        ->count();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return $data;
     }
 }
